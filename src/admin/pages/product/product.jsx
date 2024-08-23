@@ -42,14 +42,7 @@ const Product = () => {
 
   const [show, setShow] = useState(false);
 
-  const handleClose = () => {
-    setShow(false)
-    setArtDataOBJ(null)
-  };
-  const handleShow = (item) => {
-    setShow(true);
-    setArtDataOBJ(item)
-  }
+
 
 
   const [totalPages, setTotalPages] = useState(1);
@@ -96,14 +89,24 @@ const Product = () => {
     setOrderBy(property);
   };
 
-  const handleViewChange = (row) => {
-    setSelectedRow(row);
-  };
-
   const [rejectModalVal, setRejectModalVal] = useState({
     approvalStatus: "",
     rejectionReason: ""
   })
+
+  const handleClose = () => {
+    setShow(false)
+    setArtDataOBJ(null)
+    setRejectModalVal({...rejectModalVal, 'approvalStatus' : '', rejectionReason : ''})
+  };
+  const handleShow = (item) => {
+    setShow(true);
+    setArtDataOBJ(item)
+  }
+
+  const handleViewChange = (row) => {
+    setSelectedRow(row);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -115,7 +118,7 @@ const Product = () => {
 
   const handleStatusChange = async (event) => {
     const params = { ...rejectModalVal, productId: productDataOBJ?._id }
-    if(rejectModalVal.approvalStatus === ''){
+    if (rejectModalVal.approvalStatus === '') {
       toastifyError("Please select status !");
       return false
     }
@@ -126,21 +129,21 @@ const Product = () => {
     setLoading(true)
     try {
       const res = await APICALL("admin/toggleProduct", "post", params);
-      if(res?.status){
-        setShow(false);
+      if (res?.status) {
+        handleClose()
         toastifySuccess(res?.message)
         setData((prevData) =>
           prevData.map((item) =>
-            item._id === productDataOBJ._id ? { ...item, status: rejectModalVal.approvalStatus, rejectStatus : res?.data?.rejectStatus } : item
+            item._id === productDataOBJ._id ? { ...item, status: rejectModalVal.approvalStatus, rejectStatus: res?.data?.rejectStatus } : item
           )
         );
-      }else{
+      } else {
         toastifyError(SOMETHING_ERR)
       }
     } catch (error) {
       toastifyError(SOMETHING_ERR)
       console.error("API call error:", error);
-    }finally{
+    } finally {
       setLoading(false)
     }
   };
@@ -293,8 +296,8 @@ const Product = () => {
                                 <span className="d-inline-block">
                                   <Button className={`btn btn-sm ${row?.rejectStatus === 1 ? "btn-danger" : row?.status ? 'btn-success' : 'btn-warning'}`} onClick={() => handleShow(row)}>
                                     {
-                                      row?.rejectStatus === 1 ? "Rejected" : 
-                                    row?.status ? "Approved" : "Pending"
+                                      row?.rejectStatus === 1 ? "Rejected" :
+                                        row?.status ? "Approved" : "Pending"
                                     }
                                   </Button>
                                 </span>
@@ -373,14 +376,17 @@ const Product = () => {
             <div className="col-12">
               <label htmlFor="">Reason</label>
               <textarea name="rejectionReason" onChange={handleChange} rows={3} className="form-control" placeholder="Write..." maxLength={150}></textarea>
+              <div className="text-count mt-1 text-end">
+                <p>{rejectModalVal.rejectionReason.length}/150 characters</p>
+              </div>
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}> Cancel</Button>
           {
-            loading ? <BTNLoader className="artist-btn"/> :
-          <Button variant="primary" className="artist-btn" onClick={() => handleStatusChange()}> Changes</Button>
+            loading ? <BTNLoader className="artist-btn" /> :
+              <Button variant="primary" className="artist-btn" onClick={() => handleStatusChange()}> Changes</Button>
           }
         </Modal.Footer>
       </Modal>

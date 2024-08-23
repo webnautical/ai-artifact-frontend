@@ -966,8 +966,10 @@ const Home = () => {
               blogList?.length > 0 &&
               blogList?.map((item, i) => (
                 <div className="item">
-                  <button onClick={() => viewBlogDetails(item)}>
+                
                     <div className="blog_box">
+
+                    <button onClick={() => viewBlogDetails(item)}>
                       <div className="blog_img">
                         <img className="w-100" src={ imgBaseURL() + item?.image } alt="blog-img" />
                       </div>
@@ -993,22 +995,21 @@ const Home = () => {
                         </div>
                       </div>
 
-                      <div className="d-flex"><HTMLContent data={item?.content.slice(0, 70)}/> {item?.content?.length > 70 &&  <div>...</div>} </div>
+                      <div className="d-flex"><HTMLContent data={item?.content.slice(0, 70)}/> </div>
 
                       <div
                         className="user_details d-flex align-items-center "
                         style={{ gap: "10px" }}
                       >
-                        <div>
-                          <img src={avtar} alt="blog-user" />
-                        </div>
+                       
                         <div>
                           <h2>By Admin</h2>
                           <p>{timeAgo(item?.createdAt)}</p>
                         </div>
                       </div>
+                      </button>
                     </div>
-                  </button>
+         
                 </div>
               ))
             }

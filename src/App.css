@@ -3220,9 +3220,9 @@ header nav ul li a {
   margin-top: 5px;
 }
 
-.offcanvas {
+/* .offcanvas {
   width: 100% !important;
-}
+} */
 
 .back_btn {
   display: unset !important;
@@ -4802,4 +4802,20 @@ nav.sidebr-admin .simplebar-scrollable-x {
 .art_details_box { word-wrap: break-word;}
 
 .blog_img img{ height: 232px; object-fit: cover;}
+
+.blog_box button{ width: 100%;; background-color: transparent;; border: none; text-align: left;}
+
+
+
+.blog_box h6{
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre;
+}
+
+
+/* .blog_box p{    text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre; } */
 

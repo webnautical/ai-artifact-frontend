@@ -20,13 +20,14 @@ import { auth, decryptId, encryptId, imgBaseURL, timeAgo, toastifyError, toastif
 import BTNLoader from "../../components/BTNLoader";
 import { SOMETHING_ERR } from "../../helper/Constant";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
+import { Link } from "react-router-dom";
 const ProductDetail = () => {
   const { getGeneralSettingFun, generalSetting, addToCartFun, contextLoader, cartList, getGelatoPriceArrayFun, gelatoPriceArr } = useFrontDataContext();
 
   const { id } = useParams()
   const searchParams = new URLSearchParams(window.location.search);
   const affiliateParam = searchParams.get('affiliate');
-  // const affiliateID = affiliateParam ? decryptId(affiliateParam) : "";
+  // const affiliateID = affiliateParam ? decryptId(affiliateParam) : ""
 
   const [productDetails, setProductDetails] = useState(null)
   const [reviewList, setReviewList] = useState([])
@@ -393,6 +394,11 @@ const ProductDetail = () => {
     }
   }
 
+  const habdleRedirect = () => {
+    const data = { category: {name : productDetails?.category?.name, _id : productDetails?.category?._id} };
+    navigate(`/product-list`, { state: { data: data } });
+  };
+
   return (
     <>
       <div className="product-details">
@@ -400,7 +406,30 @@ const ProductDetail = () => {
           loader?.getProduct ? <FrontLoader />
             :
             <Container>
+
               <Row>
+                <Col md={12}>
+                  <div className="breadcrumbs mb-3">
+                    <ul className="m-0 p-0">
+                      <li>
+                        <Link to={'/'}>Home <i className="fa-solid fa-chevron-right"></i></Link>
+                      </li>
+                      <li>
+                        <button  onClick={() =>habdleRedirect()} className="global_light_btn" style={{color : '#8b96a5'}}>{productDetails?.category?.name} <i className="fa-solid fa-chevron-right"></i></button>
+                      </li>
+                      <li>
+                        <Link to={`/collection/${productDetails?.artist_id?._id}`}> {productDetails?.artist_id?.first_name + ' ' + productDetails?.artist_id?.last_name} </Link>
+                      </li>
+                        <li>
+                          <Link to={`/product-list`}><i className="fa-solid fa-chevron-right"></i> {productDetails?.collectionId?.name}</Link>
+                        </li>
+                        <li>
+                          <Link><i className="fa-solid fa-chevron-right"></i> {productDetails?.title}</Link>
+                        </li>
+                        
+                    </ul>
+                  </div>
+                </Col>
                 <Col lg={7}>
                   <div className="">
                     <div className="main_product_slide">

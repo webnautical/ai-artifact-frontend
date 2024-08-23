@@ -101,7 +101,7 @@ const OrderSuccess = () => {
                             </li>
                             <li>
                               <p> Discount:</p>
-                              <p> {orderDetails?.couponAmount ? `- ${orderDetails?.couponAmount}` : "---"}</p>
+                              <p> {orderDetails?.couponAmount ? `- $${orderDetails?.couponAmount}` : "---"}</p>
                             </li>
                             <li>
                               <p> Total:</p>
@@ -159,8 +159,8 @@ const OrderSuccess = () => {
                                     )}
                                   </ul>
 
-                                  <div className="text-start mt-2">              <span><b>Date : </b>
-                                    {timeAgo(orderDetails?.createdAt)}</span></div>
+                                  {/* <div className="text-start mt-2">              <span><b>Date : </b>
+                                    {timeAgo(orderDetails?.createdAt)}</span></div> */}
                                 </div>
                               </div>
                             </div>

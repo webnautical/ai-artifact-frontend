@@ -265,6 +265,9 @@ const ShippingAddress = () => {
       return error;
     }
   };
+
+  // console.log("orderDetails?.cartItem",orderDetails)
+
   const totalPrice = orderDetails?.totalPrice + (shippingChargeRes?.price || 0) - (couponRes?.discount || 0)
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -1042,7 +1045,7 @@ const ShippingAddress = () => {
                                       </Form>
                                     </div>
                                   </div>
-                                  <span className={`d-block text-end mt-1 mb-3 fw-bold ${couponRes?.status ? "text-success" : "text-danger"}`}>{couponRes?.message}  <button type="button" onClick={()=>setCouponRes(null)}> <i className="fa fa-times"></i> </button>
+                                  <span className={`d-block text-end mt-1 mb-3 fw-bold ${couponRes?.status ? "text-success" : "text-danger"}`}>{couponRes?.message}  {couponRes && <button type="button" className="global_light_btn text-danger"  onClick={()=>{setCouponRes(null); setCode('')}}> <i className="fa fa-times"></i> </button>}
 
                                   </span>
                                   <ul className="p-0">

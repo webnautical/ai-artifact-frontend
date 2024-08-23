@@ -9,8 +9,8 @@ const textures = [
   { name: 'wood', url: 'https://tse4.mm.bing.net/th?id=OIP.jdVkhxiOxZLMSNu5hFgTTQHaE8&pid=Api&P=0&h=220' , color: 'Wood' },
 ];
 
-const TexturePicker = ({ onTextureSelect }) => {
-  const [activeTexture, setActiveTexture] = useState(null);
+const TexturePicker = ({ onTextureSelect , url}) => {
+  const [activeTexture, setActiveTexture] = useState(url || null);
 
   const handleTextureSelect = (obj) => {
     if(obj){

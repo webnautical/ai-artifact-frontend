@@ -8,8 +8,8 @@ const brightnessOptions = [
   { label: 'Glossy', value: 1.25, url: '', 'Premium Semi-Glossy': '200-gsm-80lb-coated-silk', type: 'Premium Semi-Glossy' }
 ];
 
-const GlossEffect = ({ onBrightnessChange }) => {
-  const [brightness, setBrightness] = useState(1);
+const GlossEffect = ({ onBrightnessChange, light }) => {
+  const [brightness, setBrightness] = useState(light || 1);
 
   const handleBrightnessChange = (option) => {
     setBrightness(option.value);

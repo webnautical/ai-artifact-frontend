@@ -123,7 +123,6 @@ const ProductList = () => {
     setCategoryObj(item)
   };
 
-  console.log("artWorkListing",artWorkListing)
 
   return (
     <div className="product_list_page">

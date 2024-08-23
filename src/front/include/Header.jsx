@@ -106,7 +106,6 @@ const Header = () => {
     navigate(`/product-list`, { state: { data: data } });
   };
 
-  console.log("admin",auth('admin'))
 
   return (
     <>

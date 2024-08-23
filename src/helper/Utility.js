@@ -466,3 +466,27 @@ export const getRandomColor = () => {
     }
     return color;
 };
+
+export const sizeBtnArr = [
+    {
+      height: 238,
+      width: 171,
+      transform: 1,
+      size: "( Small )",
+      name: '13x18 cm / 5x7"',
+    },
+    {
+      height: 238,
+      width: 171,
+      size: "M",
+      transform: 1.1,
+      name: '30x40 cm / 12x16"',
+    },
+    {
+      height: 238,
+      width: 171,
+      transform: 1.2,
+      size: "L",
+      name: '50x70 cm / 20x28"',
+    },
+  ];
