@@ -26,6 +26,7 @@ import MessageOutlined from "@ant-design/icons/MessageOutlined";
 import { APICALL } from '../../../../../helper/api/api'
 import { auth, timeAgo } from "../../../../../helper/Utility";
 import { useNavigate } from "react-router";
+import { useNotificationHandler } from "../../../../../helper/api/RepeaterAPI";
 // sx styles
 const avatarSX = {
   width: 36,
@@ -48,6 +49,7 @@ const actionSX = {
 export default function Notification() {
   const [data, setData] = useState([])
   const navigate = useNavigate()
+  const handleNotificationClick = useNotificationHandler();
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -175,7 +177,7 @@ export default function Notification() {
                   >
                     {
                       data?.slice(0,5).map((item, i) => (
-                        <ListItemButton>
+                        <ListItemButton onClick={()=>{handleNotificationClick(item); setOpen(false)}}>
                           <ListItemAvatar>
                             <Avatar sx={{color: "primary.main",bgcolor: "primary.lighter"}}><MessageOutlined /></Avatar>
                           </ListItemAvatar>
