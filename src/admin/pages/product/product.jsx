@@ -13,7 +13,7 @@ import {
   IconButton,
   Paper,
 } from "@mui/material";
-import { Edit, MoreVert } from "@mui/icons-material";
+import { Delete, Edit, MoreVert } from "@mui/icons-material";
 import { Col, Dropdown, Form, Modal, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import AdminLoader from "../../components/AdminLoader";
 import BTNLoader from "../../../components/BTNLoader";
@@ -26,6 +26,7 @@ import {
   TABLE_ROW_PER_PAGE,
 } from "../../../helper/Constant";
 import "../../../App.css";
+import ConfirmModal from "../../../helper/ConfirmModal";
 
 const Product = () => {
   const [search, setSearch] = useState("");
@@ -39,14 +40,11 @@ const Product = () => {
   const [pageNo, setPageNo] = useState(1);
   const [productDataOBJ, setArtDataOBJ] = useState(null)
   const [selectedRow, setSelectedRow] = useState(null);
-
   const [show, setShow] = useState(false);
-
-
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const [actionType, setActionType] = useState(null);
 
   const [totalPages, setTotalPages] = useState(1);
-
   useEffect(() => {
     getListFun(pageNo, rowsPerPage);
   }, [pageNo, rowsPerPage]);
@@ -90,21 +88,25 @@ const Product = () => {
   };
 
   const [rejectModalVal, setRejectModalVal] = useState({
-    approvalStatus: "",
+    approvalStatus: true,
     rejectionReason: ""
   })
 
   const handleClose = () => {
     setShow(false)
     setArtDataOBJ(null)
-    setRejectModalVal({...rejectModalVal, 'approvalStatus' : '', rejectionReason : ''})
+    setRejectModalVal({ ...rejectModalVal, 'approvalStatus': true, rejectionReason: '' })
   };
   const handleShow = (item) => {
     setShow(true);
     setArtDataOBJ(item)
   }
 
-  const handleViewChange = (row) => {
+  const handleViewChange = (row, type) => {
+    setActionType(type)
+    if(type === 'delete'){
+      setModalOpen(true)
+    }
     setSelectedRow(row);
   };
 
@@ -148,13 +150,32 @@ const Product = () => {
     }
   };
 
+  const deleteArtWork = async () => {
+    setLoading(true)
+    try {
+      const res = await APICALL("/admin/deleteArtwork", "post", {productId: selectedRow?._id});
+      if (res?.status) {
+        toastifySuccess(res?.message)
+        setModalOpen(false)
+        getListFun(pageNo, rowsPerPage);
+      } else {
+        toastifyError(SOMETHING_ERR)
+      }
+    } catch (error) {
+      toastifyError(SOMETHING_ERR)
+      console.error("API call error:", error);
+    } finally {
+      setLoading(false)
+    }
+  };
+
   return (
     <>
-      {selectedRow ? (
+      {actionType === 'view' ? (
         <Paper className="table_samepattern p-3">
           <div className="row-details">
             <div className="d-flex" style={{ gap: '10px' }}>
-              <Button className="artist-btn" onClick={() => setSelectedRow(null)}>
+              <Button className="artist-btn" onClick={() => {setSelectedRow(null); setActionType(null)}}>
                 <i class="fa-solid fa-arrow-left"></i>
               </Button>
               <h2 className="title-admins-table m-0">Artwork Details</h2>
@@ -282,15 +303,7 @@ const Product = () => {
                             </TableCell>
                             <TableCell>{row?.category?.name}</TableCell>
                             <TableCell>{row?.subcategory?.name}</TableCell>
-                            <TableCell>{tableImg(row.image)}</TableCell>
-                            {/* <TableCell>
-                                <SwitchToggle
-                                  checked={row?.status}
-                                  onChange={(event) =>
-                                    handleStatusChange(event, row)
-                                  }
-                                />
-                              </TableCell> */}
+                            <TableCell>{tableImg(row.thumbnail)}</TableCell>
                             <TableCell>
                               <OverlayTrigger placement={'top'} overlay={<Tooltip id="tooltip-disabled" >Change product status to Click here!</Tooltip>}>
                                 <span className="d-inline-block">
@@ -313,16 +326,11 @@ const Product = () => {
                                   <MoreVert />
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                  <Dropdown.Item
-                                    href="#"
-                                    onClick={() =>
-                                      handleViewChange(row, "view")
-                                    }
-                                  >
-                                    <RemoveRedEyeIcon
-                                      style={{ marginRight: "8px" }}
-                                    />
-                                    View
+                                  <Dropdown.Item href="#" onClick={() => handleViewChange(row, "view")} >
+                                    <RemoveRedEyeIcon style={{ marginRight: "8px" }} />View
+                                  </Dropdown.Item>
+                                  <Dropdown.Item href="#" onClick={() => handleViewChange(row, "delete")}>
+                                    <Delete style={{ marginRight: "8px" }} />Delete
                                   </Dropdown.Item>
                                 </Dropdown.Menu>
                               </Dropdown>
@@ -366,30 +374,36 @@ const Product = () => {
         <Modal.Body>
           <div className="row g-3">
             <div className="col-12">
-              <label htmlFor=""><strong>{productDataOBJ?.title}</strong> Upload By <strong>{productDataOBJ?.artist_id?.first_name}</strong></label>
-              <select name="approvalStatus" onChange={handleChange} className="form-control mt-2 text-uppercase">
-                <option value={''}>--SELECT STATUS--</option>
-                <option value={true}>Approved</option>
+              <label htmlFor=""><strong>{productDataOBJ?.title}</strong> Uploaded By Artist: <strong>{productDataOBJ?.artist_id?.first_name}</strong></label>
+              <select name="approvalStatus" onChange={handleChange} className="form-control mt-2 text-capitalize">
+                <option value={true}>Approve</option>
                 <option value={false}>Reject</option>
               </select>
             </div>
-            <div className="col-12">
-              <label htmlFor="">Reason</label>
-              <textarea name="rejectionReason" onChange={handleChange} rows={3} className="form-control" placeholder="Write..." maxLength={150}></textarea>
-              <div className="text-count mt-1 text-end">
-                <p>{rejectModalVal.rejectionReason.length}/150 characters</p>
+
+            {
+              !rejectModalVal.approvalStatus &&
+              <div className="col-12">
+                <label htmlFor="">Reason</label>
+                <textarea name="rejectionReason" onChange={handleChange} rows={3} className="form-control" placeholder="Write..." maxLength={150}></textarea>
+                <div className="text-count mt-1 text-end">
+                  <p>{rejectModalVal.rejectionReason.length}/150 characters</p>
+                </div>
               </div>
-            </div>
+            }
+
           </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}> Cancel</Button>
           {
             loading ? <BTNLoader className="artist-btn" /> :
-              <Button variant="primary" className="artist-btn" onClick={() => handleStatusChange()}> Changes</Button>
+              <Button variant="primary" className="artist-btn" onClick={() => handleStatusChange()}> Save</Button>
           }
         </Modal.Footer>
       </Modal>
+
+      <ConfirmModal modalOpen={modalOpen} setModalOpen={setModalOpen} funCall={deleteArtWork} submitLoading={loading} msg="Are you sure? you want to delete it" btn1={"No"} btn2={"Yes"}/>
     </>
   );
 };

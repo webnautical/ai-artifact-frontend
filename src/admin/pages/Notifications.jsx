@@ -34,6 +34,7 @@ const Notifications = () => {
             const api = auth('admin')?.user_role === 'admin' ? 'admin/adminNotifications' : 'artist/notifications'
             const res = await APICALL(api, 'post', {})
             setListLoading(false)
+            console.log("notification", res)
             if (res?.status) {
                 setData(res?.data)
             }
@@ -128,7 +129,6 @@ const Notifications = () => {
                                                     </TableBody>
                                                 </Table>
                                             </TableContainer>
-                                            {/* {data?.length > rowsPerPage && */}
                                             <TablePagination
                                                 rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
                                                 component="div"
@@ -138,7 +138,6 @@ const Notifications = () => {
                                                 onPageChange={handleChangePage}
                                                 onRowsPerPageChange={handleChangeRowsPerPage}
                                             />
-                                            {/* } */}
                                         </>
                                         :
                                         <div className="col-12 text-center px-2 mt-3">

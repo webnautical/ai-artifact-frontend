@@ -399,6 +399,8 @@ const ProductDetail = () => {
     navigate(`/product-list`, { state: { data: data } });
   };
 
+  console.log("productDetails",productDetails)
+
   return (
     <>
       <div className="product-details">
@@ -421,7 +423,7 @@ const ProductDetail = () => {
                         <Link to={`/collection/${productDetails?.artist_id?._id}`}> {productDetails?.artist_id?.first_name + ' ' + productDetails?.artist_id?.last_name} </Link>
                       </li>
                         <li>
-                          <Link to={`/product-list`}><i className="fa-solid fa-chevron-right"></i> {productDetails?.collectionId?.name}</Link>
+                          <Link to={`/product-list`}><i className="fa-solid fa-chevron-right"></i> {productDetails?.directoryId?.name}</Link>
                         </li>
                         <li>
                           <Link><i className="fa-solid fa-chevron-right"></i> {productDetails?.title}</Link>
@@ -581,7 +583,7 @@ const ProductDetail = () => {
                         </li>
                         <li>
                           Collection
-                          <span className="d-block">{productDetails?.collectionId?.name}</span>
+                          <span className="d-block">{productDetails?.directoryId?.name}</span>
                         </li>
                         <li>
                           Category<span className="d-block">{productDetails?.category?.name}</span>

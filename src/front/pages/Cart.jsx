@@ -7,7 +7,7 @@ import paymentimg from '../../assets/images/payment-method.png'
 import whiteframe from '../../assets/images/framesSprite.png';
 
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
-import { auth, defaultIMG, imgBaseURL, sizeBtnArr } from "../../helper/Utility";
+import { auth, defaultIMG, imgBaseURL, sizeBtnArr, toastifySuccess } from "../../helper/Utility";
 import FrontLoader from "../../components/FrontLoader";
 import BTNLoader from "../../components/BTNLoader";
 import QuantitySelector from "../../components/QuantitySelector ";
@@ -17,6 +17,7 @@ import emptycart from "../../assets/images/cart-empty.png";
 import GlossEffect from "../../components/GlossEffect";
 import TexturePicker from "../../components/TexturePicker";
 import SelectableButtons from "../../components/SelectableButtons";
+import { APICALL } from "../../helper/api/api";
 const Cart = () => {
   const navigate = useNavigate()
   const { contextLoader, getCartListFun, cartList, addToCartFun, gelatoPriceArr } = useFrontDataContext();
@@ -49,8 +50,8 @@ const Cart = () => {
   }
 
   const [show, setShow] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const handleClose = () => setShow(false);
+  const [loading, setLoading] = useState(false);
+
   const [editItemObj, setEditItemObj] = useState(null)
   const [brightness, setBrightness] = useState(1)
   const [frameTexture, setFrameTexture] = useState(null);
@@ -60,6 +61,7 @@ const Cart = () => {
     setEditItemObj(item)
   }
 
+
   const [artDetails, setArtDetails] = useState({
     price: 0,
     product_price: 0,
@@ -68,40 +70,54 @@ const Cart = () => {
   })
 
   const [selectedOptions, setSelectedOptions] = useState({
-    frame: "No Frame",
-    quality: "Museum-Quality Matte",
-    size: '13x18 cm / 5x7"',
+    frame: "",
+    quality: "",
+    size: '',
+    frameType: '',
+    assembly:'',
     affiliateId: ""
   });
 
+  const handleClose = () => {
+    setEditItemObj(null)
+    setShow(false);
+    setArtDetails({
+      ...artDetails, price: 0, product_price: 0, qnt: 1, uid: null
+    })
+    setSelectedOptions({
+      ...selectedOptions, frame: '', quality: '', size: '', affiliateId: ''
+    })
+  }
+
   const brightnessOptions = [
-    { label: 'Matte', value: 1, url: '', 'Museum-Quality Matte': '250-gsm-100lb-uncoated-offwhite-archival', type:  'Museum-Quality Matte'},
+    { label: 'Matte', value: 1, url: '', 'Museum-Quality Matte': '250-gsm-100lb-uncoated-offwhite-archival', type: 'Museum-Quality Matte' },
     { label: 'Glossy', value: 1.25, url: '', 'Premium Semi-Glossy': '200-gsm-80lb-coated-silk', type: 'Premium Semi-Glossy' }
   ];
 
   const texturesOptions = [
     { name: 'black', url: 'https://wallpaperaccess.com/full/173805.jpg', color: 'Black' },
-    { name: 'white', url: whiteframe , color: 'White' },
-    { name: 'wood', url: 'https://tse4.mm.bing.net/th?id=OIP.jdVkhxiOxZLMSNu5hFgTTQHaE8&pid=Api&P=0&h=220' , color: 'Wood' },
+    { name: 'white', url: whiteframe, color: 'White' },
+    { name: 'wood', url: 'https://tse4.mm.bing.net/th?id=OIP.jdVkhxiOxZLMSNu5hFgTTQHaE8&pid=Api&P=0&h=220', color: 'Wood' },
   ];
 
   useEffect(() => {
     if (editItemObj) {
+      console.log("1",editItemObj)
       setSelectedOptions({
-        ...selectedOptions, frame: editItemObj?.frame, quality: editItemObj?.quality, size: editItemObj?.size, affiliateId: editItemObj?.affiliateId
+        ...selectedOptions, frame: editItemObj?.frame, frameType: editItemObj?.frameType,assembly: editItemObj?.assembly, quality: editItemObj?.quality, size: editItemObj?.size, affiliateId: editItemObj?.affiliateId
       })
       setArtDetails({
         ...artDetails, price: editItemObj?.row_uid?.price, qnt: editItemObj?.quantity, uid: editItemObj?.row_uid?.productUid
       })
+      getPriceFun(editItemObj?.row_uid?.productUid)
 
       const brightnessRes = brightnessOptions.find(option => option.type?.toLocaleLowerCase() == editItemObj?.quality?.toLocaleLowerCase());
-      console.log("brightness111111111", brightnessRes)
       setBrightness(brightnessRes?.value)
 
       const textures = texturesOptions.find(option => option.name?.toLocaleLowerCase() === editItemObj?.frameType?.toLocaleLowerCase());
       setFrameTexture(textures?.url)
     }
-  }, [editItemObj?._id])
+  }, [editItemObj])
 
   const canvasQntChange = (qnt, product_id) => {
     setArtDetails({ ...artDetails, qnt: qnt })
@@ -200,28 +216,46 @@ const Cart = () => {
         setUid(newUid || 'No matching UID found');
         getPriceFun(newUid)
       } else {
-        setUid('Please select all required options 1');
+        setUid(artDetails?.uid);
       }
     } else {
       setUid('Please select all required options 2');
     }
-  }, [selectedOptions]);
+  }, [selectedOptions, editItemObj]);
 
   const getPriceFun = (uid) => {
     const res = gelatoPriceArr?.find((item) => item.productUid == uid);
+    console.log("GELETOFUNC",res)
     if (res) {
-      const price = (parseInt(res?.price)) * artDetails?.qnt
+      const price = parseInt(res?.price)
       setArtDetails({ ...artDetails, 'product_price': price, 'uid': res?.test_id || res?.productUid, price: parseInt(res?.price) })
     }
   };
 
 
-
-  const editCartItem = () => {
-    console.log("artDetails", artDetails)
+  const editCartItem = async () => {
+    setLoading(true)
+    const params = {
+      "product_id": editItemObj?.product_id?._id,
+      "cartItemId": editItemObj?._id,
+      "quantity": artDetails?.qnt,
+      "puid": uid,
+      ...selectedOptions
+    }
+    try {
+      const res = await APICALL('/user/updateCartItem', 'post', params)
+      if(res?.status){
+        getCartListFun()
+        handleClose()
+      }
+    } catch (error) {
+      console.log(error)
+    }finally{
+      setLoading(false)
+    }
   }
 
-  console.log("editItemObj", editItemObj)
+  console.log("selectedOptions", selectedOptions)
   // console.log("selectedOptions", selectedOptions)
   // console.log("uid", uid)
   const canvasRef = useRef(null);
@@ -231,7 +265,7 @@ const Cart = () => {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return; 
+    if (!ctx) return;
 
     const img = new Image();
     ctx.filter = `brightness(${brightness})`;
@@ -242,15 +276,15 @@ const Cart = () => {
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
       // if (frameTexture) {
-        const frameImg = new Image();
-        frameImg.src = frameTexture;
+      const frameImg = new Image();
+      frameImg.src = frameTexture;
 
-        frameImg.onload = () => {
-          const pattern = ctx.createPattern(frameImg, 'repeat');
-          ctx.lineWidth = 30;
-          ctx.strokeStyle = pattern;
-          ctx.strokeRect(0, 0, canvas.width, canvas.height);
-        };
+      frameImg.onload = () => {
+        const pattern = ctx.createPattern(frameImg, 'repeat');
+        ctx.lineWidth = 30;
+        ctx.strokeStyle = pattern;
+        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+      };
       // }
     };
   }, [frameTexture, brightness, editItemObj?._id]);
@@ -377,7 +411,7 @@ const Cart = () => {
                 ></canvas>
               </div>
               <div className="img-box">
-                <p>${artDetails?.price}</p>
+                <p>${artDetails?.product_price} per item</p>
               </div>
 
               <div className="mt-3">
@@ -387,7 +421,7 @@ const Cart = () => {
 
               <div className="mt-3">
                 <span>Product type</span>
-                <GlossEffect onBrightnessChange={handleBrightnessChange} light={brightness}/>
+                <GlossEffect onBrightnessChange={handleBrightnessChange} light={brightness} />
               </div>
 
               <div className="mt-3">
@@ -410,21 +444,21 @@ const Cart = () => {
 
               <div className="mt-3">
                 <span>Product type</span>
-                <TexturePicker onTextureSelect={handleTextureSelect} url={frameTexture}/>
+                <TexturePicker onTextureSelect={handleTextureSelect} url={frameTexture} />
               </div>
 
               {selectedOptions.frame === 'With Frame' && (
                 <>
                   <p className="typehed mb-0 mt-3">Assembly</p>
                   <div className="add_frame">
-                    <SelectableButtons onSelect={handleSelect} url={frameTexture}/>
+                    <SelectableButtons onSelect={handleSelect} url={frameTexture} select={selectedOptions?.assembly}/>
                   </div>
                 </>
               )}
-
-
-
+              {
+                loading ? <BTNLoader className="global_btn  w-100 mt-3"/> :
               <button type="button" className="global_btn  w-100 mt-3" onClick={() => editCartItem()}>Save</button>
+              }
             </div>
           </Offcanvas.Body>
         </Offcanvas>

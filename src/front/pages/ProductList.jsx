@@ -129,7 +129,7 @@ const ProductList = () => {
       <div className="sortlist_product mb-4">
         <Container>
           <Row className="align-items-center ">
-            <Col md={6}>
+            {/* <Col md={6}>
               <div className="breadcrumbs">
                 <ul className="m-0 p-0">
                   <li>
@@ -149,8 +149,8 @@ const ProductList = () => {
                   }
                 </ul>
               </div>
-            </Col>
-            <Col md={6} className="text-end">
+            </Col> */}
+            <Col md={12} className="text-end">
               <div className="filter_mobile_menu ">
                 <div class="main_select me-3">
                   <select onChange={handleFilterChange}>

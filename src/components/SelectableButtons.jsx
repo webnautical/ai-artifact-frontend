@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-const SelectableButtons = ({ onSelect }) => {
-  const [selectedButton, setSelectedButton] = useState('Ready-to-hang');
+const SelectableButtons = ({ onSelect, select }) => {
+  const [selectedButton, setSelectedButton] = useState(select || 'Ready-to-hang');
 
   const handleButtonClick = (button,button2) => {
     setSelectedButton(button);

@@ -81,13 +81,13 @@ const dashboard = {
           url: `categories-list`,
           breadcrumbs: false
         },
-        {
-          id: "Collection",
-          title: "Collection",
-          type: "item",
-          url: `collection`,
-          breadcrumbs: false,
-        },
+        // {
+        //   id: "Collection",
+        //   title: "Collection",
+        //   type: "item",
+        //   url: `collection`,
+        //   breadcrumbs: false,
+        // },
         {
           id: "Reviews",
           title: "Reviews",

@@ -18,8 +18,7 @@ const ArtWorkUpload = () => {
     getCategoryFun,
     getSubCategoryFun,
     subCategoryList,
-    getCollectionFun,
-    collectionList,
+    // getCollectionFun,
     getDirectoryFun,
     directoryList,
   } = useDataContext();
@@ -30,7 +29,8 @@ const ArtWorkUpload = () => {
   const navigate = useNavigate();
   useEffect(() => {
     getCategoryFun();
-    getCollectionFun();
+    // getCollectionFun();
+    getDirectoryFun()
   }, []);
   const initialFormData = {
     productId: "",
@@ -39,7 +39,6 @@ const ArtWorkUpload = () => {
     description: "",
     category: "",
     subcategory: "",
-    collectionId: "",
     directoryId: "",
     directoryName: "",
   };
@@ -52,7 +51,6 @@ const ArtWorkUpload = () => {
     description: "",
     category: "",
     subcategory: "",
-    collectionId: "",
     directoryId: "",
     directoryName: "",
   });
@@ -67,13 +65,11 @@ const ArtWorkUpload = () => {
         description: artData?.description,
         category: artData?.category?._id,
         subcategory: artData?.subcategory?._id,
-        collectionId: artData?.collectionId?._id,
         directoryId: artData?.directoryId,
         directoryName: artData?.directoryName,
       });
       setImgPreview({ ...imgPreview, image: imgBaseURL() + artData?.image });
       getSubCategoryFun(artData?.category?._id);
-      getDirectoryFun(artData?.collectionId?._id);
     } else {
       setFormData({
         ...formData,
@@ -83,7 +79,6 @@ const ArtWorkUpload = () => {
         description: "",
         category: "",
         subcategory: "",
-        collectionId: "",
         directoryId: "",
         directoryName: "",
       });
@@ -197,13 +192,7 @@ const ArtWorkUpload = () => {
         ...prevData,
         ["category"]: e.target.value,
       }));
-    } else if (e.target.name === "collectionId") {
-      getDirectoryFun(e.target.value);
-      setFormData((prevData) => ({
-        ...prevData,
-        ["collectionId"]: e.target.value,
-      }));
-    } else {
+    }else {
       setFormData((prevData) => ({
         ...prevData,
         [e.target.name]: e.target.value,
@@ -229,7 +218,7 @@ const ArtWorkUpload = () => {
   const [addUpdateApiCallCount, setAddUpdateApiCallCount] = useState(0);
   const validateFun = () => {
     setAddUpdateApiCallCount(addUpdateApiCallCount + 1);
-    const { image, title, category, subcategory, collectionId } = formData;
+    const { image, title, category, subcategory } = formData;
 
     if (image.length == 0) {
       setError((prevValues) => {
@@ -270,26 +259,16 @@ const ArtWorkUpload = () => {
         return { ...prevValues, ["subcategory"]: true };
       });
     }
-
-    if (collectionId.trim() == "") {
-      setError((prevValues) => {
-        return { ...prevValues, ["collectionId"]: "Required *" };
-      });
-    } else {
-      setError((prevValues) => {
-        return { ...prevValues, ["collectionId"]: true };
-      });
-    }
   };
 
-  const { title, category, subcategory, collectionId, image } = error;
+  const { title, category, subcategory, image } = error;
   useEffect(() => {
     if (
       (image === true,
         title === true,
         category === true,
-        subcategory === true,
-        collectionId === true)
+        subcategory === true
+      )
     ) {
       handleSubmit();
     }
@@ -298,7 +277,6 @@ const ArtWorkUpload = () => {
     title,
     category,
     subcategory,
-    collectionId,
     image,
   ]);
 
@@ -312,7 +290,6 @@ const ArtWorkUpload = () => {
       params.append("description", formData.description);
       params.append("category", formData.category);
       params.append("subcategory", formData.subcategory);
-      params.append("collectionId", formData.collectionId);
       params.append("directoryId", formData.directoryId);
       params.append("directoryName", formData.directoryName);
       const apiEnd = formData?.productId ? "updateProduct" : "addProduct";
@@ -329,7 +306,12 @@ const ArtWorkUpload = () => {
         setUploadProgress(0);
         setImgPreview({ ...imgPreview, image: "" });
         setLoading({ ...loading, submit: false });
-        navigate("/admin/artworks");
+        console.log("resARRRRRRRRRRRRRRR", res)
+        const params = {
+          name: res?.data?.directoryId?.name,
+          _id : res?.data?.directoryId?._id
+        }
+        navigate("/admin/artworks", {state: {params}});
       } else {
         swal({
           title: SOMETHING_ERR,
@@ -487,22 +469,6 @@ const ArtWorkUpload = () => {
               ))}
             </Form.Select>
             <span className="errmsg">{error.subcategory}</span>
-          </Col>
-
-          <Col md={4}>
-            <Form.Label>Collection</Form.Label>
-            <Form.Select
-              aria-label="Default select example"
-              name="collectionId"
-              value={formData.collectionId}
-              onChange={handleChange}
-            >
-              <option value="1">Select Collection</option>
-              {collectionList?.map((item, i) => (
-                <option value={item._id}>{item?.name}</option>
-              ))}
-            </Form.Select>
-            <span className="errmsg">{error.collectionId}</span>
           </Col>
 
           <Col md={4}>

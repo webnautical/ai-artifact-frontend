@@ -24,8 +24,10 @@ import {
 } from "../../../helper/Constant";
 import "../../../App.css";
 import { StatusBtn } from "../../../components/StatusBtn";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 const ArtList = () => {
+    const locationData = useLocation()
+    const locationDataOBJ = locationData?.state ? locationData?.state?.params : null
     const navigate = useNavigate()
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
@@ -36,6 +38,13 @@ const ArtList = () => {
     useEffect(() => {
         getDirectoryWiseArtworkFun()
     }, []);
+
+    useEffect(() =>{
+        if(locationDataOBJ){
+            setTable(locationDataOBJ)
+            getListFun(locationDataOBJ?._id)
+        }
+    },[locationDataOBJ])
 
     const getListFun = async (directory_id) => {
         setListLoading(true);
@@ -92,6 +101,7 @@ const ArtList = () => {
     }
 
     const showTable = (item) => {
+        console.log("item", item)
         setTable(item)
         getListFun(item?._id)
     }
@@ -152,7 +162,10 @@ const ArtList = () => {
                                                                     <TableCell>{row.title}</TableCell>
                                                                     <TableCell>{row?.category?.name}</TableCell>
                                                                     <TableCell>{row?.subcategory?.name}</TableCell>
-                                                                    <TableCell> {<StatusBtn btnName={row?.status ? "Approved" : "Pending"} status={row.status} />}
+                                                                    <TableCell> {<StatusBtn btnName={
+                                                                        row?.rejectStatus === 1 ? "Rejected" :
+                                                                            row?.status ? "Approved" : "Pending"
+                                                                    } status={row.status} rejectStatus={row.rejectStatus} />}   
                                                                     </TableCell>
                                                                     <TableCell>{timeAgo(row.createdAt)}</TableCell>
                                                                     <TableCell align="right">

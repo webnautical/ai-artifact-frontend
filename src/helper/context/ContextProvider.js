@@ -55,24 +55,23 @@ export const ContextProvider = ({ children }) => {
         }
     }
 
-    const getCollectionFun = async (id) => {
-        const params = { id: id }
-        try {
-            const res = await APICALL('admin/getAllCollections', 'post', params)
-            if (res?.status) {
-                setCollectionList(res?.data)
-            } else {
-                setCollectionList(null)
-            }
-        } catch (error) {
-            setCollectionList(null)
-        }
-    }
+    // const getCollectionFun = async (id) => {
+    //     const params = { id: id }
+    //     try {
+    //         const res = await APICALL('admin/getAllCollections', 'post', params)
+    //         if (res?.status) {
+    //             setCollectionList(res?.data)
+    //         } else {
+    //             setCollectionList(null)
+    //         }
+    //     } catch (error) {
+    //         setCollectionList(null)
+    //     }
+    // }
 
-    const getDirectoryFun = async (id) => {
-        const params = { collectionId: id }
+    const getDirectoryFun = async () => {
         try {
-            const res = await APICALL('artist/getDirectoryByCollections', 'post', params)
+            const res = await APICALL('artist/getartistDirectories', 'post', {})
             if (res?.status) {
                 setDirectoryList(res?.data)
             } else {
@@ -88,7 +87,7 @@ export const ContextProvider = ({ children }) => {
             getPermision, permisionData,
             getCategoryFun, categoryList,
             getSubCategoryFun, subCategoryList,
-            getCollectionFun, collectionList,
+            // getCollectionFun, collectionList,
             getDirectoryFun, directoryList,
         }}>
             {children}

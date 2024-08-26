@@ -253,29 +253,34 @@ const Home = () => {
                           <div className="item">
                             <div className="main_baught_list_box">
                               {item?.lists?.map((art, i) => (
-                                <Link to={`/product-details/${art?.productId?._id}`} className="baought_list mt-2">
-                                  <Row>
-                                    <Col md={5} sm={5} xs={5}>
-                                      <div className="baught_img">
+                                <Row>
+                                  <Col md={5} sm={5} xs={5}>
+                                    <div className="baught_img">
+                                      <Link to={`/product-details/${art?.productId?._id}`} className="baought_list mt-2">
                                         <img
                                           className="list_tumb w-100"
                                           src={imgBaseURL() + art?.productId?.thumbnail}
                                           alt="poster-img"
                                         />
-                                      </div>
-                                    </Col>
-                                    <Col md={7} sm={7} xs={7} className="p-0">
-                                      <div className="sub_tittle">{art?.productId?.collectionId?.name}</div>
+                                      </Link>
+
+                                    </div>
+                                  </Col>
+                                  <Col md={7} sm={7} xs={7} className="p-0">
+                                    <div className="sub_tittle"><Link to={`/collection/${art?.artistId?._id}/${art?.productId?.directoryId?._id}`}>{art?.productId?.directoryId?.name}</Link></div>
+
+                                    <Link to={`/product-details/${art?.productId?._id}`} className="baought_list mt-2">
                                       <h3>{art?.productId?.title}</h3>
-                                      <div className="tiear_stauts_name d-flex align-items-center">
-                                        <span className="me-2">
-                                          <img src={badgebronze} alt="badge" />
-                                        </span>
-                                        <div className="name text-capitalize">{art?.artistId?.first_name + " " + art?.artistId?.last_name}</div>
-                                      </div>
-                                    </Col>
-                                  </Row>
-                                </Link>
+                                    </Link>
+
+                                    <div className="tiear_stauts_name d-flex align-items-center">
+                                      <span className="me-2">
+                                        <img src={badgebronze} alt="badge" />
+                                      </span>
+                                      <Link to={`/collection/${art?.artistId?._id}`}><div className="name text-capitalize">{art?.artistId?.first_name + " " + art?.artistId?.last_name}</div></Link>
+                                    </div>
+                                  </Col>
+                                </Row>
                               ))}
                             </div>
                           </div>
@@ -966,12 +971,12 @@ const Home = () => {
               blogList?.length > 0 &&
               blogList?.map((item, i) => (
                 <div className="item">
-                
-                    <div className="blog_box">
+
+                  <div className="blog_box">
 
                     <button onClick={() => viewBlogDetails(item)}>
                       <div className="blog_img">
-                        <img className="w-100" src={ imgBaseURL() + item?.image } alt="blog-img" />
+                        <img className="w-100" src={imgBaseURL() + item?.image} alt="blog-img" />
                       </div>
 
                       <div className="d-flex align-items-center justify-content-between mt-4 mb-2">
@@ -995,21 +1000,21 @@ const Home = () => {
                         </div>
                       </div>
 
-                      <div className="d-flex"><HTMLContent data={item?.content.slice(0, 70)}/> </div>
+                      <div className="d-flex"><HTMLContent data={item?.content.slice(0, 70)} /> </div>
 
                       <div
                         className="user_details d-flex align-items-center "
                         style={{ gap: "10px" }}
                       >
-                       
+
                         <div>
                           <h2>By Admin</h2>
                           <p>{timeAgo(item?.createdAt)}</p>
                         </div>
                       </div>
-                      </button>
-                    </div>
-         
+                    </button>
+                  </div>
+
                 </div>
               ))
             }
