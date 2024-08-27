@@ -51,6 +51,7 @@ const MyAddress = () => {
         try {
             const res = await APICALL('/user/userData', 'post', { id: auth('customer')?.id })
             if (res?.status) {
+                console.log("res", res)
                 setUserDetails(res?.user)
                 setLoading(false)
             } else {
@@ -88,15 +89,6 @@ const MyAddress = () => {
         validate(name, value);
     };
 
-    const isFormFilled = () => {
-        for (const key in value) {
-            if (value[key] === '') {
-                return false;
-            }
-        }
-        return true;
-    };
-
     const updateUserDetails = async (e) => {
         e.preventDefault()
         setSubmitLoading(true)
@@ -114,10 +106,6 @@ const MyAddress = () => {
             setSubmitLoading(false)
         }
     }
-
-    console.log("value",value)
-
-    console.log("userDetails", userDetails)
     return (
         <>
             {
@@ -164,8 +152,9 @@ const MyAddress = () => {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Country"
-                                                value={userDetails?.country}
-                                                disabled
+                                                name='country'
+                                                value={value?.country}
+                                                onChange={handleChange}
                                             />
                                         </Form.Group>
                                     </Col>
@@ -175,8 +164,9 @@ const MyAddress = () => {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="State"
-                                                value={userDetails?.state}
-                                                disabled
+                                                name='state'
+                                                value={value?.state}
+                                                onChange={handleChange}
                                             />
                                         </Form.Group>
                                     </Col>
@@ -231,13 +221,13 @@ const MyAddress = () => {
                                                 </Button>
                                                 :
                                                 <>
-                                                    {
-                                                        isFormFilled() ?
+                                                    {/* {
+                                                        isFormFilled() ? */}
                                                             <Button className="global_btn" type="submit" block>Save Changes</Button>
-                                                            :
+                                                            {/* :
                                                             <Button className="global_btn" type="button" block disabled>Save Changes</Button>
 
-                                                    }
+                                                    } */}
                                                 </>
                                         }
                                     </Col>

@@ -74,7 +74,7 @@ const Cart = () => {
     quality: "",
     size: '',
     frameType: '',
-    assembly:'',
+    assembly: '',
     affiliateId: ""
   });
 
@@ -84,9 +84,9 @@ const Cart = () => {
     setArtDetails({
       ...artDetails, price: 0, product_price: 0, qnt: 1, uid: null
     })
-    setSelectedOptions({
-      ...selectedOptions, frame: '', quality: '', size: '', affiliateId: ''
-    })
+    // setSelectedOptions({
+    //   ...selectedOptions, frame: '', quality: '', size: '', affiliateId: ''
+    // })
   }
 
   const brightnessOptions = [
@@ -102,9 +102,8 @@ const Cart = () => {
 
   useEffect(() => {
     if (editItemObj) {
-      console.log("1",editItemObj)
       setSelectedOptions({
-        ...selectedOptions, frame: editItemObj?.frame, frameType: editItemObj?.frameType,assembly: editItemObj?.assembly, quality: editItemObj?.quality, size: editItemObj?.size, affiliateId: editItemObj?.affiliateId
+        ...selectedOptions, frame: editItemObj?.frame, frameType: editItemObj?.frameType, assembly: editItemObj?.assembly, quality: editItemObj?.quality, size: editItemObj?.size, affiliateId: editItemObj?.affiliateId
       })
       setArtDetails({
         ...artDetails, price: editItemObj?.row_uid?.price, qnt: editItemObj?.quantity, uid: editItemObj?.row_uid?.productUid
@@ -117,7 +116,7 @@ const Cart = () => {
       const textures = texturesOptions.find(option => option.name?.toLocaleLowerCase() === editItemObj?.frameType?.toLocaleLowerCase());
       setFrameTexture(textures?.url)
     }
-  }, [editItemObj])
+  }, [editItemObj, show])
 
   const canvasQntChange = (qnt, product_id) => {
     setArtDetails({ ...artDetails, qnt: qnt })
@@ -221,11 +220,10 @@ const Cart = () => {
     } else {
       setUid('Please select all required options 2');
     }
-  }, [selectedOptions, editItemObj]);
+  }, [selectedOptions, editItemObj, show]);
 
   const getPriceFun = (uid) => {
     const res = gelatoPriceArr?.find((item) => item.productUid == uid);
-    console.log("GELETOFUNC",res)
     if (res) {
       const price = parseInt(res?.price)
       setArtDetails({ ...artDetails, 'product_price': price, 'uid': res?.test_id || res?.productUid, price: parseInt(res?.price) })
@@ -244,50 +242,56 @@ const Cart = () => {
     }
     try {
       const res = await APICALL('/user/updateCartItem', 'post', params)
-      if(res?.status){
+      if (res?.status) {
         getCartListFun()
         handleClose()
       }
     } catch (error) {
       console.log(error)
-    }finally{
+    } finally {
       setLoading(false)
     }
   }
 
-  console.log("selectedOptions", selectedOptions)
-  // console.log("selectedOptions", selectedOptions)
-  // console.log("uid", uid)
+  
   const canvasRef = useRef(null);
-
+  
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (selectedOptions) {
+      console.log("selectedOptions", selectedOptions)
+      const canvas = canvasRef.current;
+      if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    const img = new Image();
-    ctx.filter = `brightness(${brightness})`;
-    img.src = imgBaseURL() + editItemObj?.product_id?.image;
+      const img = new Image();
+      // ctx.filter = `brightness(${brightness})`;
+      img.src = imgBaseURL() + editItemObj?.product_id?.image;
 
-    img.onload = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      img.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.filter = `brightness(${brightness})`;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      // if (frameTexture) {
-      const frameImg = new Image();
-      frameImg.src = frameTexture;
+        if (frameTexture) {
+          const frameImg = new Image();
+          frameImg.src = frameTexture;
 
-      frameImg.onload = () => {
-        const pattern = ctx.createPattern(frameImg, 'repeat');
-        ctx.lineWidth = 30;
-        ctx.strokeStyle = pattern;
-        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+          frameImg.onload = () => {
+            const pattern = ctx.createPattern(frameImg, 'repeat');
+            ctx.lineWidth = 30;
+            ctx.strokeStyle = pattern;
+            ctx.strokeRect(0, 0, canvas.width, canvas.height);
+          };
+        }
+        return () => {
+          img.onload = null;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        };
       };
-      // }
-    };
-  }, [frameTexture, brightness, editItemObj?._id]);
+    }
+  }, [frameTexture, brightness, editItemObj, show, selectedOptions]);
 
   return (
     <>
@@ -451,13 +455,13 @@ const Cart = () => {
                 <>
                   <p className="typehed mb-0 mt-3">Assembly</p>
                   <div className="add_frame">
-                    <SelectableButtons onSelect={handleSelect} url={frameTexture} select={selectedOptions?.assembly}/>
+                    <SelectableButtons onSelect={handleSelect} url={frameTexture} select={selectedOptions?.assembly} />
                   </div>
                 </>
               )}
               {
-                loading ? <BTNLoader className="global_btn  w-100 mt-3"/> :
-              <button type="button" className="global_btn  w-100 mt-3" onClick={() => editCartItem()}>Save</button>
+                loading ? <BTNLoader className="global_btn  w-100 mt-3" /> :
+                  <button type="button" className="global_btn  w-100 mt-3" onClick={() => editCartItem()}>Save</button>
               }
             </div>
           </Offcanvas.Body>

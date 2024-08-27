@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import sliderbanner from "../../assets/images/sliderbanner.png";
+import sliderbannertwo from "../../assets/images/bannertwo.webp";
 // import baughtlistnew from "../../assets/images/baughtlisttwo.png";
 
 // import baughtlisttwo from "../../assets/images/baughtlist.png";
@@ -75,6 +76,7 @@ const Home = () => {
   useEffect(() => {
     getProductListFun()
     getHeaderContent()
+    getBlogFun()
     getCategoryFun()
     getHomePageData()
   }, [])
@@ -85,7 +87,7 @@ const Home = () => {
 
   const knowledgebaseowl = {
     loop: true,
-    autoplay: true,
+    autoplay: false,
     autoplaySpeed: 100,
     margin: 30,
     dots: false,
@@ -168,6 +170,40 @@ const Home = () => {
   };
 
 
+  const heroslider = {
+    loop: false,
+    autoplay: false,
+    autoplaySpeed: 100,
+    margin: 30,
+    dots: false,
+    nav: true,
+    responsiveClass: true,
+    infinite: true,
+    speed: 100,
+    navText: [
+      '<i class="fas fa-chevron-left"></i>',
+      '<i class="fas fa-chevron-right"></i>',
+    ], // Custom Font Awesome arrows
+
+    responsive: {
+      0: {
+        items: 1,
+        margin: 0,
+      },
+      600: {
+        items: 1,
+        margin: 10,
+      },
+      1000: {
+        items: 1,
+
+        // loop: true,
+      },
+    },
+  };
+
+
+
   const owlCarouselRef = useRef(null);
 
   const handlePrev = () => {
@@ -207,8 +243,12 @@ const Home = () => {
     const popularCollectionRes = await APICALL('user/getpopularCollection', 'post', {})
     if (popularCollectionRes?.status) { setPopularCollection(popularCollectionRes?.data) } else { setPopularCollection([]) }
 
+    
+  }
+
+  const getBlogFun = async () => {
     const blogsRes = await APICALL('admin/allBlogs', 'post', {})
-    if (blogsRes?.status) { setBlogList(blogsRes?.data) } else { setBlogList([]) }
+      if (blogsRes?.status) { setBlogList(blogsRes?.data) } else { setBlogList([]) }
   }
 
   const viewBlogDetails = (item) => {
@@ -223,18 +263,33 @@ const Home = () => {
             <Container>
               <Row>
                 <Col lg={8}>
-                  <div className="slider_big" >
-                    <img className="w-100 full zoom" src={sliderbanner} alt="slider-img" />
-                    <div className="cnt_slider">
-                      <div className="sub_tittle">Inspirations</div>
-                      <h2>Passion revealed, space elevated</h2>
-                      <button className="global_btn">View More</button>
+                  <OwlCarousel className=" owl-theme" {...heroslider} ref={owlCarouselRef}>
+                    <div className="item">
+                      <div className="slider_big" >
+                        <img className="w-100 full zoom" src={sliderbanner} alt="slider-img" />
+                        <div className="cnt_slider">
+                          <div className="sub_tittle">Inspirations</div>
+                          <h2>Passion revealed, space elevated</h2>
+                          <button className="global_btn">View More</button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+
+                    <div className="item">
+                      <div className="slider_big" >
+                        <img className="w-100 full zoom" src={sliderbannertwo} alt="slider-img" />
+                        <div className="cnt_slider">
+
+                          <h2>Passion revealed, space elevated</h2>
+                          <button className="global_btn">View More</button>
+                        </div>
+                      </div>
+                    </div>
+                  </OwlCarousel>
                 </Col>
 
                 <Col lg={4} >
-                  <div className="just_bought global_card mt-5">
+                  <div className="just_bought global_card">
                     <div className="d-flex justify-content-between align-items-center">
                       <h1>Just Bought !</h1>
                       <div className="cs_btn">
@@ -251,12 +306,12 @@ const Home = () => {
                       {
                         justBought?.map((item, i) => (
                           <div className="item">
-                            <div className="main_baught_list_box">
-                              {item?.lists?.map((art, i) => (
+                            {item?.lists?.map((art, i) => (
+                              <div className="main_baught_list_box">
                                 <Row>
                                   <Col md={5} sm={5} xs={5}>
                                     <div className="baught_img">
-                                      <Link to={`/product-details/${art?.productId?._id}`} className="baought_list mt-2">
+                                      <Link to={`/product-details/${art?.productId?._id}`} className="baought_list">
                                         <img
                                           className="list_tumb w-100"
                                           src={imgBaseURL() + art?.productId?.thumbnail}
@@ -269,7 +324,7 @@ const Home = () => {
                                   <Col md={7} sm={7} xs={7} className="p-0">
                                     <div className="sub_tittle"><Link to={`/collection/${art?.artistId?._id}/${art?.productId?.directoryId?._id}`}>{art?.productId?.directoryId?.name}</Link></div>
 
-                                    <Link to={`/product-details/${art?.productId?._id}`} className="baought_list mt-2">
+                                    <Link to={`/product-details/${art?.productId?._id}`} className="baought_list">
                                       <h3>{art?.productId?.title}</h3>
                                     </Link>
 
@@ -281,8 +336,9 @@ const Home = () => {
                                     </div>
                                   </Col>
                                 </Row>
-                              ))}
-                            </div>
+                              </div>
+                            ))}
+
                           </div>
                         ))
                       }
