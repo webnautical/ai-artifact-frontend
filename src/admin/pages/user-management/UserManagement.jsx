@@ -4,8 +4,6 @@ import { APICALL } from "../../../helper/api/api";
 import { useEffect, useState } from "react";
 import {
   Box,
-  Button,
-  CircularProgress,
   IconButton,
   Table,
   TableBody,
@@ -16,11 +14,7 @@ import {
   TablePagination,
   TableRow,
   TextField,
-  Typography,
   Paper,
-  capitalize,
-  InputAdornment,
-  OutlinedInput,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
@@ -29,13 +23,15 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import "../../../assets/css/admin.css";
 import AdminLoader from "../../components/AdminLoader";
-import { Dropdown, FormControl } from "react-bootstrap";
-import { Delete, Edit, MoreVert, SearchOutlined } from "@mui/icons-material";
 import { useDataContext } from './../../../helper/context/ContextProvider';
 import TableMSG from "../../../components/TableMSG";
 import { filterByKey } from "../../../helper/Utility";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from './../../../helper/Constant';
 import { useParams } from "react-router";
+import { Dropdown } from "react-bootstrap";
+import { Edit, MoreVert } from "@mui/icons-material";
+import { EyeFilled } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
 function TablePaginationActions(props) {
 
@@ -160,7 +156,6 @@ export default function UserManagement() {
       user.last_name.toLowerCase().includes(search.toLowerCase()) ||
       user.email.toLowerCase().includes(search.toLowerCase())
   );
-
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredList.length) : 0;
 
   return (
@@ -180,8 +175,6 @@ export default function UserManagement() {
           onChange={handleSearchChange}
           style={{ width: "300px" }}
         />
-
-        {/* <Button className="artist-btn" >Add User </Button> */}
       </div>
       {loading ? (
         <AdminLoader />
@@ -200,7 +193,7 @@ export default function UserManagement() {
                       <TableCell>Assigned Roles</TableCell>
                       {/* <TableCell>Status (Active/Inactive)</TableCell> */}
                       {/* <TableCell>Date</TableCell> */}
-                      {/* <TableCell>Action</TableCell> */}
+                      <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <>
@@ -228,23 +221,20 @@ export default function UserManagement() {
                           {/* <TableCell>{row.status}</TableCell> */}
 
                           {/* <TableCell>{timeAgo(row.created_at)}</TableCell> */}
-                          {/* <TableCell>
+                          <TableCell>
                             <Dropdown className="dorpdown-curtom">
                               <Dropdown.Toggle as={IconButton} variant="link">
                                 <MoreVert />
                               </Dropdown.Toggle>
                               <Dropdown.Menu>
-                                <Dropdown.Item href="#">
-                                  <Edit style={{ marginRight: "8px" }} />
-                                  Edit
-                                </Dropdown.Item>
-                                <Dropdown.Item href="#">
-                                  <Delete style={{ marginRight: "8px" }} />
-                                  Delete
+                                <Dropdown.Item>
+                                  <Link  to={`/admin/user-management-details/${row?._id}`}>
+                                  <EyeFilled style={{ marginRight: "8px" }} />Views Details
+                                  </Link>
                                 </Dropdown.Item>
                               </Dropdown.Menu>
                             </Dropdown>
-                          </TableCell> */}
+                          </TableCell>
                         </TableRow>
                       ))}
                       {emptyRows > 0 && (

@@ -17,7 +17,10 @@ import { APICALL } from "../../helper/api/api";
 import { auth, timeAgo } from "../../helper/Utility";
 import AdminLoader from "../components/AdminLoader";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../helper/Constant";
+import { useNotificationHandler } from "../../helper/api/RepeaterAPI";
 const Notifications = () => {
+    const handleNotificationClick = useNotificationHandler();
+
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_PER_PAGE);
@@ -116,7 +119,11 @@ const Notifications = () => {
                                                         {sortedData
                                                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                                             .map((row, index) => (
-                                                                <TableRow key={index}>
+                                                                <TableRow
+                                                                    key={index}
+                                                                    onClick={() => { handleNotificationClick(row) }}
+                                                                    style={{ cursor: 'pointer', background: row?.status === "unread" ? "#E8FFE7": "" }}
+                                                                >
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     {
                                                                         auth('admin')?.user_role === 'admin' &&

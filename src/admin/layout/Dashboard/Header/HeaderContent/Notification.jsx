@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-// material-ui
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Avatar from "@mui/material/Avatar";
@@ -27,7 +26,6 @@ import { APICALL } from '../../../../../helper/api/api'
 import { auth, timeAgo } from "../../../../../helper/Utility";
 import { useNavigate } from "react-router";
 import { useNotificationHandler } from "../../../../../helper/api/RepeaterAPI";
-// sx styles
 const avatarSX = {
   width: 36,
   height: 36,
@@ -44,8 +42,6 @@ const actionSX = {
   transform: "none",
 };
 
-// ==============================|| HEADER CONTENT - NOTIFICATION ||============================== //
-
 export default function Notification() {
   const [data, setData] = useState([])
   const navigate = useNavigate()
@@ -57,6 +53,7 @@ export default function Notification() {
   const [read, setRead] = useState(2);
   const [open, setOpen] = useState(false);
   const handleToggle = () => {
+    getListFun()
     setOpen((prevOpen) => !prevOpen);
   };
 
@@ -139,23 +136,23 @@ export default function Notification() {
                   elevation={0}
                   border={false}
                   content={false}
-                  secondary={
-                    <>
-                      {read > 0 && (
-                        <Tooltip title="Mark as all read">
-                          <IconButton
-                            color="success"
-                            size="small"
-                            onClick={() => setRead(0)}
-                          >
-                            <CheckCircleOutlined
-                              style={{ fontSize: "1.15rem" }}
-                            />
-                          </IconButton>
-                        </Tooltip>
-                      )}
-                    </>
-                  }
+                  // secondary={
+                  //   <>
+                  //     {read > 0 && (
+                  //       <Tooltip title="Mark as all read">
+                  //         <IconButton
+                  //           color="success"
+                  //           size="small"
+                  //           onClick={() => setRead(0)}
+                  //         >
+                  //           <CheckCircleOutlined
+                  //             style={{ fontSize: "1.15rem" }}
+                  //           />
+                  //         </IconButton>
+                  //       </Tooltip>
+                  //     )}
+                  //   </>
+                  // }
                 >
                   <List
                     component="nav"
@@ -177,7 +174,9 @@ export default function Notification() {
                   >
                     {
                       data?.slice(0,5).map((item, i) => (
-                        <ListItemButton onClick={()=>{handleNotificationClick(item); setOpen(false)}}>
+                        <ListItemButton onClick={()=>{handleNotificationClick(item); setOpen(false)}} 
+                        style={{ cursor: 'pointer', background: item?.status === "unread" ? "#E8FFE7": "" }}
+                        >
                           <ListItemAvatar>
                             <Avatar sx={{color: "primary.main",bgcolor: "primary.lighter"}}><MessageOutlined /></Avatar>
                           </ListItemAvatar>

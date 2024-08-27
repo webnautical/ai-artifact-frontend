@@ -12,7 +12,23 @@ export const ContextProvider = ({ children }) => {
         // getPermision()
     }, [])
 
-
+    const [userInfoByID, setUserInfoByID] = useState(null)
+    const [userDetailsLoading, setDetailsLoading] = useState(false)
+    const getUserByIDFun = async (id) => {
+        try {
+            setDetailsLoading(true)
+            const res = await APICALL('/user/userData', 'post', {id: id})
+            if (res?.status) {
+                setUserInfoByID(res?.user)
+            } else {
+                setUserInfoByID(null)
+            }
+        } catch (error) {
+            console.log(error)
+        }finally{
+            setDetailsLoading(false)
+        }
+    }
 
     const getPermision = async () => {
         try {
@@ -89,6 +105,8 @@ export const ContextProvider = ({ children }) => {
             getSubCategoryFun, subCategoryList,
             // getCollectionFun, collectionList,
             getDirectoryFun, directoryList,
+            userInfoByID, getUserByIDFun,userDetailsLoading
+
         }}>
             {children}
         </ContextData.Provider>

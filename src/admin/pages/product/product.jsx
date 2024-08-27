@@ -27,6 +27,7 @@ import {
 } from "../../../helper/Constant";
 import "../../../App.css";
 import ConfirmModal from "../../../helper/ConfirmModal";
+import { Link } from "react-router-dom";
 
 const Product = () => {
   const [search, setSearch] = useState("");
@@ -171,63 +172,6 @@ const Product = () => {
 
   return (
     <>
-      {actionType === 'view' ? (
-        <Paper className="table_samepattern p-3">
-          <div className="row-details">
-            <div className="d-flex" style={{ gap: '10px' }}>
-              <Button className="artist-btn" onClick={() => {setSelectedRow(null); setActionType(null)}}>
-                <i class="fa-solid fa-arrow-left"></i>
-              </Button>
-              <h2 className="title-admins-table m-0">Artwork Details</h2>
-            </div>
-            <Row className=" justify-content-center">
-              <Col md={7}>
-                <Row className="art_details_box">
-
-                  <Col md={4}>
-
-                    <div className="art_work_image">
-
-                      {tableImg(selectedRow.image)}
-                    </div>
-
-                  </Col>
-                  <Col md={8}>
-                    <div>
-                      <p>
-                        <strong>Name:</strong> {selectedRow.title}
-                      </p>
-                      <p>
-                        <strong>Category:</strong> {selectedRow?.category?.name}
-                      </p>
-                      <p>
-                        <strong>Sub Category:</strong> {selectedRow?.subcategory?.name}
-                      </p>
-                      <p>
-                        <strong>Description:</strong> {selectedRow.description}
-                      </p>
-                      <p>
-                        <strong>Artist Name:</strong>{" "}
-                        {selectedRow?.artist_id?.first_name +
-                          " " +
-                          selectedRow?.artist_id?.last_name}
-                      </p>
-                      <p>
-                        <strong>Status:</strong> {selectedRow.status ? "Active" : "Inactive"}
-                      </p>
-                      <p>
-                        <strong>Date:</strong> {timeAgo(selectedRow.createdAt)}
-                      </p>
-                    </div>
-                  </Col>
-
-                </Row>
-              </Col>
-            </Row>
-
-          </div>
-        </Paper>
-      ) : (
         <Paper className="table_samepattern">
           {listLoading ? (
             <AdminLoader />
@@ -326,8 +270,10 @@ const Product = () => {
                                   <MoreVert />
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu>
-                                  <Dropdown.Item href="#" onClick={() => handleViewChange(row, "view")} >
+                                  <Dropdown.Item href="#" >
+                                    <Link to={`/admin/product-details/${row?._id}`}>
                                     <RemoveRedEyeIcon style={{ marginRight: "8px" }} />View
+                                    </Link>
                                   </Dropdown.Item>
                                   <Dropdown.Item href="#" onClick={() => handleViewChange(row, "delete")}>
                                     <Delete style={{ marginRight: "8px" }} />Delete
@@ -364,8 +310,6 @@ const Product = () => {
             </>
           )}
         </Paper>
-      )}
-
 
       <Modal className="modal-all" centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>

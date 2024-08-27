@@ -3,6 +3,8 @@ import  Loadable  from '../components/Loadable';
 import  Dashboard  from '../layout/Dashboard';
 import Faq from '../pages/faq/Faq';
 import ArtWorkUpload from '../pages/artist/ArtWorkUpload';
+import ViewUserDetails from '../pages/user-management/ViewUserDetails';
+import ProductDetails from '../pages/product/ProductDetails';
 const DashboardDefault = Loadable(lazy(() => import('../pages/dashboard/index')));
 const RolesPermission = Loadable(lazy(() => import('../pages/roles-permission/RolesPermission')));
 const CategoriesList =  Loadable(lazy(() => import('../pages/categories/CategoriesList')));
@@ -44,6 +46,10 @@ const MainRoutes = {
     {
       path: '/categories-list',
       element: <CategoriesList />
+    },
+    {
+      path: '/user-management-details/:id',
+      element: <ViewUserDetails />
     },
     {
       path: '/user-management/:type',
@@ -92,6 +98,10 @@ const MainRoutes = {
     {
       path: "/products",
       element: <Products />,
+    },
+    {
+      path: "/product-details/:id",
+      element: <ProductDetails />,
     },
     {
       path: "/reviews",

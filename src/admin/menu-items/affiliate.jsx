@@ -28,6 +28,14 @@ const affiliate = {
       icon: icons.AddModeratorOutlined,
       breadcrumbs: false
     }, 
+    {
+      id: 'notifications',
+      title: 'Notifications',
+      type: 'item',
+      url: '/admin/notifications',
+      icon: icons.AddModeratorOutlined,
+      breadcrumbs: false
+    }, 
     // {
     //   id: 'commission',
     //   title: 'Commission',

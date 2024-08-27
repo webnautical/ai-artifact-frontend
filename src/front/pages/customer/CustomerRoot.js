@@ -7,6 +7,7 @@ import { getTokenType } from "../../../helper/Utility";
 import Profile from "./Profile";
 import Orders from "./Orders";
 import OrderDetails from "./OrderDetails";
+import MyAddress from "./MyAddress";
 
 const CustomerRoot = () => {
   const { getCustomerInfoFun } = useFrontDataContext();
@@ -29,9 +30,9 @@ const CustomerRoot = () => {
                   <li>
                     <Link className={`${pageURI === 'profile' && 'active'}`} to="/customer/profile"> My Profile </Link>
                   </li>
-                  {/* <li>
-                    <Link to="">Address Book</Link>
-                  </li> */}
+                  <li>
+                    <Link to="/customer/my-address" className={`${pageURI === 'my-address' && 'active'}`}>My Address</Link>
+                  </li>
                   <li>
                     <Link to="/customer/my-orders" className={`${pageURI === 'my-orders' && 'active'}`}>My Orders</Link>
                   </li>
@@ -47,15 +48,18 @@ const CustomerRoot = () => {
               pageURI === 'profile' ?
                 <Profile />
                 :
-                pageURI === 'my-orders' ?
-                  <Orders />
+                pageURI === 'my-address' ?
+                  <MyAddress />
                   :
-                pageURI === 'order-details' ?
-                  <OrderDetails />
-                  :
-                  <>
-                    Work in progress
-                  </>
+                  pageURI === 'my-orders' ?
+                    <Orders />
+                    :
+                    pageURI === 'order-details' ?
+                      <OrderDetails />
+                      :
+                      <>
+                        Work in progress
+                      </>
             }
 
           </Col>

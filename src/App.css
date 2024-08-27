@@ -4814,8 +4814,13 @@ nav.sidebr-admin .simplebar-scrollable-x {
   white-space: pre;
 }
 
-
-/* .blog_box p{    text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: pre; } */
+.table_border {
+ 
+  padding: 20px;
+    /* box-shadow: rgb(110 110 110 / 11%) 0px 7px 29px 0px; */
+    border-radius: 10px;
+    background: #80008000;
+    border-radius: 10px;
+    border: 1px solid #dfdfdf;
+}
 
