@@ -122,7 +122,8 @@ const FrontLogin = () => {
             dataParam,
             "DoNotTryToAccess"
           );
-          navigate("/admin/dashboard");
+          navigate(`/${res?.user?.user_role}/dashboard`);
+          window.location.reload();
         }
         setLoading(false);
       } else {

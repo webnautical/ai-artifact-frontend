@@ -118,6 +118,9 @@ const Cart = () => {
     }
   }, [editItemObj, show])
 
+  console.log("editItemObj1111111111111111111",editItemObj)
+  console.log("SE222222222222", selectedOptions)
+
   const canvasQntChange = (qnt, product_id) => {
     setArtDetails({ ...artDetails, qnt: qnt })
   };
@@ -135,7 +138,7 @@ const Cart = () => {
   };
 
   const handleTextureSelect = (texture) => {
-    const newSelectedOptions = { ...selectedOptions, ['frame']: texture?.frame, ['frameType']: texture.color, ['assembly']: 'Ready-to-hang' };
+    const newSelectedOptions = { ...selectedOptions, ['frame']: texture?.frame, ['frameType']: texture.color, ['assembly']: editItemObj?.assembly };
     setSelectedOptions(newSelectedOptions)
     setFrameTexture(texture.url);
   };
@@ -447,7 +450,7 @@ const Cart = () => {
               </div>
 
               <div className="mt-3">
-                <span>Product type</span>
+                <span>Add frame</span>
                 <TexturePicker onTextureSelect={handleTextureSelect} url={frameTexture} />
               </div>
 

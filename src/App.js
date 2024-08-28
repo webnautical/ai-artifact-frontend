@@ -41,6 +41,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import OrderSuccess from "./front/pages/orders/OrderSuccess";
 import OrderFailure from "./front/pages/orders/OrderFailure";
 import CustomerRoot from "./front/pages/customer/CustomerRoot";
+import { auth } from "./helper/Utility";
 const stripePromise = loadStripe('pk_test_51PdpfWCeFWsCdKvD0zd3KZ2tQGXw0SwEOaHFWiQqhTTdjGMiPCg5sLJYVdrn8AOkAsrFHqktWs9ZyjLnrvcUy2Xl00YltTFAaq');
 function App() {
   useEffect(() => {
@@ -85,9 +86,11 @@ function App() {
             <Route path="/order-success/:order_id" element={<FrontWeb cmp={OrderSuccess} />} />
             <Route path="/order-failure" element={<FrontWeb cmp={OrderFailure} />} />
 
-
             {/* ADMIN */}
-            <Route path="/admin/*" element={<Admin />} />
+            <Route path={`/${auth('admin')?.user_role || "admin"}/*`} element={<Admin />} />
+
+            {/* <Route path="/admin/*" element={<Admin />} /> */}
+
           </Routes>
         </Elements>
         <ToastContainer />

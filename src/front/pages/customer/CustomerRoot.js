@@ -30,9 +30,9 @@ const CustomerRoot = () => {
                   <li>
                     <Link className={`${pageURI === 'profile' && 'active'}`} to="/customer/profile"> My Profile </Link>
                   </li>
-                  {/* <li>
+                  <li>
                     <Link to="/customer/my-address" className={`${pageURI === 'my-address' && 'active'}`}>My Address</Link>
-                  </li> */}
+                  </li>
                   <li>
                     <Link to="/customer/my-orders" className={`${pageURI === 'my-orders' && 'active'}`}>My Orders</Link>
                   </li>

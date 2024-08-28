@@ -19,7 +19,7 @@ export default function ProfileTab({setOpen}) {
   const handleListItemClick = (index) => {
     setSelectedIndex(index);
     setOpen(false)
-    navigate('/admin/edit-profile')
+    navigate(`/${auth('admin')?.user_role}/edit-profile`)
   };
 
   const handleLogout = (type) => {

@@ -118,7 +118,8 @@ const FrontSignup = () => {
             dataParam,
             "DoNotTryToAccess"
           );
-          navigate("/admin/dashboard");
+          navigate(`/${res?.registerUser?.user_role}/dashboard`);
+          window.location.reload();
         }
         setLoading(false);
         setResMsg("Something Went Wrong !!");

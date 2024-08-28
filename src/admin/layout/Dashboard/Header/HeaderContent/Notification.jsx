@@ -79,7 +79,7 @@ export default function Notification() {
   }
 
   const viewAll = () =>{
-    navigate('/admin/notifications')
+    navigate(`/${auth('admin')?.user_role}/notifications`)
     setOpen(false)
   }
 

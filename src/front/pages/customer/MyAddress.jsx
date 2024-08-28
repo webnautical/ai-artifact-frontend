@@ -5,6 +5,9 @@ import { APICALL } from "../../../helper/api/api";
 import { auth } from "../../../helper/Utility";
 import TextMessage from "../../../components/TextMessage";
 import FrontLoader from './../../../components/FrontLoader';
+import { Autocomplete, Box, TextField } from "@mui/material";
+import ReactCountryFlag from "react-country-flag";
+import { Country, State, City } from "country-state-city";
 
 const MyAddress = () => {
 
@@ -13,12 +16,28 @@ const MyAddress = () => {
     const [submitLoading, setSubmitLoading] = useState(false)
     const [userDetails, setUserDetails] = useState({})
     const [resMsg, setResMsg] = useState(false)
+    const [stateList, setStateList] = useState([]);
+
     useEffect(() => {
         if (!auth('customer')) {
             navigate('/login/customer')
         }
         getCustomerDetailsFunt()
     }, [])
+
+    const countryOptions = Country?.getAllCountries()?.map((country) => ({
+        value: country.isoCode,
+        label: (
+            <div style={{ display: "flex", alignItems: "center" }}>
+                <ReactCountryFlag
+                    countryCode={country.isoCode}
+                    svg
+                    style={{ width: "1.5em", height: "1.5em", marginRight: "0.5em" }}
+                />
+                {country.name}
+            </div>
+        ),
+    }));
 
     const [value, setValue] = useState({
         "address1": "",
@@ -43,6 +62,7 @@ const MyAddress = () => {
                 "postalCode": userDetails?.postalCode,
                 "phone": userDetails?.phone,
             })
+            getStateFun(userDetails?.country)
         }
     }, [userDetails])
 
@@ -79,14 +99,29 @@ const MyAddress = () => {
             [name]: error,
         }));
     };
-
+    const handleCountryChange = (event, selectedOption) => {
+        handleChange({
+            target: { name: "country", value: selectedOption ? selectedOption.value : "" },
+        });
+    };
     const handleChange = (e) => {
         const { name, value } = e.target;
+        if (name === "country") {
+            setValue({ ...value, country: e.target.value });
+            getStateFun(e.target.value);
+        }
         setValue((prevValue) => ({
             ...prevValue,
             [name]: value,
         }));
         validate(name, value);
+    };
+    const getStateFun = (country) => {
+        const stateData = State?.getStatesOfCountry(country).map((state) => ({
+            value: state.isoCode,
+            displayValue: state.name,
+        }));
+        setStateList(stateData);
     };
 
     const updateUserDetails = async (e) => {
@@ -106,6 +141,8 @@ const MyAddress = () => {
             setSubmitLoading(false)
         }
     }
+
+
     return (
         <>
             {
@@ -114,7 +151,7 @@ const MyAddress = () => {
                         <div className="account-profile-title">
                             <h1>Edit Your Address</h1>
                         </div>
-                        <div className="account-content-box cutoms-login-artist">
+                        <div className="account-content-box cutoms-login-artist ship_address ">
                             <Form onSubmit={updateUserDetails}>
                                 <Row>
                                     <Col md={12}>
@@ -127,6 +164,7 @@ const MyAddress = () => {
                                                 name='address1'
                                                 value={value?.address1}
                                                 onChange={handleChange}
+                                                maxLength={35}
                                             />
                                             <span className="error">{errors.address1}</span>
                                         </Form.Group>
@@ -141,33 +179,53 @@ const MyAddress = () => {
                                                 name='address2'
                                                 value={value?.address2}
                                                 onChange={handleChange}
+                                                maxLength={35}
                                             />
                                             <span className="error">{errors.address2}</span>
 
                                         </Form.Group>
                                     </Col>
-                                    <Col md={6}>
-                                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                                            <Form.Label>Country</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Country"
-                                                name='country'
-                                                value={value?.country}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
+                                    <Col md={6} className="mb-3">
+                                        <Form.Label>Choose Country</Form.Label>
+                                        <Autocomplete
+                                            options={countryOptions}
+                                            autoComplete={"off"}
+                                            getOptionLabel={(option) => option.label.props.children[1]}
+                                            renderOption={(props, option) => (
+                                                <Box component="li" {...props}>
+                                                    {option.label}
+                                                </Box>
+                                            )}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    variant="outlined"
+                                                //   error={Boolean(error.country)}
+                                                //   helperText={error.country}
+                                                />
+                                            )}
+                                            value={countryOptions.find((option) => option.value === value.country) || null}
+                                            onChange={handleCountryChange}
+                                        />
                                     </Col>
-                                    <Col md={6}>
-                                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                                            <Form.Label>State</Form.Label>
+
+                                    <Col md={6} className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label>Choose State</Form.Label>
                                             <Form.Control
-                                                type="text"
-                                                placeholder="State"
-                                                name='state'
-                                                value={value?.state}
+                                                as="select"
+                                                name="state"
+                                                value={value.state}
                                                 onChange={handleChange}
-                                            />
+                                            >
+                                                <option value="">--SELECT--</option>
+                                                {stateList?.map((item, i) => (
+                                                    <option value={item?.value}>
+                                                        {item.displayValue}
+                                                    </option>
+                                                ))}
+                                            </Form.Control>
+
                                         </Form.Group>
                                     </Col>
                                     <Col md={6}>
@@ -179,6 +237,8 @@ const MyAddress = () => {
                                                 name='city'
                                                 value={value?.city}
                                                 onChange={handleChange}
+                                                maxLength={30}
+
                                             />
                                         </Form.Group>
                                     </Col>
@@ -191,6 +251,8 @@ const MyAddress = () => {
                                                 name='postalCode'
                                                 value={value?.postalCode}
                                                 onChange={handleChange}
+                                                maxLength={8}
+
                                             />
                                         </Form.Group>
                                     </Col>
@@ -203,6 +265,8 @@ const MyAddress = () => {
                                                 name='phone'
                                                 value={value?.phone}
                                                 onChange={handleChange}
+                                                maxLength={12}
+
                                             />
                                         </Form.Group>
                                     </Col>
@@ -223,8 +287,8 @@ const MyAddress = () => {
                                                 <>
                                                     {/* {
                                                         isFormFilled() ? */}
-                                                            <Button className="global_btn" type="submit" block>Save Changes</Button>
-                                                            {/* :
+                                                    <Button className="global_btn" type="submit" block>Save Changes</Button>
+                                                    {/* :
                                                             <Button className="global_btn" type="button" block disabled>Save Changes</Button>
 
                                                     } */}

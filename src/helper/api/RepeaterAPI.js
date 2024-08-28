@@ -10,28 +10,28 @@ export const useNotificationHandler = () => {
         APICALL('/admin/readNotification', 'post', params)
         switch (notification.type) {
             case "newproduct":
-                navigate(`/admin/products`);
+                navigate(`/${auth('admin')?.user_role}/products`);
                 break;
             case 'neworder':
-                navigate(`/admin/orders/list`);
+                navigate(`/${auth('admin')?.user_role}/orders/list`);
                 break;
             case 'registration':
-                navigate(`/admin/user-management-details/${notification?.user_id}`);
+                navigate(`/${auth('admin')?.user_role}/user-management-details/${notification?.user_id}`);
                 break;
             case 'newreview':
-                navigate(`/admin/reviews`);
+                navigate(`/${auth('admin')?.user_role}/reviews`);
                 break;
             case 'productapproval':
-                navigate(`/admin/artworks`);
+                navigate(`/${auth('admin')?.user_role}/artworks`);
                 break;
             case 'productdelete':
-                navigate(`/admin/artworks`);
+                navigate(`/${auth('admin')?.user_role}/artworks`);
                 break;
             case 'productrejection':
-                navigate(`/admin/artworks`);
+                navigate(`/${auth('admin')?.user_role}/artworks`);
                 break;
             case 'sale':
-                navigate(`/admin/sold-art`);
+                navigate(`/${auth('admin')?.user_role}/sold-art`);
                 break;
             default:
                 console.log('Unknown notification type');

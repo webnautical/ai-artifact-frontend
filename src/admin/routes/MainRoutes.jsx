@@ -19,6 +19,7 @@ const Products = Loadable(lazy(() => import("../pages/product/product")));
 const Reviews = Loadable(lazy(() => import("../pages/product/Review")));
 const GeneralSettings = Loadable( lazy(() => import("../pages/GeneralSettings")));
 const GelatoPrice = Loadable( lazy(() => import("../pages/web/GelatoPrice")));
+const BannerAndImages = Loadable( lazy(() => import("../pages/web/BannerAndImages")));
 const OrderList = Loadable( lazy(() => import("../pages/order/OrderList")));
 const CouponList = Loadable( lazy(() => import("../pages/coupon/CouponList")));
 const ArtList = Loadable( lazy(() => import("../pages/artist/ArtList")));
@@ -118,6 +119,10 @@ const MainRoutes = {
     {
       path: "/gelato-price",
       element: <GelatoPrice />,
+    },
+    {
+      path: "/banner-images",
+      element: <BannerAndImages />,
     },
     {
       path: "/coupon",

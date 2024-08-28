@@ -17,7 +17,7 @@ import { Edit, MoreVert } from "@mui/icons-material";
 import { Dropdown } from "react-bootstrap";
 import AdminLoader from "../../components/AdminLoader";
 import { APICALL } from "../../../helper/api/api";
-import { defaultIMG, imgBaseURL, tableImg, timeAgo } from "../../../helper/Utility";
+import { auth, defaultIMG, imgBaseURL, tableImg, timeAgo } from "../../../helper/Utility";
 import {
     TABLE_PAGINATION_DROPDOWN,
     TABLE_ROW_PER_PAGE,
@@ -97,11 +97,10 @@ const ArtList = () => {
     );
 
     const handleEdit = (row) => {
-        navigate('/admin/art-work-upload', { state: { data: row } })
+        navigate(`/${auth('admin')?.user_role}/art-work-upload`, { state: { data: row } })
     }
 
     const showTable = (item) => {
-        console.log("item", item)
         setTable(item)
         getListFun(item?._id)
     }

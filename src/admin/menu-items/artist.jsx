@@ -16,7 +16,7 @@ const artist = {
       id: 'dashboard',
       title: 'Dashboard',
       type: 'item',
-      url: '/admin/dashboard',
+      url: '/artist/dashboard',
       icon: icons.Dashboard,
       breadcrumbs: false
     },
@@ -47,7 +47,7 @@ const artist = {
       id: 'notifications',
       title: 'Notifications',
       type: 'item',
-      url: '/admin/notifications',
+      url: '/artist/notifications',
       icon: icons.AddModeratorOutlined,
       breadcrumbs: false
     }, 
@@ -55,23 +55,15 @@ const artist = {
       id: 'sold-art',
       title: 'Sold Art',
       type: 'item',
-      url: '/admin/sold-art',
+      url: '/artist/sold-art',
       icon: icons.AddModeratorOutlined,
       breadcrumbs: false
     }, 
-    // {
-    //   id: 'commission',
-    //   title: 'Commission',
-    //   type: 'item',
-    //   url: `/admin/commission/artist`,
-    //   icon: icons.AddModeratorOutlined,
-    //   breadcrumbs: false
-    // },
     {
       id: 'withdrawal',
       title: 'Withdrawal',
       type: 'item',
-      url: '/admin/withdrawal',
+      url: '/artist/withdrawal',
       icon: icons.Dashboard,
       breadcrumbs: false
     },

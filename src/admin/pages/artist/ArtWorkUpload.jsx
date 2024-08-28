@@ -6,7 +6,7 @@ import { useDataContext } from "../../../helper/context/ContextProvider";
 import BTNLoader from "../../../components/BTNLoader";
 import { APICALL } from "../../../helper/api/api";
 import axios from "axios";
-import { apiBaseURL, imgBaseURL } from "../../../helper/Utility";
+import { apiBaseURL, auth, imgBaseURL } from "../../../helper/Utility";
 import swal from "sweetalert";
 import { SOMETHING_ERR } from "../../../helper/Constant";
 import { useLocation, useNavigate } from "react-router";
@@ -306,12 +306,11 @@ const ArtWorkUpload = () => {
         setUploadProgress(0);
         setImgPreview({ ...imgPreview, image: "" });
         setLoading({ ...loading, submit: false });
-        console.log("resARRRRRRRRRRRRRRR", res)
         const params = {
           name: res?.data?.directoryId?.name,
           _id : res?.data?.directoryId?._id
         }
-        navigate("/admin/artworks", {state: {params}});
+        navigate(`/${auth('admin')?.user_role}/artworks`, {state: {params}});
       } else {
         swal({
           title: SOMETHING_ERR,

@@ -2,6 +2,8 @@ import { AccountCircleOutlined, AddModeratorOutlined, Dashboard, FolderSharedOut
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import BookIcon from '@mui/icons-material/Book';
+import PermMediaIcon from '@mui/icons-material/PermMedia';
+import { auth } from '../../helper/Utility';
 const icons = {
   Dashboard,
   FolderSharedOutlined,
@@ -10,6 +12,7 @@ const icons = {
   PaidOutlined,
   NotificationsActiveOutlined,
   AccountCircleOutlined,
+  PermMediaIcon
 };
 const dashboard = {
   id: 'group-dashboard',
@@ -81,13 +84,6 @@ const dashboard = {
           url: `categories-list`,
           breadcrumbs: false
         },
-        // {
-        //   id: "Collection",
-        //   title: "Collection",
-        //   type: "item",
-        //   url: `collection`,
-        //   breadcrumbs: false,
-        // },
         {
           id: "Reviews",
           title: "Reviews",
@@ -269,6 +265,14 @@ const dashboard = {
       type: "item",
       url: "/admin/gelato-price",
       icon: AttachMoneyIcon,
+      breadcrumbs: false,
+    },
+    {
+      id: "banner-images",
+      title: "Banner & Images",
+      type: "item",
+      url: `/${auth('admin')?.user_role}/banner-images`,
+      icon: icons.PermMediaIcon,
       breadcrumbs: false,
     },
     {

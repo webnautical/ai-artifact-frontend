@@ -26,9 +26,9 @@ const ShippingAddress = () => {
     getCartListFun
   } = useFrontDataContext();
 
-  useEffect(() =>{
+  useEffect(() => {
     getCartListFun()
-  },[])
+  }, [])
 
   const itemTotal = cartList.reduce((acc, item) => {
     return acc + (item?.row_uid?.price * item?.quantity || 0);
@@ -180,16 +180,17 @@ const ShippingAddress = () => {
         ...formData,
         firstName: customerInfo?.user?.first_name,
         lastName: customerInfo?.user?.last_name,
-        addressLine1: customerInfo?.user?.address,
-        addressLine2: "",
-        postalCode: "",
-        city: "",
-        state: "",
-        country: "",
-        contactPhone: "",
+        addressLine1: customerInfo?.user?.address1,
+        addressLine2:  customerInfo?.user?.address2,
+        postalCode:  customerInfo?.user?.postalCode,
+        city:  customerInfo?.user?.city,
+        state:  customerInfo?.user?.state,
+        country:  customerInfo?.user?.country,
+        contactPhone:  customerInfo?.user?.phone,
         email: customerInfo?.user?.email,
         useDifferentBillingAddress: false,
       });
+      getStateFun(customerInfo?.user?.country)
     }
   }, [customerInfo]);
 
@@ -200,7 +201,7 @@ const ShippingAddress = () => {
     } else if (e.target.name === "billingCountry") {
       setFormData({ ...formData, billingCountry: e.target.value });
       getStateFun1(e.target.value);
-    }else if (e.target.name === "state") {
+    } else if (e.target.name === "state") {
       setFormData({ ...formData, state: e.target.value });
     } else {
       setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -245,10 +246,10 @@ const ShippingAddress = () => {
   };
 
   useEffect(() => {
-    if(shippingChargeRes){
+    if (shippingChargeRes) {
       getClientSecretFun(orderDetails?.totalPrice);
     }
-  },[shippingChargeRes])
+  }, [shippingChargeRes])
 
   const [stripErr, setStripErr] = useState(null);
   const [processing, setProcessing] = useState(false);
@@ -653,7 +654,7 @@ const ShippingAddress = () => {
                               </Col> */}
 
                               <Col md={12} className="mb-3">
-                              <Form.Label>Choose Country</Form.Label>
+                                <Form.Label>Choose Country</Form.Label>
                                 <Autocomplete
                                   options={countryOptions}
                                   getOptionLabel={(option) => option.label.props.children[1]}
@@ -665,7 +666,7 @@ const ShippingAddress = () => {
                                   renderInput={(params) => (
                                     <TextField
                                       {...params}
-                                 
+
                                       variant="outlined"
                                       error={Boolean(error.country)}
                                       helperText={error.country}
@@ -1045,7 +1046,7 @@ const ShippingAddress = () => {
                                       </Form>
                                     </div>
                                   </div>
-                                  <span className={`d-block text-end mt-1 mb-3 fw-bold ${couponRes?.status ? "text-success" : "text-danger"}`}>{couponRes?.message}  {couponRes && <button type="button" className="global_light_btn text-danger"  onClick={()=>{setCouponRes(null); setCode('')}}> <i className="fa fa-times"></i> </button>}
+                                  <span className={`d-block text-end mt-1 mb-3 fw-bold ${couponRes?.status ? "text-success" : "text-danger"}`}>{couponRes?.message}  {couponRes && <button type="button" className="global_light_btn text-danger" onClick={() => { setCouponRes(null); setCode('') }}> <i className="fa fa-times"></i> </button>}
 
                                   </span>
                                   <ul className="p-0">
@@ -1064,7 +1065,7 @@ const ShippingAddress = () => {
                                         <b>${orderDetails?.subTotal}</b>{" "}
                                       </p>
                                     </li>
-                                    
+
                                     <li>
                                       <span>Shipping</span>
                                       <p className="m-0">
@@ -1156,20 +1157,20 @@ const ShippingAddress = () => {
                                       </div>
                                     </form>
                                     {/* {openPaymentForm === "Stripe" && ( */}
-                                      <Col md={12} className="mb-3 mt-4">
-                                        <CardElement className="card-stripe-element" />
-                                        {stripErr && (
-                                          <div className="stripe-error-msg mt-2">
-                                            {stripErr}
-                                          </div>
-                                        )}
-                                        <div className="mt-4">
-                                          <span>
-                                            Secure payments are handled by Stripe.
-                                            We never even see your card details.
-                                          </span>
+                                    <Col md={12} className="mb-3 mt-4">
+                                      <CardElement className="card-stripe-element" />
+                                      {stripErr && (
+                                        <div className="stripe-error-msg mt-2">
+                                          {stripErr}
                                         </div>
-                                      </Col>
+                                      )}
+                                      <div className="mt-4">
+                                        <span>
+                                          Secure payments are handled by Stripe.
+                                          We never even see your card details.
+                                        </span>
+                                      </div>
+                                    </Col>
                                     {/* )} */}
                                   </div>
                                 </div>

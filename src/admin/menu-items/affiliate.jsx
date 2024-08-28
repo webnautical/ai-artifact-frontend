@@ -1,4 +1,5 @@
 import { AccountCircleOutlined, AddModeratorOutlined, Dashboard, FolderSharedOutlined, NotificationsActiveOutlined, PaidOutlined, PeopleAltOutlined } from '@mui/icons-material';
+import { auth } from '../../helper/Utility';
 const icons = {
   Dashboard,
   FolderSharedOutlined,
@@ -16,7 +17,7 @@ const affiliate = {
       id: 'dashboard',
       title: 'Dashboard',
       type: 'item',
-      url: '/admin/dashboard',
+      url: `/${auth('admin')?.user_role}/dashboard`,
       icon: icons.Dashboard,
       breadcrumbs: false
     },
@@ -24,7 +25,7 @@ const affiliate = {
       id: 'sold-art',
       title: 'Sold Art',
       type: 'item',
-      url: '/admin/sold-art',
+      url: `/${auth('admin')?.user_role}/sold-art`,
       icon: icons.AddModeratorOutlined,
       breadcrumbs: false
     }, 
@@ -32,23 +33,15 @@ const affiliate = {
       id: 'notifications',
       title: 'Notifications',
       type: 'item',
-      url: '/admin/notifications',
+      url: `/${auth('admin')?.user_role}/notifications`,
       icon: icons.AddModeratorOutlined,
       breadcrumbs: false
     }, 
-    // {
-    //   id: 'commission',
-    //   title: 'Commission',
-    //   type: 'item',
-    //   url: `/admin/commission/affiliat`,
-    //   icon: icons.AddModeratorOutlined,
-    //   breadcrumbs: false
-    // },  
     {
       id: 'Withdrawal',
       title: 'Withdrawal',
       type: 'item',
-      url: '/admin/withdrawal',
+      url: `/${auth('admin')?.user_role}/withdrawal`,
       icon: icons.Dashboard,
       breadcrumbs: false
     },

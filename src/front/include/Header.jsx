@@ -615,7 +615,7 @@ const Header = () => {
                       </div>
                     </>
                   ) : auth('admin')  ? (
-                    <Link className="text-center" to="/admin/dashboard">
+                    <Link className="text-center" to={`/${auth('admin')?.user_role}/dashboard`}>
                       <svg
                         width="24"
                         height="24"

@@ -243,12 +243,12 @@ const Home = () => {
     const popularCollectionRes = await APICALL('user/getpopularCollection', 'post', {})
     if (popularCollectionRes?.status) { setPopularCollection(popularCollectionRes?.data) } else { setPopularCollection([]) }
 
-    
+
   }
 
   const getBlogFun = async () => {
     const blogsRes = await APICALL('admin/allBlogs', 'post', {})
-      if (blogsRes?.status) { setBlogList(blogsRes?.data) } else { setBlogList([]) }
+    if (blogsRes?.status) { setBlogList(blogsRes?.data) } else { setBlogList([]) }
   }
 
   const viewBlogDetails = (item) => {

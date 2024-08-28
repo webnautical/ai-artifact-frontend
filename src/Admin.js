@@ -4,7 +4,6 @@ import ScrollTop from './admin/components/ScrollTop'
 import Routes from './admin/routes'
 import { auth } from './helper/Utility'
 import { useLocation, useNavigate } from 'react-router-dom'
-// import './assets/css/admin.css'
 const Admin = () => {
     const pathname = useLocation()?.pathname
     const navigate = useNavigate()
