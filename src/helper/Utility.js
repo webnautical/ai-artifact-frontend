@@ -1,5 +1,9 @@
 // import img1 from '../assets/img/1.png'
 import dfIMG from '../assets/images/placeholder.jpg'
+import bronze from '../assets/images/1 - Bronze.png'
+import silver from '../assets/images/2 - Silver.png'
+import gold from '../assets/images/3 - Gold.png'
+import diamond from '../assets/images/4 - Diamond.png'
 import { toast } from 'react-toastify';
 // import logoimg from '../assets/img/logosite.png'
 import { utils, writeFileXLSX } from 'xlsx';
@@ -39,7 +43,7 @@ export const decryptId = (encryptedId) => {
     const originalId = bytes.toString(CryptoJS.enc.Utf8);
     return originalId;
 };
-  
+
 
 
 export const filterByKey = (key, obj) => {
@@ -469,24 +473,39 @@ export const getRandomColor = () => {
 
 export const sizeBtnArr = [
     {
-      height: 238,
-      width: 171,
-      transform: 1,
-      size: "( Small )",
-      name: '13x18 cm / 5x7"',
+        height: 238,
+        width: 171,
+        transform: 1,
+        size: "( Small )",
+        name: '13x18 cm / 5x7"',
     },
     {
-      height: 238,
-      width: 171,
-      size: "M",
-      transform: 1.1,
-      name: '30x40 cm / 12x16"',
+        height: 238,
+        width: 171,
+        size: "M",
+        transform: 1.1,
+        name: '30x40 cm / 12x16"',
     },
     {
-      height: 238,
-      width: 171,
-      transform: 1.2,
-      size: "L",
-      name: '50x70 cm / 20x28"',
+        height: 238,
+        width: 171,
+        transform: 1.2,
+        size: "L",
+        name: '50x70 cm / 20x28"',
     },
-  ];
+];
+
+export const getTierImg = (tier) => {
+    const tierType = tier.toLowerCase()
+    if(tierType === "66b5c8e97402d256e68f856b"){
+        return <img src={gold} alt="badge" />
+    }else if(tierType === "66b5c8d07402d256e68f8568"){
+        return <img src={silver} alt="badge" />
+    }else if(tierType === "66b5c8bc7402d256e68f8565"){
+        return <img src={bronze} alt="badge" />
+    }else if(tierType === "66b5c90c7402d256e68f856e"){
+        return <img src={diamond} alt="badge" />
+    }else {
+        return null
+    }
+}

@@ -9,7 +9,7 @@ export const ContextProvider = ({ children }) => {
     const [collectionList, setCollectionList] = useState([])
     const [directoryList, setDirectoryList] = useState([])
     useEffect(() => {
-        // getPermision()
+        getTierImgFun()
     }, [])
 
     const [userInfoByID, setUserInfoByID] = useState(null)
@@ -70,6 +70,19 @@ export const ContextProvider = ({ children }) => {
             setSubCategoryList(null)
         }
     }
+    const [getRankTier, setRankTier] = useState([])
+    const getTierImgFun = async () => {
+        try {
+            const res = await APICALL('rank/getTiers', 'post', {})
+            if (res?.status) {
+                setRankTier(res?.data)
+            } else {
+                setRankTier(null)
+            }
+        } catch (error) {
+            setRankTier(null)
+        }
+    }
 
     // const getCollectionFun = async (id) => {
     //     const params = { id: id }
@@ -84,6 +97,8 @@ export const ContextProvider = ({ children }) => {
     //         setCollectionList(null)
     //     }
     // }
+
+    console.log("getRankTier",getRankTier)
 
     const getDirectoryFun = async () => {
         try {
@@ -105,8 +120,8 @@ export const ContextProvider = ({ children }) => {
             getSubCategoryFun, subCategoryList,
             // getCollectionFun, collectionList,
             getDirectoryFun, directoryList,
-            userInfoByID, getUserByIDFun,userDetailsLoading
-
+            userInfoByID, getUserByIDFun,userDetailsLoading,
+            getTierImgFun,getRankTier
         }}>
             {children}
         </ContextData.Provider>

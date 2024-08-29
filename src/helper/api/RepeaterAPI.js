@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router';
 import { APICALL } from './api';
 import { auth } from '../Utility';
+import { useDataContext } from '../context/ContextProvider';
 
 export const useNotificationHandler = () => {
     const navigate = useNavigate();
 
     const handleNotificationClick = async (notification) => {
-        const params = {notificationId: notification?._id, type: auth('admin')?.user_role}
+        const params = { notificationId: notification?._id, type: auth('admin')?.user_role }
         APICALL('/admin/readNotification', 'post', params)
         switch (notification.type) {
             case "newproduct":
@@ -39,4 +40,27 @@ export const useNotificationHandler = () => {
     };
 
     return handleNotificationClick;
+};
+
+
+export const useTierDetails = () => {
+    const { getTierDetails } = useDataContext();
+
+    const getTierDataById = (tierId) => {
+        if (!getTierDetails) {
+            console.warn("getTierDetails is undefined or not loaded yet.");
+            return null; 
+        }
+
+        if (getTierDetails.length > 0) {
+            console.log("getTierDetails Loaded:", getTierDetails);
+            const tierData = getTierDetails.find((tier) => tier._id === tierId);
+            return tierData || null;
+        } else {
+            console.warn("getTierDetails is an empty array.");
+            return null;
+        }
+    };
+
+    return { getTierDataById };
 };

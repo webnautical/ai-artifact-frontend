@@ -33,7 +33,7 @@ const BannerAndImages = () => {
     const getListFun = async () => {
         setLoading({ ...loading, 'list': true })
         try {
-            const res = await APICALL('admin/getActiveBanners', 'post', {})
+            const res = await APICALL('admin/getActiveBanners', 'post', { type: 'admin' })
             setLoading({ ...loading, 'list': false })
             console.log("List", res?.data)
             if (res?.status) { setBannerList(res?.data) }
@@ -46,7 +46,7 @@ const BannerAndImages = () => {
         id: '',
         redirectUrl: '',
         title: '',
-        status: false,
+        status: true,
         image: '',
     };
     const [imgPreview, setImgPreview] = useState({ image: "" });
@@ -55,7 +55,8 @@ const BannerAndImages = () => {
 
     const handleEditChange = (row) => {
         setShow(true)
-        setFormData({ ...formData, 'category_name': row?.name, 'id': row?._id, 'image': row.image, parentCategoryId: row.parentCategoryId?._id })
+        console.log(row)
+        setFormData({ ...formData, 'redirectUrl': row?.redirectUrl, 'id': row?._id, 'image': row.image, title: row.title, status: row.status })
         setImgPreview({ ...imgPreview, 'image': imgBaseURL() + row?.image })
     }
 
@@ -97,6 +98,7 @@ const BannerAndImages = () => {
             setLoading({ ...loading, 'submit': false })
             if (res?.status) {
                 getListFun()
+                setFormData(initialFormData)
                 setShow(false)
                 swal({ title: "Updated Successfully !!", icon: "success", button: { text: "OK", className: "swal_btn_ok" } });
             } else {
@@ -109,10 +111,10 @@ const BannerAndImages = () => {
         }
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (item) => {
         try {
-            const params = 0 == "category" ? { categoryId: id } : { subcategoryId: id }
-            const apiEnd = 0 == "category" ? "deleteCategory" : "deleteSubcategory"
+            const params = { id: item?._id }
+            const apiEnd = `deleteBanner`
             const res = await APICALL(`admin/${apiEnd}`, 'post', params);
             if (res?.status) {
                 getListFun()
@@ -143,15 +145,20 @@ const BannerAndImages = () => {
                                     <div className="col-md-4">
                                         <div className="banner-box">
                                             <div className="img-box">
-                                                <img src={imgBaseURL() + item?.image} alt="" style={{ width: '100%' }} />
+                                                <img src={imgBaseURL() + item?.image} alt="" style={{ width: '100%', height: '250px', objectFit: 'cover' }} />
                                             </div>
                                             <div >
-                                                <div className="bannar-btn-box">
-                                                    <button>Active</button>
-                                                    <button>Edit</button>
-                                                    <button>Del</button>
+                                                <div className="bannar-btn-box d-flex align-items-center">
+                                                    <div class={`spinner-grow ${item.status ? "text-success" : "text-danger"} `} role="status" style={{ height: '20px', width: '20px' }}>
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                    <button onClick={() => handleEditChange(item)} className="btn-icon __warning me-2"> <i className="fa fa-edit"></i> </button>
+                                                    <button className="btn-icon __danger" onClick={() => handleDelete(item)}><i className="fa fa-trash"></i></button>
                                                 </div>
-                                                <h6 className="bannar-title">{item?.title}</h6>
+                                                <div className="bannar-title">
+                                                    <p> {item?.title}</p>
+                                                    <p>{item?.redirectUrl}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -183,8 +190,8 @@ const BannerAndImages = () => {
                         <Col md={12} className="mb-3">
                             <div class="file-uploader">
                                 <label for="logoID" class="global_file_upload_deisgn">
-                                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
-                                    Upload  image here
+                                    <p> <i class="fa-solid fa-arrow-up-from-bracket"></i>Upload  image here</p> <br />
+                                    <p>(Recommended size 856 x 653)</p>
                                     <input type="file" id="logoID" name="image" value={formData.name} onChange={handleChange} />
                                 </label>
                             </div>
@@ -217,18 +224,15 @@ const BannerAndImages = () => {
                             </Form.Group>
                         </Col>
 
-                        {/* {
-                            listingTab == "subcategory" &&
+                        {
                             <Col md={12} className="mb-3">
-                                <Form.Label>Parent Category</Form.Label>
-                                <Form.Select aria-label="Default select example" name="parentCategoryId" value={formData.parentCategoryId} onChange={handleChange}>
-                                    <option value="1">Select Parent Category</option>
-                                    {categoryList?.map((item, i) => (
-                                        <option value={item._id}>{item?.name}</option>
-                                    ))}
+                                <Form.Label>Status</Form.Label>
+                                <Form.Select aria-label="Default select example" name="status" value={formData.status} onChange={handleChange}>
+                                    <option value={true}>Active</option>
+                                    <option value={false}>Deative</option>
                                 </Form.Select>
                             </Col>
-                        } */}
+                        }
                     </Row>
                 </Modal.Body>
                 <Modal.Footer>

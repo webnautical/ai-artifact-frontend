@@ -58,7 +58,7 @@ import blogthree from "../../assets/images/blog-3.png";
 import blogfaour from "../../assets/images/blog-4.png";
 import avtar from "../../assets/images/Avatar.png";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
-import { defaultIMG, imgBaseURL, timeAgo } from "../../helper/Utility";
+import { defaultIMG, getTierImg, imgBaseURL, timeAgo } from "../../helper/Utility";
 import { Rating, Stack } from "@mui/material";
 import { APICALL } from "../../helper/api/api";
 import FrontLoader from "../../components/FrontLoader";
@@ -70,7 +70,6 @@ const Home = () => {
   const { categoryList, getCategoryFun } = useDataContext()
   const navigate = useNavigate()
   const [key, setKey] = useState("one");
-
   const { getProductListFun, productList, contextLoader, addRemoveWishList, getHeaderContent } = useFrontDataContext();
   const [loading, setLoading] = useState(false)
   useEffect(() => {
@@ -222,6 +221,7 @@ const Home = () => {
   const [trendingArt, setTrendingArt] = useState([])
   const [popularCollection, setPopularCollection] = useState([])
   const [blogList, setBlogList] = useState([])
+  const [bannerList, setBannerList] = useState([])
 
   const habdleRedirect = (page) => {
     const data = { category: page }
@@ -243,10 +243,14 @@ const Home = () => {
     const popularCollectionRes = await APICALL('user/getpopularCollection', 'post', {})
     if (popularCollectionRes?.status) { setPopularCollection(popularCollectionRes?.data) } else { setPopularCollection([]) }
 
-
   }
 
   const getBlogFun = async () => {
+    setLoading(true)
+    const banner = await APICALL('admin/getActiveBanners', 'post', {})
+    setLoading(false)
+    if (banner?.status) { setBannerList(banner?.data) } else { setBannerList([]) }
+
     const blogsRes = await APICALL('admin/allBlogs', 'post', {})
     if (blogsRes?.status) { setBlogList(blogsRes?.data) } else { setBlogList([]) }
   }
@@ -254,6 +258,7 @@ const Home = () => {
   const viewBlogDetails = (item) => {
     navigate('/blog-details', { state: { data: item } })
   }
+
 
   return (
     <div className="main_homapage">
@@ -264,27 +269,20 @@ const Home = () => {
               <Row>
                 <Col lg={8}>
                   <OwlCarousel className=" owl-theme" {...heroslider} ref={owlCarouselRef}>
-                    <div className="item">
-                      <div className="slider_big" >
-                        <img className="w-100 full zoom" src={sliderbanner} alt="slider-img" />
-                        <div className="cnt_slider">
-                          <div className="sub_tittle">Inspirations</div>
-                          <h2>Passion revealed, space elevated</h2>
-                          <button className="global_btn">View More</button>
+                    {
+                      bannerList?.map((item, i) => (
+                        <div className="item">
+                          <div className="slider_big" >
+                            <img className="w-100 full zoom" src={imgBaseURL() + item?.image} alt="slider-img" />
+                            <div className="cnt_slider">
+                              <h2>{item?.title}</h2>
+                              <Link to={item?.redirectUrl} className="global_btn">View More</Link>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
+                      ))
+                    }
 
-                    <div className="item">
-                      <div className="slider_big" >
-                        <img className="w-100 full zoom" src={sliderbannertwo} alt="slider-img" />
-                        <div className="cnt_slider">
-
-                          <h2>Passion revealed, space elevated</h2>
-                          <button className="global_btn">View More</button>
-                        </div>
-                      </div>
-                    </div>
                   </OwlCarousel>
                 </Col>
 
@@ -388,7 +386,7 @@ const Home = () => {
 
                           <div className="tiear_stauts_name d-flex align-items-center">
                             <span className="me-2">
-                              <img src={badge} alt="badge" />
+                              {getTierImg(item?.artist?.currentRank)}
                             </span>
                             <div className="name">
                               {item?.artist?.first_name +

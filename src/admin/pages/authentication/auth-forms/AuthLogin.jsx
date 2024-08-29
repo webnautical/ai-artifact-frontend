@@ -52,6 +52,7 @@ export default function AuthLogin({ isDemo = false }) {
         }
         encryptLocalStorageData('admin-secret', dataParam, 'DoNotTryToAccess')
         navigate('/admin/dashboard')
+        window.location.reload()
       }else{
         setErrors({ submit: "Invalid Username or Password" });
       }
