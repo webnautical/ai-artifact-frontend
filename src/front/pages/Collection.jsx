@@ -13,11 +13,11 @@ import noDataImg from '../../assets/images/animasi-emptystate.gif'
 import FrontLoader from "../../components/FrontLoader";
 import { Link } from "react-router-dom";
 import { Rating, Stack } from "@mui/material";
-import { defaultIMG, imgBaseURL } from "../../helper/Utility";
+import { defaultIMG, getTierImg, imgBaseURL } from "../../helper/Utility";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
 
 const Collection = () => {
-  const { userInfoByID, getUserByIDFun,addRemoveWishList } = useFrontDataContext();
+  const { userInfoByID, getUserByIDFun, addRemoveWishList } = useFrontDataContext();
   const { artist, directory } = useParams()
   const [loading, setLoading] = useState(false)
   const [list, setList] = useState([])
@@ -39,6 +39,8 @@ const Collection = () => {
       console.log(error)
     }
   }
+
+  console.log("userInfoByID", userInfoByID)
 
   return (
     <div className="Home_page">
@@ -66,12 +68,12 @@ const Collection = () => {
                         <div className="level_heading">
                           {userInfoByID?.first_name + " " + userInfoByID?.last_name} {" "}
                           <span className="tier_img">
-                            <img style={{ width:'50px'}} src={goldtier} alt="icon-fgol-tier" />
+                            {getTierImg(userInfoByID?.currentRank)?.icon}
                           </span>{" "}
-                          Gold Tier
+                          {getTierImg(userInfoByID?.currentRank)?.text}
                         </div>
 
-                        <div className=" right_btn">
+                        {/* <div className=" right_btn">
                           <button className="global_btn">
                             Follow
                             <svg
@@ -105,7 +107,7 @@ const Collection = () => {
                               />
                             </svg>
                           </button>
-                        </div>
+                        </div> */}
                       </div>
 
                       {/* <div className="item_product_outer">
@@ -171,7 +173,7 @@ const Collection = () => {
 
                                     <div className="tiear_stauts_name d-flex align-items-center">
                                       <span className="me-2">
-                                        <img src={badge} alt="badge" />
+                                        {getTierImg(item?.artist_id?.currentRank)?.icon}
                                       </span>
 
                                       <div className="name">
@@ -207,12 +209,12 @@ const Collection = () => {
                       <div className="level_heading">
                         {userInfoByID?.first_name + " " + userInfoByID?.last_name}
                         <span className="tier_img">
-                          <img src={goldtier} alt="icon-fgol-tier" />
+                        {getTierImg(userInfoByID?.currentRank)?.icon}
                         </span>{" "}
-                        Gold Tier
+                        {getTierImg(userInfoByID?.currentRank)?.text}
                       </div>
 
-                      <div className=" right_btn">
+                      {/* <div className=" right_btn">
                         <button className="global_btn">
                           Follow
                           <svg
@@ -246,7 +248,7 @@ const Collection = () => {
                             />
                           </svg>
                         </button>
-                      </div>
+                      </div> */}
                     </div>
                     {
                       list?.map((item, i) => (

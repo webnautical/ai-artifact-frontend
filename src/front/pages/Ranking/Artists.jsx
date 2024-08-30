@@ -9,14 +9,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
-import ReactApexChart from 'react-apexcharts';
+import { Box, Rating, Stack } from "@mui/material";
 import { useDataContext } from "../../../helper/context/ContextProvider";
-import { useFrontDataContext } from "../../../helper/context/FrontContextProvider";
 import { imgBaseURL } from "../../../helper/Utility";
 import { APICALL } from "../../../helper/api/api";
+import { Link } from "react-router-dom";
+import { useFrontDataContext } from "../../../helper/context/FrontContextProvider";
 
-const RankingStatus = () => {
+const Artists = () => {
   const { getTierImgFun, getRankTier, loading } = useDataContext()
   const { getProductListFun, addRemoveWishList } = useFrontDataContext();
 
@@ -26,72 +26,20 @@ const RankingStatus = () => {
   })
 
   const [topArtist, setTopArtist] = useState([])
-  const [salesHistroy, setSalesHistory] = useState([])
-  const [activeArtist, setActiveArtist] = useState()
+  const [topArtwork, setTopArtwork] = useState([])
+
 
   const [selected, setSelected] = useState();
   const [openRows, setOpenRows] = useState({});
 
-  const [period, setPeriod] = useState('week');
-
-  const categories = period === "week" ? salesHistroy?.map(item => item.dayName || '') : salesHistroy?.map(item => item.monthName || '');
-  const salesAmounts = salesHistroy?.map(item => (item.totalSalesAmount ? item.totalSalesAmount.toFixed(2) : 0));
-  
-  const options = {
-    chart: {
-      type: 'bar',
-      height: 350,
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '55%',
-        endingShape: 'rounded',
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent'],
-    },
-    xaxis: {
-      categories: categories
-    },
-    fill: {
-      opacity: 1,
-      colors: ['#036565'],
-    },
-    tooltip: {
-      y: {
-        formatter: function (val) {
-          return `$${val}`;
-        },
-      },
-    },
-  };
-
-  const series = [
-    {
-      name: 'Revenue',
-      data: salesAmounts || []
-    },
-  ];
   const handleSelect = (k) => {
     setSelected(k);
     getTopArtist(k?._id)
   };
-  const handleChange = (event) => {
-    setPeriod(event.target.value);
-    getSalesHistroyByArtist(activeArtist, event.target.value)
-  };
 
   const handleToggle = (artistId) => {
     setOpenRows({ [artistId]: true })
-    setActiveArtist(artistId)
-    getSalesHistroyByArtist(artistId, period)
+    getArtworkByArtist(artistId)
   };
 
   useEffect(() => {
@@ -101,14 +49,12 @@ const RankingStatus = () => {
     }
   }, [getRankTier])
 
-  useEffect(() => {
-    if (topArtist?.length > 0) {
+  useEffect(() =>{
+    if(topArtist?.length > 0){
       setOpenRows({ [topArtist[0]?.artistId]: true })
-      setActiveArtist(topArtist[0]?.artistId)
-      getSalesHistroyByArtist(topArtist[0]?.artistId, period)
+      getArtworkByArtist(topArtist[0]?.artistId)
     }
-  }, [topArtist])
-
+  },[topArtist])
 
   useEffect(() => {
     getTierImgFun()
@@ -128,13 +74,12 @@ const RankingStatus = () => {
     }
   }
 
-  const getSalesHistroyByArtist = async (artistId, period) => {
+  const getArtworkByArtist = async (artistId) => {
     try {
       setListLoading({ ...listLoading, 'artwork': true })
-      const res = await APICALL(`user/getSalesHistory`, 'post', { artistId: artistId, "period": period })
-      console.log("getSalesHistory", res)
+      const res = await APICALL(`user/topTenArtworks`, 'post', { artistId: artistId })
       if (res?.status) {
-        setSalesHistory(res?.data)
+        setTopArtwork(res?.data)
       }
     } catch (error) {
       console.log(error)
@@ -142,9 +87,6 @@ const RankingStatus = () => {
       setListLoading({ ...listLoading, 'artwork': false })
     }
   }
-
-
-
 
   return (
     <>
@@ -170,11 +112,15 @@ const RankingStatus = () => {
               </Row>
             </div>
 
-            <Tabs defaultActiveKey={selected?._id} id="uncontrolled-tab-example" className="mb-3 d-none" activeKey={selected?._id} >
+            <Tabs defaultActiveKey={selected?._id} id="uncontrolled-tab-example" className="mb-3 d-none" activeKey={selected?._id}>
               <Tab eventKey={selected?._id} title={selected?._id}>
                 <Paper className="table_samepattern">
                   <TableContainer>
-                    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                    <Table
+                      sx={{ minWidth: 650 }}
+                      size="small"
+                      aria-label="a dense table"
+                    >
                       <TableHead>
                         <TableRow>
                           <TableCell>Rank</TableCell>
@@ -199,28 +145,58 @@ const RankingStatus = () => {
                                     <TableCell align="center">${row.totalCommissionAmount}</TableCell>
                                     <TableCell align="center">${row.totalMonthlySalesAmount}</TableCell>
                                   </TableRow>
+
                                   {openRows[row.artistId] && (
                                     <TableRow>
                                       <TableCell colSpan={7}>
                                         <Box p={2} bgcolor="white">
-                                          <ReactApexChart options={options} series={series} type="bar" height={350} />
-                                          <div className="d-flex justify-content-center">
-                                            <div className="d-flex align-items-center">
-                                              <div className="mx-3"><FormLabel id="demo-row-radio-buttons-group-label">By</FormLabel></div>
-                                              <div>
-                                                <FormControl>
-                                                  <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group" value={period} onChange={handleChange}>
-                                                    <FormControlLabel value="month" control={<Radio />} label="Month" />
-                                                    <FormControlLabel value="week" control={<Radio />} label="Week" />
-                                                  </RadioGroup>
-                                                </FormControl>
-                                              </div>
-                                            </div>
+                                          <div className="product_list_box row">
+                                            {
+                                              listLoading?.artwork ? <>Artwork Loading....</> :
+                                                topArtwork?.length > 0 ? (
+                                                  topArtwork?.map((item, i) => (
+                                                    <div className="col-md-2">
+                                                      <Link to={`/product-details/${item?._id}`}>
+                                                        <div className="product_box">
+                                                          <div className="main_show_image">
+                                                            <img className="w-100" src={imgBaseURL() + item?.image} alt="product-img" />
+                                                          </div>
+
+                                                          <div className="product_name">{item?.title}</div>
+                                                          <div className="product_rating">
+                                                            <Stack spacing={1}>
+                                                              <Rating
+                                                                name="half-rating-read"
+                                                                defaultValue={item?.averageRating}
+                                                                precision={0.5}
+                                                                readOnly
+                                                              />
+                                                            </Stack>
+                                                          </div>
+                                                        </div>
+
+                                                      </Link>
+                                                      {/* <button className="wishlist border-0" onClick={() => {
+                                            addRemoveWishList(item?._id, getProductListFun, true)
+                                          }}>
+                                            { item?.isWishlist ?
+                                                <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i>
+                                                :
+                                                <i className="fa-regular fa-heart"></i>
+                                            }
+                                          </button> */}
+                                                    </div>
+                                                  ))
+                                                ) : (
+                                                  <></>
+                                                )}
                                           </div>
                                         </Box>
                                       </TableCell>
                                     </TableRow>
                                   )}
+
+                                  
                                 </React.Fragment>
                               ))
                               :
@@ -240,7 +216,7 @@ const RankingStatus = () => {
         </Container>
       </section>
     </>
-  )
-}
+  );
+};
 
-export default RankingStatus
+export default Artists;

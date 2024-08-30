@@ -496,15 +496,15 @@ export const sizeBtnArr = [
 ];
 
 export const getTierImg = (tier) => {
-    const tierType = tier.toLowerCase()
+    const tierType = tier
     if(tierType === "66b5c8e97402d256e68f856b"){
-        return <img src={gold} alt="badge" />
+        return {icon: <img src={gold} alt="badge" />, text : "Gold"}
     }else if(tierType === "66b5c8d07402d256e68f8568"){
-        return <img src={silver} alt="badge" />
+        return {icon: <img src={silver} alt="badge" />, text : "Silver"}
     }else if(tierType === "66b5c8bc7402d256e68f8565"){
-        return <img src={bronze} alt="badge" />
+        return {icon: <img src={bronze} alt="badge" />, text : "Bronze"}
     }else if(tierType === "66b5c90c7402d256e68f856e"){
-        return <img src={diamond} alt="badge" />
+        return {icon: <img src={diamond} alt="badge" />, text : "Diamond"}
     }else {
         return null
     }

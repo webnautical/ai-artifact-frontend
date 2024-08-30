@@ -13,6 +13,7 @@ import { auth, imgBaseURL } from '../../../helper/Utility';
 import { APICALL } from "../../../helper/api/api";
 import { useEffect, useState } from 'react';
 import AdminLoader from '../../components/AdminLoader';
+import { useDataContext } from '../../../helper/context/ContextProvider';
 
 const options = {
   chart: {
@@ -58,31 +59,16 @@ const options = {
 };
 
 export default function DashboardDefault() {
-  const [artistRanking, setArtistRanking] = useState(null)
-  const [loading, setLoading] = useState({
-    'ranking': false
-  })
-  const getArtistRankFun = async () => {
-    setLoading({ ...loading, 'ranking': true })
-    try {
-      const res = await APICALL(`artist/artistRanking`, 'post', {})
-      if (res) {
-        setArtistRanking(res)
-      } else {
-        setArtistRanking()
-      }
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setLoading({ ...loading, 'ranking': false })
-    }
-  }
+  const { artistRanking, getArtistRankingFun, loading } = useDataContext()
+
 
   useEffect(() => {
     if (auth('admin')?.user_role === "artist") {
-      getArtistRankFun()
+      getArtistRankingFun()
     }
   }, [])
+
+  console.log("artistRanking", artistRanking)
 
   return (
     <Grid container rowSpacing={4.5} columnSpacing={2.75}>
@@ -104,9 +90,12 @@ export default function DashboardDefault() {
         </Grid>
 
         <Grid item md={8} sx={{ display: { sm: 'none', md: 'block', lg: 'none' } }} />
-        <Grid item xs={12} md={7} lg={8}>
-          <UniqueVisitorCard />
-        </Grid>
+        {
+          auth('admin')?.user_role == "artist" &&
+          <Grid item xs={12} md={7} lg={8}>
+            <UniqueVisitorCard />
+          </Grid>
+        }
       </>
 
       {
@@ -121,24 +110,24 @@ export default function DashboardDefault() {
           <MainCard sx={{ mt: 2 }} content={false}>
             {
               // loading?.ranking ? <AdminLoader /> :
-                <Box className="text" sx={{ p: 3, pb: 0 }}>
-                  <Stack className='align-items-center' direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 1, md: 3 }}>
-                    <ApexCharts options={options} series={[artistRanking?.progressPercentage || 100]} type="radialBar" height={350} />
-                    <div className='tier_status'>
-                      {
-                        artistRanking?.tierIcon &&
-                        <div className='tier_img mb-3'>
-                          <img style={{ width: '50px' }} src={imgBaseURL() + artistRanking?.tierIcon} alt='tier-image' />
-                        </div>
-                      }
-                      <ul>
-                        <li> <b> Rank</b> - {artistRanking?.currentRank}</li>
-                        <li> <b>Currunt Points </b>-  {artistRanking?.currentPoints}</li>
-                      </ul>
-                    </div>
-                  </Stack>
-                  <p className='chat_tier text-center'>{artistRanking?.message}</p>
-                </Box>
+              <Box className="text" sx={{ p: 3, pb: 0 }}>
+                <Stack className='align-items-center' direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 1, md: 3 }}>
+                  <ApexCharts options={options} series={[artistRanking?.progressPercentage || 100]} type="radialBar" height={350} />
+                  <div className='tier_status'>
+                    {
+                      artistRanking?.tierIcon &&
+                      <div className='tier_img mb-3'>
+                        <img style={{ width: '50px' }} src={imgBaseURL() + artistRanking?.tierIcon} alt='tier-image' />
+                      </div>
+                    }
+                    <ul>
+                      <li> <b> Rank</b> - {artistRanking?.currentRank}</li>
+                      <li> <b>Currunt Points </b>-  {artistRanking?.currentPoints}</li>
+                    </ul>
+                  </div>
+                </Stack>
+                <p className='chat_tier text-center'>{artistRanking?.message}</p>
+              </Box>
             }
           </MainCard>
         </Grid>

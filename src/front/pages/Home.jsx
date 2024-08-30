@@ -21,23 +21,23 @@ import Spinner from 'react-bootstrap/Spinner';
 import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
-// import Tab from "react-bootstrap/Tab";
-// import Tabs from "react-bootstrap/Tabs";
-// import collectionimg from "../../assets/images/top (1).png";
-// import toptwo from "../../assets/images/top (2).png";
-// import topthree from "../../assets/images/top (3).png";
-// import topfour from "../../assets/images/top (4).png";
-// import topfive from "../../assets/images/top-5.png";
-// import topsix from "../../assets/images/top-6.png";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
+import collectionimg from "../../assets/images/top (1).png";
+import toptwo from "../../assets/images/top (2).png";
+import topthree from "../../assets/images/top (3).png";
+import topfour from "../../assets/images/top (4).png";
+import topfive from "../../assets/images/top-5.png";
+import topsix from "../../assets/images/top-6.png";
 
-// import firsttier from "../../assets/images/1 - Bronze.png";
-// import silver from "../../assets/images/2 - Silver.png";
-// import gold from "../../assets/images/3 - Gold.png";
-// import diamond from "../../assets/images/4 - Diamond.png";
-// import topimages from "../../assets/images/top (1).png";
-// import topimagesone from "../../assets/images/top (2).png";
-// import topimagestwo from "../../assets/images/top (3).png";
-// import topimagesthree from "../../assets/images/top (4).png";
+import firsttier from "../../assets/images/1 - Bronze.png";
+import silver from "../../assets/images/2 - Silver.png";
+import gold from "../../assets/images/3 - Gold.png";
+import diamond from "../../assets/images/4 - Diamond.png";
+import topimages from "../../assets/images/top (1).png";
+import topimagesone from "../../assets/images/top (2).png";
+import topimagestwo from "../../assets/images/top (3).png";
+import topimagesthree from "../../assets/images/top (4).png";
 import CollectionLIst from "../../components/CollectionLIst";
 import Artworks from "../../components/Artworks";
 import Newsletter from "../../components/Newsletter";
@@ -70,7 +70,8 @@ const Home = () => {
   const { categoryList, getCategoryFun } = useDataContext()
   const navigate = useNavigate()
   const [key, setKey] = useState("one");
-  const { getProductListFun, productList, contextLoader, addRemoveWishList, getHeaderContent } = useFrontDataContext();
+  const { getProductListFun, productList, contextLoader, addRemoveWishList, getHeaderContent,getGeneralSettingFun, generalSetting } = useFrontDataContext();
+
   const [loading, setLoading] = useState(false)
   useEffect(() => {
     getProductListFun()
@@ -78,6 +79,7 @@ const Home = () => {
     getBlogFun()
     getCategoryFun()
     getHomePageData()
+    getGeneralSettingFun()
   }, [])
 
   const handleSelect = (k) => {
@@ -259,6 +261,7 @@ const Home = () => {
     navigate('/blog-details', { state: { data: item } })
   }
 
+  console.log("generalSetting",generalSetting)
 
   return (
     <div className="main_homapage">
@@ -328,7 +331,7 @@ const Home = () => {
 
                                     <div className="tiear_stauts_name d-flex align-items-center">
                                       <span className="me-2">
-                                        <img src={badgebronze} alt="badge" />
+                                        {getTierImg(art?.artistId?.currentRank)?.icon}
                                       </span>
                                       <Link to={`/collection/${art?.artistId?._id}`}><div className="name text-capitalize">{art?.artistId?.first_name + " " + art?.artistId?.last_name}</div></Link>
                                     </div>
@@ -386,7 +389,7 @@ const Home = () => {
 
                           <div className="tiear_stauts_name d-flex align-items-center">
                             <span className="me-2">
-                              {getTierImg(item?.artist?.currentRank)}
+                              {getTierImg(item?.artist?.currentRank)?.icon}
                             </span>
                             <div className="name">
                               {item?.artist?.first_name +
@@ -421,7 +424,7 @@ const Home = () => {
         </Container>
       </section>
 
-      {/* 
+
       <section className="top_ten">
         <Container>
           <div className="shode_box " >
@@ -918,7 +921,7 @@ const Home = () => {
           </div>
         </Container>
       </section>
-    */}
+
       <CollectionLIst title={"Popular collections this week"} data={popularCollection} />
 
       <Artworks title={"Best Selling Artworks"} data={bestSelling} fun={getHomePageData} />
@@ -975,37 +978,37 @@ const Home = () => {
                 <Col md={3}>
                   <ul className="social_community mb-0">
                     <li>
-                      <Link>
+                      <Link to={generalSetting?.facebookUrl} target="_blank">
                         <img src={Feedback} alt="facebook-icon" />
                       </Link>
                     </li>
                     <li>
-                      <Link>
+                      <Link to={generalSetting?.instagramUrl} target="_blank">
                         <img src={insta} alt="facebook-icon" />
                       </Link>
                     </li>
                     <li>
-                      <Link>
+                      <Link to={generalSetting?.redditUrl} target="_blank">
                         <img src={redit} alt="facebook-icon" />
                       </Link>
                     </li>
                     <li>
-                      <Link>
+                      <Link to={generalSetting?.tiktokUrl} target="_blank">
                         <img src={tiktok} alt="facebook-icon" />
                       </Link>
                     </li>
                     <li>
-                      <Link>
+                      <Link to={generalSetting?.discordUrl} target="_blank">
                         <img src={discord} alt="facebook-icon" />
                       </Link>
                     </li>
                     <li>
-                      <Link>
+                      <Link to={generalSetting?.pinterestUrl} target="_blank">
                         <img src={pinterst} alt="facebook-icon" />
                       </Link>
                     </li>
                     <li>
-                      <Link>
+                      <Link to={generalSetting?.twitterUrl} target="_blank">
                         <img src={twitter} alt="facebook-icon" />
                       </Link>
                     </li>

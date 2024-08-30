@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useDataContext } from '../../../helper/context/ContextProvider';
 import { Grid, Paper, Stack, Typography } from '@mui/material';
 import { Button, Col, Row } from 'react-bootstrap';
-import { timeAgo } from '../../../helper/Utility';
+import { imgBaseURL, timeAgo } from '../../../helper/Utility';
 import MainCard from '../../components/MainCard';
 import { Box } from '@mui/system';
 import ApexCharts from 'react-apexcharts';
@@ -58,12 +58,16 @@ const series = [75];
 const ViewUserDetails = () => {
     const { id } = useParams()
     const navigate = useNavigate()
-    const { userInfoByID, getUserByIDFun, userDetailsLoading } = useDataContext();
+    const { userInfoByID, getUserByIDFun, userDetailsLoading, artistRanking, getArtistRankingFun, loading } = useDataContext();
     useEffect(() => {
         if (id) {
             getUserByIDFun(id)
+            getArtistRankingFun(id)
         }
     }, [id])
+
+    console.log("userInfoByID", userInfoByID)
+    console.log("artistRanking", artistRanking)
 
     return (
         <>
@@ -73,7 +77,7 @@ const ViewUserDetails = () => {
                 ) : (
                     <div className="row-details">
                         <div className="d-flex mb-4" style={{ gap: "10px" }}>
-                            <Link   className="artist-btn"  onClick={() => navigate(-1)}>
+                            <Link className="artist-btn" onClick={() => navigate(-1)}>
                                 <i class="fa-solid fa-arrow-left"></i>
                             </Link>
                             <h2 className="title-admins-table m-0 text-capitalize">
@@ -118,17 +122,17 @@ const ViewUserDetails = () => {
                                                         <p>
                                                             {" "}
                                                             <strong>State:</strong>{" "}
-                                                            {userInfoByID?.state  || "---"}
+                                                            {userInfoByID?.state || "---"}
                                                         </p>
                                                         <p>
                                                             {" "}
                                                             <strong>City:</strong>{" "}
-                                                            {userInfoByID?.city  || "---"}
+                                                            {userInfoByID?.city || "---"}
                                                         </p>
                                                         <p>
                                                             {" "}
                                                             <strong>Postal Code:</strong>{" "}
-                                                            {userInfoByID?.postalCode  || "---"}
+                                                            {userInfoByID?.postalCode || "---"}
                                                         </p>
                                                     </div>
                                                 </Col>
@@ -137,25 +141,28 @@ const ViewUserDetails = () => {
                                     </Col>
                                 </Row>
                             </Col>
-                            {userInfoByID?.user_role === "customer" &&
+                            {userInfoByID?.user_role === "artist" &&
                                 <Col md={5}>
                                     <Row>
                                         <Col md={12} className="mb-3">
                                             <MainCard content={false}>
                                                 <Box className="text" sx={{ p: 3, pb: 0 }}>
                                                     <Stack className='align-items-center' direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 1, md: 3 }}>
-                                                        <ApexCharts options={options} series={series} type="radialBar" height={350} />
+                                                        <ApexCharts options={options} series={[artistRanking?.progressPercentage || 100]} type="radialBar" height={350} />
                                                         <div className='tier_status'>
-                                                            <div className='tier_img mb-3'>
-                                                                <img style={{ width: '50px' }} src={tier} alt='tier-image' />
-                                                            </div>
+                                                            {
+                                                                artistRanking?.tierIcon &&
+                                                                <div className='tier_img mb-3'>
+                                                                    <img style={{ width: '50px' }} src={imgBaseURL() + artistRanking?.tierIcon} alt='tier-image' />
+                                                                </div>
+                                                            }
                                                             <ul>
-                                                                <li> <b>  Rank</b> - {userInfoByID?.currentRank?.name}</li>
-                                                                <li> <b>Currunt Points </b>-  {userInfoByID?.currentRank?.commission}</li>
+                                                                <li> <b> Rank</b> - {artistRanking?.currentRank}</li>
+                                                                <li> <b>Currunt Points </b>-  {artistRanking?.currentPoints}</li>
                                                             </ul>
                                                         </div>
                                                     </Stack>
-                                                    <p className='chat_tier text-center'>Get 3000 Points To Reach Bronze</p>
+                                                    <p className='chat_tier text-center'>{artistRanking?.message}</p>
                                                 </Box>
                                             </MainCard>
                                         </Col>

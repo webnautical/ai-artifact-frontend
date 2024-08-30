@@ -4926,3 +4926,8 @@ nav.sidebr-admin .simplebar-scrollable-x {
 .general-setting label{
   text-transform: capitalize;
 }
+
+.table_image_container img{
+  height:32px !important;
+  width: 28px !important;
+}

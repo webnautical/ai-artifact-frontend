@@ -135,7 +135,7 @@ const ShippingAddress = () => {
     if (city.trim() === "") errors.city = "Required *";
 
     const phonePattern = /^\+?[1-9]\d{1,14}$/;
-    if (contactPhone.trim() === "") {
+    if (contactPhone === "") {
       errors.contactPhone = "Required *";
     } else if (!phonePattern.test(contactPhone)) {
       errors.contactPhone = "Invalid phone number for DHL/UPS";
@@ -155,7 +155,7 @@ const ShippingAddress = () => {
       if (billingState.trim() === "") errors.billingState = "Required *";
       if (billingCity.trim() === "") errors.billingCity = "Required *";
 
-      if (billingContactPhone.trim() === "") {
+      if (billingContactPhone === "") {
         errors.billingContactPhone = "Required *";
       } else if (!phonePattern.test(billingContactPhone)) {
         errors.billingContactPhone = "Invalid phone number for DHL/UPS";
@@ -181,12 +181,12 @@ const ShippingAddress = () => {
         firstName: customerInfo?.user?.first_name,
         lastName: customerInfo?.user?.last_name,
         addressLine1: customerInfo?.user?.address1,
-        addressLine2:  customerInfo?.user?.address2,
-        postalCode:  customerInfo?.user?.postalCode,
-        city:  customerInfo?.user?.city,
-        state:  customerInfo?.user?.state,
-        country:  customerInfo?.user?.country,
-        contactPhone:  customerInfo?.user?.phone,
+        addressLine2: customerInfo?.user?.address2,
+        postalCode: customerInfo?.user?.postalCode,
+        city: customerInfo?.user?.city,
+        state: customerInfo?.user?.state,
+        country: customerInfo?.user?.country,
+        contactPhone: customerInfo?.user?.phone,
         email: customerInfo?.user?.email,
         useDifferentBillingAddress: false,
       });

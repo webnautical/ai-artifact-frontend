@@ -126,9 +126,9 @@ const Footer = () => {
                   <li>
                     <Link to="/what-is-aiartifact">What's a AiArtifact?</Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link  to="/aiartifact-club">AiArtifact Club</Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link to="/about-us">About us</Link>
                   </li>

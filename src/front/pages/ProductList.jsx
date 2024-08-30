@@ -13,7 +13,7 @@ import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import { useDataContext } from "../../helper/context/ContextProvider";
 import { APICALL } from "../../helper/api/api";
-import { imgBaseURL } from "../../helper/Utility";
+import { getTierImg, imgBaseURL } from "../../helper/Utility";
 import FrontLoader from "../../components/FrontLoader";
 import NoData from "../../components/NoData";
 import noDataImg from '../../assets/images/animasi-emptystate.gif'
@@ -239,7 +239,7 @@ const ProductList = () => {
 
                                 <div className="tiear_stauts_name d-flex align-items-center">
                                   <span className="me-2">
-                                    <img src={badge} alt="badge" />
+                                  {getTierImg(item?.artist?.currentRank)?.icon}
                                   </span>
                                   <div className="name">
                                     {item?.artist?.first_name +

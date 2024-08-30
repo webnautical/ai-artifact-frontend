@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import badge from "../../assets/images/badge (1).png";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
-import { auth, imgBaseURL } from "../../helper/Utility";
+import { auth, getTierImg, imgBaseURL } from "../../helper/Utility";
 import FrontLoader from "../../components/FrontLoader";
 import BTNLoader from "./../../components/BTNLoader";
 import { Link, useNavigate } from "react-router-dom";
@@ -59,7 +59,7 @@ const Wishlist = () => {
                               </div>
                               <div className="tiear_stauts_name d-flex align-items-center">
                                 <span className="me-2">
-                                  <img src={badge} alt="badge" />
+                                {getTierImg(item?.product_id?.artist_id?.currentRank)?.icon}
                                 </span>
                                 <div className="name">
                                   {item?.product_id?.artist_id?.first_name +

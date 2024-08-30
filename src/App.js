@@ -30,7 +30,7 @@ import ShippingAddress from "./front/pages/ShippingAddress";
 import ProductDetail from "./front/pages/ProductDetails";
 import Wishlist from "./front/pages/Wishlist";
 import Blog from "./front/pages/Blog";
-import Ranking from "./front/pages/Ranking/Ranking";
+import Artists from "./front/pages/Ranking/Artists";
 import RankingStatus from "./front/pages/Ranking/RankingStatus";
 import BlogDetails from "./front/pages/BlogDetails";
 import { ToastContainer } from "react-toastify";
@@ -65,8 +65,8 @@ function App() {
             <Route path="/customer/:page" element={<FrontWeb cmp={CustomerRoot} header={true} footer={true} />} />
             <Route path="/faq" element={<FrontWeb cmp={Faq} />} />
             <Route path="/cart" element={<FrontWeb cmp={Cart} />} />
-            <Route path="/ranking" element={<FrontWeb cmp={Ranking} />} />
-            <Route path="/ranking-status" element={<FrontWeb cmp={RankingStatus} />} />
+            <Route path="/artists" element={<FrontWeb cmp={Artists} />} />
+            <Route path="/ranking" element={<FrontWeb cmp={RankingStatus} />} />
             <Route path="/product-details/:id" element={<FrontWeb cmp={ProductDetail} />} />
             <Route path="/wishlist" element={<FrontWeb cmp={Wishlist} />} />
             <Route path="/blog" element={<FrontWeb cmp={Blog} />} />

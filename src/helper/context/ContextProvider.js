@@ -6,7 +6,10 @@ export const ContextProvider = ({ children }) => {
     const [permisionData, setPermisionData] = useState(null)
     const [categoryList, setCategoryList] = useState([])
     const [subCategoryList, setSubCategoryList] = useState([])
-    const [collectionList, setCollectionList] = useState([])
+    const [loading, setLoading] = useState({
+        'ranking': false,
+        'tier' : false
+    })
     const [directoryList, setDirectoryList] = useState([])
     useEffect(() => {
         getTierImgFun()
@@ -17,7 +20,7 @@ export const ContextProvider = ({ children }) => {
     const getUserByIDFun = async (id) => {
         try {
             setDetailsLoading(true)
-            const res = await APICALL('/user/userData', 'post', {id: id})
+            const res = await APICALL('/user/userData', 'post', { id: id })
             if (res?.status) {
                 setUserInfoByID(res?.user)
             } else {
@@ -25,7 +28,7 @@ export const ContextProvider = ({ children }) => {
             }
         } catch (error) {
             console.log(error)
-        }finally{
+        } finally {
             setDetailsLoading(false)
         }
     }
@@ -84,21 +87,24 @@ export const ContextProvider = ({ children }) => {
         }
     }
 
-    // const getCollectionFun = async (id) => {
-    //     const params = { id: id }
-    //     try {
-    //         const res = await APICALL('admin/getAllCollections', 'post', params)
-    //         if (res?.status) {
-    //             setCollectionList(res?.data)
-    //         } else {
-    //             setCollectionList(null)
-    //         }
-    //     } catch (error) {
-    //         setCollectionList(null)
-    //     }
-    // }
 
-    console.log("getRankTier",getRankTier)
+    const [artistRanking, setArtistRanking] = useState(null)
+    const getArtistRankingFun = async (id) => {
+        const params = { artistId: id }
+        setLoading({ ...loading, 'ranking': true })
+        try {
+            const res = await APICALL(`artist/artistRanking`, 'post', params)
+            if (res) {
+                setArtistRanking(res)
+            } else {
+                setArtistRanking(null)
+            }
+        } catch (error) {
+            setArtistRanking(null)
+        } finally {
+            setLoading({ ...loading, 'ranking': false })
+        }
+    }
 
     const getDirectoryFun = async () => {
         try {
@@ -120,8 +126,9 @@ export const ContextProvider = ({ children }) => {
             getSubCategoryFun, subCategoryList,
             // getCollectionFun, collectionList,
             getDirectoryFun, directoryList,
-            userInfoByID, getUserByIDFun,userDetailsLoading,
-            getTierImgFun,getRankTier
+            userInfoByID, getUserByIDFun, userDetailsLoading,
+            getTierImgFun, getRankTier,
+            artistRanking, getArtistRankingFun,loading
         }}>
             {children}
         </ContextData.Provider>

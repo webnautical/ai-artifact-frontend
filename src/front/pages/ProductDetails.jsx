@@ -16,7 +16,7 @@ import revimg from "../../assets/images/feedback.gif";
 import { APICALL } from "../../helper/api/api";
 import { useLocation, useNavigate, useParams } from "react-router";
 import FrontLoader from "../../components/FrontLoader";
-import { auth, decryptId, encryptId, imgBaseURL, timeAgo, toastifyError, toastifySuccess } from "../../helper/Utility";
+import { auth, decryptId, encryptId, getTierImg, imgBaseURL, timeAgo, toastifyError, toastifySuccess } from "../../helper/Utility";
 import BTNLoader from "../../components/BTNLoader";
 import { SOMETHING_ERR } from "../../helper/Constant";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
@@ -395,11 +395,11 @@ const ProductDetail = () => {
   }
 
   const habdleRedirect = () => {
-    const data = { category: {name : productDetails?.category?.name, _id : productDetails?.category?._id} };
+    const data = { category: { name: productDetails?.category?.name, _id: productDetails?.category?._id } };
     navigate(`/product-list`, { state: { data: data } });
   };
 
-  console.log("productDetails",productDetails)
+  console.log("productDetails", productDetails)
 
   return (
     <>
@@ -417,18 +417,18 @@ const ProductDetail = () => {
                         <Link to={'/'}>Home <i className="fa-solid fa-chevron-right"></i></Link>
                       </li>
                       <li>
-                        <button  onClick={() =>habdleRedirect()} className="global_light_btn" style={{color : '#8b96a5'}}>{productDetails?.category?.name} <i className="fa-solid fa-chevron-right"></i></button>
+                        <button onClick={() => habdleRedirect()} className="global_light_btn" style={{ color: '#8b96a5' }}>{productDetails?.category?.name} <i className="fa-solid fa-chevron-right"></i></button>
                       </li>
                       <li>
                         <Link to={`/collection/${productDetails?.artist_id?._id}`}> {productDetails?.artist_id?.first_name + ' ' + productDetails?.artist_id?.last_name} </Link>
                       </li>
-                        <li>
-                          <Link to={`/product-list`}><i className="fa-solid fa-chevron-right"></i> {productDetails?.directoryId?.name}</Link>
-                        </li>
-                        <li>
-                          <Link><i className="fa-solid fa-chevron-right"></i> {productDetails?.title}</Link>
-                        </li>
-                        
+                      <li>
+                        <Link to={`/product-list`}><i className="fa-solid fa-chevron-right"></i> {productDetails?.directoryId?.name}</Link>
+                      </li>
+                      <li>
+                        <Link><i className="fa-solid fa-chevron-right"></i> {productDetails?.title}</Link>
+                      </li>
+
                     </ul>
                   </div>
                 </Col>
@@ -502,7 +502,7 @@ const ProductDetail = () => {
 
                     <div className="artist_name mt-2 mb-4">
                       <span>
-                        <img src={tiericon} alt="icon" />
+                        {getTierImg(productDetails?.artist_id?.currentRank)?.icon}
                       </span>
                       <p className="m-0">{productDetails?.artist_id?.first_name + ' ' + productDetails?.artist_id?.last_name}</p>
                     </div>

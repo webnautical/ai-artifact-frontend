@@ -416,10 +416,10 @@ const Header = () => {
                       <Link to="/product-list">Collections</Link>
                     </li>
                     <li>
-                      <Link to="">Artists</Link>
+                      <Link to="/artists">Artists</Link>
                     </li>
                     <li>
-                      <Link to="/">Ranking</Link>
+                      <Link to="/ranking">Ranking</Link>
                     </li>
                   </ul>
                 </nav>
@@ -706,10 +706,10 @@ const Header = () => {
                 <Link to="/product-list">Collection</Link>
               </li>
               <li>
-                <Link to="/">Artist</Link>
+                <Link to="/artists">Artists</Link>
               </li>
               <li>
-                <Link to="/">Ranking</Link>
+                <Link to="/ranking">Ranking</Link>
               </li>
             </ul>
           </div>

@@ -53,7 +53,6 @@ export const useTierDetails = () => {
         }
 
         if (getTierDetails.length > 0) {
-            console.log("getTierDetails Loaded:", getTierDetails);
             const tierData = getTierDetails.find((tier) => tier._id === tierId);
             return tierData || null;
         } else {

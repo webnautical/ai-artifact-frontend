@@ -25,7 +25,7 @@ import "../../../assets/css/admin.css";
 import AdminLoader from "../../components/AdminLoader";
 import { useDataContext } from './../../../helper/context/ContextProvider';
 import TableMSG from "../../../components/TableMSG";
-import { filterByKey } from "../../../helper/Utility";
+import { filterByKey, getTierImg } from "../../../helper/Utility";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from './../../../helper/Constant';
 import { useParams } from "react-router";
 import { Dropdown } from "react-bootstrap";
@@ -104,7 +104,7 @@ TablePaginationActions.propTypes = {
 };
 
 export default function UserManagement() {
-  const {type} = useParams()
+  const { type } = useParams()
   const { permisionData, getPermision } = useDataContext();
 
   const [list, setList] = useState([]);
@@ -114,11 +114,11 @@ export default function UserManagement() {
   const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_PER_PAGE);
   const permisionCheck = filterByKey("userManagement", permisionData?.permissions);
 
-  useEffect(() =>{
-    getPermision()
-  },[])
   useEffect(() => {
-    if(permisionCheck?.read){
+    getPermision()
+  }, [])
+  useEffect(() => {
+    if (permisionCheck?.read) {
       getListFun();
     }
   }, [type]);
@@ -126,7 +126,7 @@ export default function UserManagement() {
   const getListFun = async () => {
     setLoading(true);
     try {
-      const res = await APICALL("admin/allUsers", "post", {role: type});
+      const res = await APICALL("admin/allUsers", "post", { role: type });
       setLoading(false);
       if (res?.status) {
         setList(res?.Users);
@@ -159,7 +159,7 @@ export default function UserManagement() {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredList.length) : 0;
 
   return (
-    <Paper className="table_samepattern">
+    <Paper className="table_samepattern table_image_container">
       <div
         style={{
           display: "flex",
@@ -188,10 +188,13 @@ export default function UserManagement() {
                   <TableHead>
                     <TableRow>
                       <TableCell align="center">S.NO</TableCell>
+                      {
+                        type === "artist" &&
+                        <TableCell>Tier</TableCell>
+                      }
                       <TableCell>User Name</TableCell>
                       <TableCell>Email Address</TableCell>
                       <TableCell>Assigned Roles</TableCell>
-                      {/* <TableCell>Status (Active/Inactive)</TableCell> */}
                       {/* <TableCell>Date</TableCell> */}
                       <TableCell>Action</TableCell>
                     </TableRow>
@@ -209,6 +212,10 @@ export default function UserManagement() {
                           <TableCell component="th" scope="row" align="center">
                             {i + 1}
                           </TableCell>
+                          {
+                            type === "artist" &&
+                          <TableCell>{getTierImg(row?.currentRank)?.icon}</TableCell>
+                          }
                           <TableCell component="th" scope="row">
                             {row.first_name + " " + row.last_name}
                           </TableCell>
@@ -228,8 +235,8 @@ export default function UserManagement() {
                               </Dropdown.Toggle>
                               <Dropdown.Menu>
                                 <Dropdown.Item>
-                                  <Link  to={`/admin/user-management-details/${row?._id}`}>
-                                  <EyeFilled style={{ marginRight: "8px" }} />Views Details
+                                  <Link to={`/admin/user-management-details/${row?._id}`}>
+                                    <EyeFilled style={{ marginRight: "8px" }} />Views Details
                                   </Link>
                                 </Dropdown.Item>
                               </Dropdown.Menu>
