@@ -236,6 +236,14 @@ const dashboard = {
       breadcrumbs: false
     },  
     {
+      id: 'Subscribers',
+      title: 'Subscribers',
+      type: 'item',
+      url: '/admin/subscribers',
+      icon: icons.AddModeratorOutlined,
+      breadcrumbs: false
+    },  
+    {
       id: 'blogs',
       title: 'Blogs',
       type: 'item',

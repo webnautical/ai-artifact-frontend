@@ -67,13 +67,17 @@ import HTMLContent from "../../components/HTMLContent";
 
 const Home = () => {
 
-  const { categoryList, getCategoryFun } = useDataContext()
+  const { categoryList, getCategoryFun, getTierImgFun, getRankTier } = useDataContext()
   const navigate = useNavigate()
   const [key, setKey] = useState("one");
-  const { getProductListFun, productList, contextLoader, addRemoveWishList, getHeaderContent,getGeneralSettingFun, generalSetting } = useFrontDataContext();
+  const { getProductListFun, productList, contextLoader, addRemoveWishList, getHeaderContent, getGeneralSettingFun, generalSetting } = useFrontDataContext();
 
   const [loading, setLoading] = useState(false)
+  const [listLoading, setListLoading] = useState({
+    'artwork': false
+  })
   useEffect(() => {
+    getTierImgFun()
     getProductListFun()
     getHeaderContent()
     getBlogFun()
@@ -83,8 +87,31 @@ const Home = () => {
   }, [])
 
   const handleSelect = (k) => {
-    setKey(k);
+    setSelected(k);
+    getTop10Artwork(k?._id)
   };
+
+  const [top10ArtworkList, setTop10ArtworkList] = useState([])
+  const getTop10Artwork = async (tierId) => {
+    setListLoading({ ...listLoading, 'artwork': true })
+    try {
+      const res = await APICALL(`user/top10ByTier`, 'post', { tierId: tierId })
+      if (res?.status) {
+        setTop10ArtworkList(res?.data)
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setListLoading({ ...listLoading, 'artwork': false })
+    }
+  }
+
+  useEffect(() => {
+    if (getRankTier) {
+      setSelected(getRankTier[0])
+      getTop10Artwork(getRankTier[0]?._id)
+    }
+  }, [getRankTier])
 
   const knowledgebaseowl = {
     loop: true,
@@ -203,7 +230,7 @@ const Home = () => {
     },
   };
 
-
+  const [selected, setSelected] = useState();
 
   const owlCarouselRef = useRef(null);
 
@@ -261,8 +288,6 @@ const Home = () => {
     navigate('/blog-details', { state: { data: item } })
   }
 
-  console.log("generalSetting",generalSetting)
-
   return (
     <div className="main_homapage">
       {
@@ -308,36 +333,36 @@ const Home = () => {
                         justBought?.map((item, i) => (
                           <div className="item">
                             {item?.lists?.map((art, i) => (
-                              <div className="main_baught_list_box">
-                                <Row>
-                                  <Col md={5} sm={5} xs={5}>
-                                    <div className="baught_img">
-                                      <Link to={`/product-details/${art?.productId?._id}`} className="baought_list">
-                                        <img
-                                          className="list_tumb w-100"
-                                          src={imgBaseURL() + art?.productId?.thumbnail}
-                                          alt="poster-img"
-                                        />
-                                      </Link>
+                             <div className="main_baught_list_box">
+                             <div className="main_baught_list_box_outer">
+                              <div>
+                                 <div className="baught_img">
+                                   <Link to={`/product-details/${art?.productId?._id}`} className="baought_list">
+                                     <img
+                                       className="list_tumb w-100"
+                                       src={imgBaseURL() + art?.productId?.thumbnail}
+                                       alt="poster-img"
+                                     />
+                                   </Link>
 
-                                    </div>
-                                  </Col>
-                                  <Col md={7} sm={7} xs={7} className="p-0">
-                                    <div className="sub_tittle"><Link to={`/collection/${art?.artistId?._id}/${art?.productId?.directoryId?._id}`}>{art?.productId?.directoryId?.name}</Link></div>
+                                 </div>
+                                 </div>
+                             <div>
+                                 <div className="sub_tittle"><Link to={`/collection/${art?.artistId?._id}/${art?.productId?.directoryId?._id}`}>{art?.productId?.directoryId?.name}</Link></div>
 
-                                    <Link to={`/product-details/${art?.productId?._id}`} className="baought_list">
-                                      <h3>{art?.productId?.title}</h3>
-                                    </Link>
+                                 <Link to={`/product-details/${art?.productId?._id}`} className="baought_list">
+                                   {art?.productId?.title}
+                                 </Link>
 
-                                    <div className="tiear_stauts_name d-flex align-items-center">
-                                      <span className="me-2">
-                                        {getTierImg(art?.artistId?.currentRank)?.icon}
-                                      </span>
-                                      <Link to={`/collection/${art?.artistId?._id}`}><div className="name text-capitalize">{art?.artistId?.first_name + " " + art?.artistId?.last_name}</div></Link>
-                                    </div>
-                                  </Col>
-                                </Row>
+                                 <div className="tiear_stauts_name d-flex align-items-center">
+                                   <span className="me-2">
+                                     {getTierImg(art?.artistId?.currentRank)?.icon}
+                                   </span>
+                                   <Link to={`/collection/${art?.artistId?._id}`}><div className="name text-capitalize">{art?.artistId?.first_name + " " + art?.artistId?.last_name}</div></Link>
+                                 </div>
                               </div>
+                             </div>
+                           </div>
                             ))}
 
                           </div>
@@ -367,8 +392,8 @@ const Home = () => {
                         <div className="product_box">
                           <div className="main_show_image">
                             <img className="w-100" src={
-                              item?.image
-                                ? imgBaseURL() + item?.image
+                              item?.thumbnail
+                                ? imgBaseURL() + item?.thumbnail
                                 : productimg
                             }
                               alt="product-img"
@@ -432,491 +457,51 @@ const Home = () => {
               <Col lg={6}>
                 <h4 class="left_global_heading">Top 10 by tier</h4>
               </Col>
+
               <Col lg={6} className="text-lg-end text-center">
                 <div className="tab-cus-buttons">
-                  <button
-                    className={key === "one" ? "active" : ""}
-                    onClick={() => handleSelect("one")}
-                  >
-                    <img src={firsttier} alt="icon_tier" />
-                  </button>
-                  <button
-                    className={key === "two" ? "active" : ""}
-                    onClick={() => handleSelect("two")}
-                  >
-                    <img src={silver} alt="icon_tier" />
-                  </button>
-
-                  <button
-                    className={key === "three" ? "active" : ""}
-                    onClick={() => handleSelect("three")}
-                  >
-                    <img src={gold} alt="icon_tier" />
-                  </button>
-
-                  <button
-                    className={key === "four" ? "active" : ""}
-                    onClick={() => handleSelect("four")}
-                  >
-                    <img src={diamond} alt="icon_tier" />
-                  </button>
+                  {
+                    getRankTier?.filter(item => item?.name !== "Unranked")?.map((item, i) => (
+                      <button className={item?.name === selected?.name ? "active" : ""} onClick={() => handleSelect(item)} >
+                        <img src={imgBaseURL() + item?.icon} alt="icon_tier" />
+                      </button>
+                    ))
+                  }
                 </div>
+
               </Col>
+
             </Row>
 
-            <Tabs
-              class="d-none"
-              defaultActiveKey="one"
-              id="uncontrolled-tab-example"
-              className="mb-3"
-              activeKey={key}
+            <Tabs class="d-none" defaultActiveKey={selected?._id} id="uncontrolled-tab-example" className="mb-3" activeKey={selected?._id}
             >
-              <Tab eventKey="one" title="One">
-                <Row
-                  className="    row-cols-2
-               row-cols-sm-2
-               row-cols-xl-5
-               row-cols-lg-4
-               row-cols-md-3
-               gx-md-5
-               pt-1"
-                >
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={toptwo}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topthree}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topfour}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topfive}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topsix}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-                </Row>
-              </Tab>
-              <Tab eventKey="two" title="Two">
-                <Row
-                  className="    row-cols-2
-               row-cols-sm-2
-               row-cols-xl-5
-               row-cols-lg-4
-               row-cols-md-3
-               gx-5
-               pt-1"
-                >
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimages}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimagesone}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimagestwo}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimagesthree}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
+              <Tab eventKey={selected?._id} title={selected?._id}>
+                <Row className="row-cols-2 row-cols-sm-2 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 gx-md-5 pt-1">
+                  {
+                    listLoading?.artwork ? <>Loading....</> :
+                      top10ArtworkList?.length > 0 ?
+                        top10ArtworkList.map((row, i) => (
+                          <Col className="mb-4">
+                            <div className="collection_grid" data-aos="zoom-in">
+                              <Link to={`/product-details/${row?.product?._id}`}>
+                                <img className="w-100"
+                                  src={imgBaseURL() + row?.product?.thumbnail}
+                                  alt="populat-collection-img"
+                                />
+                              </Link>
+                            </div>
+                          </Col>
+                        ))
+                        :
+                        <>
+                          <div className="text-center mt-3">
+                            <h6>There are no artwork on this rank !</h6>
+                          </div>
+                        </>
+                  }
                 </Row>
               </Tab>
 
-              <Tab eventKey="three" title="Three">
-                <Row
-                  className="    row-cols-2
-               row-cols-sm-2
-               row-cols-xl-5
-               row-cols-lg-4
-               row-cols-md-3
-               gx-5
-               pt-1"
-                >
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimages}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimagesone}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimagestwo}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimagesthree}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-                </Row>
-              </Tab>
-
-              <Tab eventKey="four" title="Four">
-                <Row
-                  className="    row-cols-2
-               row-cols-sm-2
-               row-cols-xl-5
-               row-cols-lg-4
-               row-cols-md-3
-               gx-5
-               pt-1"
-                >
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimages}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimagesone}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimagestwo}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={topimagesthree}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-
-                  <Col className="mb-4">
-                    <div className="collection_grid" data-aos="zoom-in">
-                      <img
-                        className="w-100"
-                        src={collectionimg}
-                        alt="populat-collection-img"
-                      />
-                    </div>
-                  </Col>
-                </Row>
-              </Tab>
             </Tabs>
           </div>
         </Container>

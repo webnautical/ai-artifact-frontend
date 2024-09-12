@@ -17,14 +17,12 @@ const Header = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
-  const [ setDropdownOpen] = useState(false);
+  const [setDropdownOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  // Toggle dropdown open/close
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  // Close dropdown when a link is clicked
   const handleLinkClick = () => {
     setIsOpen(false);
   };
@@ -90,7 +88,6 @@ const Header = () => {
 
     window.addEventListener("scroll", handleScroll);
 
-    // Cleanup event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -105,6 +102,8 @@ const Header = () => {
     setShowBrowse(false);
     navigate(`/product-list`, { state: { data: data } });
   };
+
+  console.log("headerContent", headerContent)
 
 
   return (
@@ -270,7 +269,7 @@ const Header = () => {
                       {/* <span className="d-block">{"Join"}</span> */}
                     </Link>
                   ) :
-                  <Link className="text-center" to="/login/customer">
+                    <Link className="text-center" to="/login/customer">
                       <svg
                         width="24"
                         height="24"
@@ -338,11 +337,9 @@ const Header = () => {
         </div>
       </div>
 
-      {/* WEB HEADER */}
       <section
-        className={`header d-lg-block d-none ${
-          scrolled ? "scrolled-class" : ""
-        }`}
+        className={`header d-lg-block d-none ${scrolled ? "scrolled-class" : ""
+          }`}
       >
         <div className="container">
           <div className="main_inner_header">
@@ -362,46 +359,45 @@ const Header = () => {
                                   <div className="menu_header_box">
                                     <h5>{item?.name}</h5>
                                     <ul>
-                                      {item?.subcategories
-                                        ?.slice(0, 7)
-                                        ?.map((sub, i) => (
-                                          <li>
-                                            <button
-                                              type="button"
-                                              onClick={() =>
-                                                habdleRedirect(item)
-                                              }
-                                            >
-                                              {sub?.name}
-                                            </button>
-                                          </li>
-                                        ))}
+                                      {item?.subcategories?.slice(0, 7)?.map((sub, i) => (
+                                        <li>
+                                          <button type="button" onClick={() => habdleRedirect(item)}>
+                                            {sub?.name}
+                                          </button>
+                                        </li>
+                                      ))}
                                     </ul>
                                   </div>
                                   <div>
                                     <Row>
-                                      {item?.subcategories
-                                        ?.slice(0, 2)
-                                        ?.map((sub, i) => (
-                                          <col-md-12
-                                            class="mb-3"
-                                            onClick={() => habdleRedirect(item)}
-                                            style={{ cursor: "pointer" }}
-                                          >
-                                            <div className="browse_with_img">
-                                              <img
-                                                className="w-100"
-                                                src={
-                                                  sub?.image
-                                                    ? imgBaseURL() + sub?.image
-                                                    : hoverimg
-                                                }
-                                                alt=""
-                                              />
-                                              <p className="m-0">{sub?.name}</p>
+                                      {/* {(() => {
+                                        const filteredSubs = item?.subcategories?.filter((sub) => sub?.randomProduct);
+
+                                        if (filteredSubs?.length > 0) {
+                                          const randomSub = filteredSubs[Math.floor(Math.random() * filteredSubs.length)];
+                                          return ( */}
+                                            <div
+                                              className="col-md-12 mb-0"
+                                              onClick={() => habdleRedirect(item)}
+                                              style={{ cursor: "pointer" }}
+                                            >
+                                              <Link to={`/product-details/${item?.randomProduct?._id}`}>
+                                                <div className="browse_with_img">
+                                                  <img
+                                                    className="w-100"
+                                                    src={imgBaseURL() + item?.randomProduct?.thumbnail}
+                                                    alt=""
+                                                  />
+                                                  <Link>
+                                                    <p className="m-0">{item?.name}</p>
+                                                  </Link>
+                                                </div>
+                                              </Link>
                                             </div>
-                                          </col-md-12>
-                                        ))}
+                                          {/* );
+                                        }
+                                        return null;
+                                      })()} */}
                                     </Row>
                                   </div>
                                 </div>
@@ -601,7 +597,7 @@ const Header = () => {
                             <i class="fa-regular fa-rectangle-list  me-2"></i>My
                             Orders
                           </Link>
-                        
+
                           <hr className="m-0"></hr>
                           <Link
                             className="dropdown-item"
@@ -614,7 +610,7 @@ const Header = () => {
                         </div>
                       </div>
                     </>
-                  ) : auth('admin')  ? (
+                  ) : auth('admin') ? (
                     <Link className="text-center" to={`/${auth('admin')?.user_role}/dashboard`}>
                       <svg
                         width="24"
@@ -644,36 +640,36 @@ const Header = () => {
                       <span className="d-block">{"Me"}</span>
                     </Link>
                   ) :
-                  <>
-                  <Link className="text-center" to="/login/customer">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <mask
-                          id="mask0_152_8859"
-                          style={{ maskType: "alpha" }}
-                          maskUnits="userSpaceOnUse"
-                          x="0"
-                          y="0"
+                    <>
+                      <Link className="text-center" to="/login/customer">
+                        <svg
                           width="24"
                           height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <rect width="24" height="24" fill="#D9D9D9" />
-                        </mask>
-                        <g mask="url(#mask0_152_8859)">
-                          <path
-                            d="M12 11.6923C11.0375 11.6923 10.2135 11.3496 9.52813 10.6642C8.84271 9.97879 8.5 9.15484 8.5 8.19236C8.5 7.22986 8.84271 6.40591 9.52813 5.72051C10.2135 5.03509 11.0375 4.69238 12 4.69238C12.9625 4.69238 13.7864 5.03509 14.4718 5.72051C15.1572 6.40591 15.5 7.22986 15.5 8.19236C15.5 9.15484 15.1572 9.97879 14.4718 10.6642C13.7864 11.3496 12.9625 11.6923 12 11.6923ZM4.5 19.3077V17.0846C4.5 16.5949 4.63302 16.1414 4.89905 15.7241C5.16507 15.3068 5.52051 14.986 5.96537 14.7616C6.95384 14.277 7.95096 13.9135 8.95672 13.6712C9.96249 13.4289 10.9769 13.3078 12 13.3078C13.023 13.3078 14.0375 13.4289 15.0432 13.6712C16.049 13.9135 17.0461 14.277 18.0346 14.7616C18.4794 14.986 18.8349 15.3068 19.1009 15.7241C19.3669 16.1414 19.5 16.5949 19.5 17.0846V19.3077H4.5ZM5.99997 17.8077H18V17.0846C18 16.8821 17.9413 16.6946 17.824 16.5221C17.7067 16.3497 17.5474 16.209 17.3461 16.1C16.4846 15.6757 15.6061 15.3542 14.7107 15.1356C13.8152 14.917 12.9117 14.8077 12 14.8077C11.0883 14.8077 10.1847 14.917 9.28927 15.1356C8.39384 15.3542 7.51536 15.6757 6.65382 16.1C6.45254 16.209 6.29325 16.3497 6.17595 16.5221C6.05863 16.6946 5.99997 16.8821 5.99997 17.0846V17.8077ZM12 10.1924C12.55 10.1924 13.0208 9.99653 13.4125 9.60486C13.8041 9.21319 14 8.74236 14 8.19236C14 7.64236 13.8041 7.17153 13.4125 6.77986C13.0208 6.38819 12.55 6.19236 12 6.19236C11.45 6.19236 10.9791 6.38819 10.5875 6.77986C10.1958 7.17153 9.99997 7.64236 9.99997 8.19236C9.99997 8.74236 10.1958 9.21319 10.5875 9.60486C10.9791 9.99653 11.45 10.1924 12 10.1924Z"
-                            fill="#1C1B1F"
-                          />
-                        </g>
-                      </svg>
-                      <span className="d-block">{"Join"}</span>
-                    </Link>
-                  </>
+                          <mask
+                            id="mask0_152_8859"
+                            style={{ maskType: "alpha" }}
+                            maskUnits="userSpaceOnUse"
+                            x="0"
+                            y="0"
+                            width="24"
+                            height="24"
+                          >
+                            <rect width="24" height="24" fill="#D9D9D9" />
+                          </mask>
+                          <g mask="url(#mask0_152_8859)">
+                            <path
+                              d="M12 11.6923C11.0375 11.6923 10.2135 11.3496 9.52813 10.6642C8.84271 9.97879 8.5 9.15484 8.5 8.19236C8.5 7.22986 8.84271 6.40591 9.52813 5.72051C10.2135 5.03509 11.0375 4.69238 12 4.69238C12.9625 4.69238 13.7864 5.03509 14.4718 5.72051C15.1572 6.40591 15.5 7.22986 15.5 8.19236C15.5 9.15484 15.1572 9.97879 14.4718 10.6642C13.7864 11.3496 12.9625 11.6923 12 11.6923ZM4.5 19.3077V17.0846C4.5 16.5949 4.63302 16.1414 4.89905 15.7241C5.16507 15.3068 5.52051 14.986 5.96537 14.7616C6.95384 14.277 7.95096 13.9135 8.95672 13.6712C9.96249 13.4289 10.9769 13.3078 12 13.3078C13.023 13.3078 14.0375 13.4289 15.0432 13.6712C16.049 13.9135 17.0461 14.277 18.0346 14.7616C18.4794 14.986 18.8349 15.3068 19.1009 15.7241C19.3669 16.1414 19.5 16.5949 19.5 17.0846V19.3077H4.5ZM5.99997 17.8077H18V17.0846C18 16.8821 17.9413 16.6946 17.824 16.5221C17.7067 16.3497 17.5474 16.209 17.3461 16.1C16.4846 15.6757 15.6061 15.3542 14.7107 15.1356C13.8152 14.917 12.9117 14.8077 12 14.8077C11.0883 14.8077 10.1847 14.917 9.28927 15.1356C8.39384 15.3542 7.51536 15.6757 6.65382 16.1C6.45254 16.209 6.29325 16.3497 6.17595 16.5221C6.05863 16.6946 5.99997 16.8821 5.99997 17.0846V17.8077ZM12 10.1924C12.55 10.1924 13.0208 9.99653 13.4125 9.60486C13.8041 9.21319 14 8.74236 14 8.19236C14 7.64236 13.8041 7.17153 13.4125 6.77986C13.0208 6.38819 12.55 6.19236 12 6.19236C11.45 6.19236 10.9791 6.38819 10.5875 6.77986C10.1958 7.17153 9.99997 7.64236 9.99997 8.19236C9.99997 8.74236 10.1958 9.21319 10.5875 9.60486C10.9791 9.99653 11.45 10.1924 12 10.1924Z"
+                              fill="#1C1B1F"
+                            />
+                          </g>
+                        </svg>
+                        <span className="d-block">{"Join"}</span>
+                      </Link>
+                    </>
                   }
                 </li>
               </ul>
@@ -726,28 +722,30 @@ const Header = () => {
                   <Spinner animation="grow" size="sm" /> {item?.name}
                 </h6>
 
-                <Row>
-                  {item?.subcategories?.slice(0, 7)?.map((sub, i) => (
-                    <Col
-                      md={3}
-                      sm={3}
-                      xs={4}
-                      onClick={() => habdleRedirect(item)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <div className="cat_mobile_box text-center">
-                        <img
-                          className="w-100"
-                          src={
-                            sub?.image ? imgBaseURL() + sub?.image : mobilecat
-                          }
-                          alt=""
-                        />
-                        <p>{sub?.name}</p>
+                {/* {(() => {
+                  const filteredSubs = item?.subcategories?.filter((sub) => sub?.randomProduct);
+
+                  if (filteredSubs?.length > 0) {
+                    const randomSub = filteredSubs[Math.floor(Math.random() * filteredSubs.length)];
+                    return ( */}
+                      <div
+                        className="col-md-12 mb-3"
+                        onClick={() => habdleRedirect(item)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <div className="browse_with_img">
+                          <img
+                            className="w-100"
+                            src={imgBaseURL() + item?.randomProduct?.thumbnail}
+                            alt=""
+                          />
+                          <p className="m-0">{item?.name}</p>
+                        </div>
                       </div>
-                    </Col>
-                  ))}
-                </Row>
+                    {/* );
+                  }
+                  return null;
+                })()} */}
               </>
             ))}
           </div>

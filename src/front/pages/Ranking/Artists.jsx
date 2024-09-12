@@ -12,81 +12,85 @@ import Paper from "@mui/material/Paper";
 import { Box, Rating, Stack } from "@mui/material";
 import { useDataContext } from "../../../helper/context/ContextProvider";
 import { imgBaseURL } from "../../../helper/Utility";
+import Spinner from "react-bootstrap/Spinner";
 import { APICALL } from "../../../helper/api/api";
 import { Link } from "react-router-dom";
 import { useFrontDataContext } from "../../../helper/context/FrontContextProvider";
 
 const Artists = () => {
-  const { getTierImgFun, getRankTier, loading } = useDataContext()
+  const { getTierImgFun, getRankTier, loading } = useDataContext();
   const { getProductListFun, addRemoveWishList } = useFrontDataContext();
 
   const [listLoading, setListLoading] = useState({
-    'artist': false,
-    'artwork': false
-  })
+    artist: false,
+    artwork: false,
+  });
 
-  const [topArtist, setTopArtist] = useState([])
-  const [topArtwork, setTopArtwork] = useState([])
-
+  const [topArtist, setTopArtist] = useState([]);
+  const [topArtwork, setTopArtwork] = useState([]);
 
   const [selected, setSelected] = useState();
   const [openRows, setOpenRows] = useState({});
 
   const handleSelect = (k) => {
     setSelected(k);
-    getTopArtist(k?._id)
+    getTopArtist(k?._id);
   };
 
   const handleToggle = (artistId) => {
-    setOpenRows({ [artistId]: true })
-    getArtworkByArtist(artistId)
+    setOpenRows({ [artistId]: true });
+    getArtworkByArtist(artistId);
   };
 
   useEffect(() => {
     if (getRankTier) {
-      setSelected(getRankTier[0])
-      getTopArtist(getRankTier[0]?._id)
+      setSelected(getRankTier[0]);
+      getTopArtist(getRankTier[0]?._id);
     }
-  }, [getRankTier])
-
-  useEffect(() =>{
-    if(topArtist?.length > 0){
-      setOpenRows({ [topArtist[0]?.artistId]: true })
-      getArtworkByArtist(topArtist[0]?.artistId)
-    }
-  },[topArtist])
+  }, [getRankTier]);
 
   useEffect(() => {
-    getTierImgFun()
-  }, [])
+    if (topArtist?.length > 0) {
+      setOpenRows({ [topArtist[0]?.artistId]: true });
+      getArtworkByArtist(topArtist[0]?.artistId);
+    }
+  }, [topArtist]);
+
+  useEffect(() => {
+    getTierImgFun();
+  }, []);
 
   const getTopArtist = async (tierId) => {
-    setListLoading({ ...listLoading, 'artist': true })
+    setListLoading({ ...listLoading, artist: true });
     try {
-      const res = await APICALL(`user/topfiveArtist`, 'post', { tierId: tierId })
+      const res = await APICALL(`user/topfiveArtist`, "post", {
+        tierId: tierId,
+      });
       if (res?.status) {
-        setTopArtist(res?.data)
+        setTopArtist(res?.data);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
-      setListLoading({ ...listLoading, 'artist': false })
+      setListLoading({ ...listLoading, artist: false });
     }
-  }
+  };
 
   const getArtworkByArtist = async (artistId) => {
     try {
-      setListLoading({ ...listLoading, 'artwork': true })
-      const res = await APICALL(`user/topTenArtworks`, 'post', { artistId: artistId })
+      setListLoading({ ...listLoading, artwork: true });
+      const res = await APICALL(`user/topTenArtworks`, "post", {
+        artistId: artistId,
+      });
       if (res?.status) {
-        setTopArtwork(res?.data)
+        setTopArtwork(res?.data);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
-      setListLoading({ ...listLoading, 'artwork': false })
+      setListLoading({ ...listLoading, artwork: false });
     }
-  }
+  };
 
   return (
     <>
@@ -100,19 +104,32 @@ const Artists = () => {
                 </Col>
                 <Col lg={6} className="text-lg-end text-center">
                   <div className="tab-cus-buttons">
-                    {
-                      getRankTier?.filter(item => item?.name !== "Unranked")?.map((item, i) => (
-                        <button className={item?.name === selected?.name ? "active" : ""} onClick={() => handleSelect(item)} >
-                          <img src={imgBaseURL() + item?.icon} alt="icon_tier" />
+                    {getRankTier
+                      ?.filter((item) => item?.name !== "Unranked")
+                      ?.map((item, i) => (
+                        <button
+                          className={
+                            item?.name === selected?.name ? "active" : ""
+                          }
+                          onClick={() => handleSelect(item)}
+                        >
+                          <img
+                            src={imgBaseURL() + item?.icon}
+                            alt="icon_tier"
+                          />
                         </button>
-                      ))
-                    }
+                      ))}
                   </div>
                 </Col>
               </Row>
             </div>
 
-            <Tabs defaultActiveKey={selected?._id} id="uncontrolled-tab-example" className="mb-3 d-none" activeKey={selected?._id}>
+            <Tabs
+              defaultActiveKey={selected?._id}
+              id="uncontrolled-tab-example"
+              className="mb-3 d-none"
+              activeKey={selected?._id}
+            >
               <Tab eventKey={selected?._id} title={selected?._id}>
                 <Paper className="table_samepattern">
                   <TableContainer>
@@ -127,56 +144,102 @@ const Artists = () => {
                           <TableCell align="center">Artist Name</TableCell>
                           <TableCell align="center">Total Sales</TableCell>
                           <TableCell align="center">Total Revenue</TableCell>
-                          <TableCell align="center">Last Month Revenue</TableCell>
+                          <TableCell align="center">
+                            Last Month Revenue
+                          </TableCell>
                         </TableRow>
                       </TableHead>
-                      <TableBody>
-                        {
-                          listLoading?.artist ? <>Loading....</> :
-                            topArtist?.length > 0 ?
-                              topArtist.map((row, i) => (
-                                <React.Fragment key={row.artistId}>
-                                  <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 }, cursor: "pointer" }} onClick={() => handleToggle(row.artistId)} >
-                                    <TableCell component="th" scope="row">
-                                      {i + 1}
-                                    </TableCell>
-                                    <TableCell align="center">{row.artistName}</TableCell>
-                                    <TableCell align="center">{row.totalSalesCount}</TableCell>
-                                    <TableCell align="center">${row.totalCommissionAmount}</TableCell>
-                                    <TableCell align="center">${row.totalMonthlySalesAmount}</TableCell>
-                                  </TableRow>
+                      <TableBody className="text-center w-100">
+                        {listLoading?.artist ? (
+                            <TableCell colSpan={5} align="center">
+<div className="text-center">
+Please Wait
+</div>
+                          </TableCell>
+                        ) : topArtist?.length > 0 ? (
+                          topArtist.map((row, i) => (
+                            <React.Fragment key={row.artistId}>
+                              <TableRow
+                                sx={{
+                                  "&:last-child td, &:last-child th": {
+                                    border: 0,
+                                  },
+                                  cursor: "pointer",
+                                }}
+                                onClick={() => handleToggle(row.artistId)}
+                              >
+                                <TableCell component="th" scope="row">
+                                  {i + 1}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.artistName}
+                                </TableCell>
+                                <TableCell align="center">
+                                  {row.totalSalesCount}
+                                </TableCell>
+                                <TableCell align="center">
+                                  ${row.totalCommissionAmount}
+                                </TableCell>
+                                <TableCell align="center">
+                                  ${row.totalMonthlySalesAmount}
+                                </TableCell>
+                              </TableRow>
 
-                                  {openRows[row.artistId] && (
-                                    <TableRow>
-                                      <TableCell colSpan={7}>
-                                        <Box p={2} bgcolor="white">
-                                          <div className="product_list_box row">
-                                            {
-                                              listLoading?.artwork ? <>Artwork Loading....</> :
-                                                topArtwork?.length > 0 ? (
-                                                  topArtwork?.map((item, i) => (
-                                                    <div className="col-md-2">
-                                                      <Link to={`/product-details/${item?._id}`}>
-                                                        <div className="product_box">
-                                                          <div className="main_show_image">
-                                                            <img className="w-100" src={imgBaseURL() + item?.image} alt="product-img" />
-                                                          </div>
+                              {openRows[row.artistId] && (
+                                <TableRow>
+                                  <TableCell colSpan={7} className="p-0">
+                                    <Box bgcolor="white">
+                                      <div className="product_list_box">
+                                        <div className="row row-cols-1 row-cols-sm-2 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 g-3 pt-1 ">
+                                          {listLoading?.artwork ? (
+                                            <div className="may_loader_box">
+                                             
+                                                <Spinner
+                                                  animation="border"
+                                                  role="status"
+                                                >
+                                                  <span className="visually-hidden">
+                                                    Loading...
+                                                  </span>
+                                                </Spinner>
+                                              
+                                            </div>
+                                          ) : topArtwork?.length > 0 ? (
+                                            topArtwork?.map((item, i) => (
+                                              <div className="col p-0">
+                                                <Link
+                                                  to={`/product-details/${item?._id}`}
+                                                >
+                                                  <div className="product_box">
+                                                    <div className="main_show_image">
+                                                      <img
+                                                        className="w-100"
+                                                        src={
+                                                          imgBaseURL() +
+                                                          item?.image
+                                                        }
+                                                        alt="product-img"
+                                                      />
+                                                    </div>
 
-                                                          <div className="product_name">{item?.title}</div>
-                                                          <div className="product_rating">
-                                                            <Stack spacing={1}>
-                                                              <Rating
-                                                                name="half-rating-read"
-                                                                defaultValue={item?.averageRating}
-                                                                precision={0.5}
-                                                                readOnly
-                                                              />
-                                                            </Stack>
-                                                          </div>
-                                                        </div>
-
-                                                      </Link>
-                                                      {/* <button className="wishlist border-0" onClick={() => {
+                                                    <div className="product_name">
+                                                      {item?.title}
+                                                    </div>
+                                                    <div className="product_rating">
+                                                      <Stack spacing={1}>
+                                                        <Rating
+                                                          name="half-rating-read"
+                                                          defaultValue={
+                                                            item?.averageRating
+                                                          }
+                                                          precision={0.5}
+                                                          readOnly
+                                                        />
+                                                      </Stack>
+                                                    </div>
+                                                  </div>
+                                                </Link>
+                                                {/* <button className="wishlist border-0" onClick={() => {
                                             addRemoveWishList(item?._id, getProductListFun, true)
                                           }}>
                                             { item?.isWishlist ?
@@ -185,27 +248,28 @@ const Artists = () => {
                                                 <i className="fa-regular fa-heart"></i>
                                             }
                                           </button> */}
-                                                    </div>
-                                                  ))
-                                                ) : (
-                                                  <></>
-                                                )}
-                                          </div>
-                                        </Box>
-                                      </TableCell>
-                                    </TableRow>
-                                  )}
-
-                                  
-                                </React.Fragment>
-                              ))
-                              :
-                              <>
-                                <div className="text-center mt-3">
-                                  <h6>There are no artist on this rank !</h6>
-                                </div>
-                              </>
-                        }
+                                              </div>
+                                            ))
+                                          ) : (
+                                            <></>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </Box>
+                                  </TableCell>
+                                </TableRow>
+                              )}
+                            </React.Fragment>
+                          ))
+                        ) : (
+                          <>
+                             <TableCell colSpan={5} align="center">
+                            <div className="text-center mt-3">
+                              <h6>There are no artist on this rank !</h6>
+                            </div>
+                            </TableCell>
+                          </>
+                        )}
                       </TableBody>
                     </Table>
                   </TableContainer>

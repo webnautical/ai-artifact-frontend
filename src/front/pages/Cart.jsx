@@ -118,7 +118,7 @@ const Cart = () => {
     }
   }, [editItemObj, show])
 
-  console.log("editItemObj1111111111111111111",editItemObj)
+  console.log("editItemObj1111111111111111111", editItemObj)
   console.log("SE222222222222", selectedOptions)
 
   const canvasQntChange = (qnt, product_id) => {
@@ -256,9 +256,9 @@ const Cart = () => {
     }
   }
 
-  
+
   const canvasRef = useRef(null);
-  
+
   useEffect(() => {
     if (selectedOptions) {
       console.log("selectedOptions", selectedOptions)
@@ -311,11 +311,16 @@ const Cart = () => {
                         cartList?.map((item, i) => (
                           <div className="cart_list">
                             <div className="product_image">
-                              <img src={imgBaseURL() + item?.product_id?.thumbnail} alt="product-image" />
+                              <Link to={`/product-details/${item?.product_id?._id}`}>
+                                <img src={imgBaseURL() + item?.product_id?.thumbnail} alt="product-image" />
+                              </Link>
                             </div>
 
                             <div className="about_details_product">
-                              <h2>{item?.product_id?.title}</h2>
+                              <Link to={`/product-details/${item?.product_id?._id}`}>
+                                <h2>{item?.product_id?.title}</h2>
+                              </Link>
+
                               <div className="about_frame d-flex justify-content-between align-items-center">
                                 <div>
                                   <ul>
@@ -403,7 +408,7 @@ const Cart = () => {
           }
         </Container>
 
-        <Offcanvas placement="end" show={show} onHide={handleClose}>
+        <Offcanvas className="cart_edit" placement="end" show={show} onHide={handleClose}>
           <Offcanvas.Header closeButton>
             <Offcanvas.Title>Edit item</Offcanvas.Title>
           </Offcanvas.Header>

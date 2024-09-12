@@ -500,12 +500,14 @@ const ProductDetail = () => {
                       </ul>
                     </div>
 
-                    <div className="artist_name mt-2 mb-4">
-                      <span>
-                        {getTierImg(productDetails?.artist_id?.currentRank)?.icon}
-                      </span>
-                      <p className="m-0">{productDetails?.artist_id?.first_name + ' ' + productDetails?.artist_id?.last_name}</p>
-                    </div>
+                    <Link to={`/collection/${productDetails?.artist_id?._id}`}>
+                      <div className="artist_name mt-2 mb-4">
+                        <span>
+                          {getTierImg(productDetails?.artist_id?.currentRank)?.icon}
+                        </span>
+                        <p className="m-0">{productDetails?.artist_id?.first_name + ' ' + productDetails?.artist_id?.last_name}</p>
+                      </div>
+                    </Link>
                     <div className="mb-4">
                       <p className="typehed mb-1">Product type</p>
                       <div className="add_frame">

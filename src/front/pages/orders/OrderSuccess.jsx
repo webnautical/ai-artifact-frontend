@@ -7,6 +7,7 @@ import { APICALL } from "../../../helper/api/api";
 import { imgBaseURL, timeAgo } from "../../../helper/Utility";
 import FrontLoader from "../../../components/FrontLoader";
 import orderplaced from "../../../assets/images/orderplace.gif";
+import { Link } from "react-router-dom";
 
 const OrderSuccess = () => {
   const { order_id } = useParams();
@@ -41,7 +42,6 @@ const OrderSuccess = () => {
   const itemTotal = orderDetails?.orderItems?.reduce((acc, item) => {
     return acc + (item?.price * item?.quantity || 0);
   }, 0);
-  console.log("orderDetails", orderDetails);
   return (
     <>
       {loading ? (
@@ -129,41 +129,39 @@ const OrderSuccess = () => {
                       <Row className="align-items-center">
                         {orderDetails?.orderItems?.map((row, index) => (
                           <Col md={12}>
-                            <div className="order_all_details mt-2  ">
-                              <div className="order_img">
-                                <img
-                                  src={imgBaseURL() + row.productId?.thumbnail}
-                                  alt="product-image"
-                                />
-                              </div>
-                              <div className="order_text_details">
-                                {/* <p className="order_status">Order Arriving Soon</p> */}
-                                <h3>{row.productId?.title}</h3>
-                                <div className="frame_details">
-                                  <ul className="p-0 m-0">
-                                    <li>
-                                      <span>Size :</span> {row?.size}
-                                    </li>
-                                    <li>
-                                      <span>Finish :</span> {row?.quality}
-                                    </li>
-                                    {row?.frameType && (
+                            <Link to={`/product-details/${row.productId?._id}`}>
+                              <div className="order_all_details mt-2  ">
+                                <div className="order_img">
+                                  <img
+                                    src={imgBaseURL() + row.productId?.thumbnail}
+                                    alt="product-image"
+                                  />
+                                </div>
+                                <div className="order_text_details">
+                                  <h3>{row.productId?.title}</h3>
+                                  <div className="frame_details">
+                                    <ul className="p-0 m-0">
                                       <li>
-                                        <span>Color : </span> {row?.frameType}
+                                        <span>Size :</span> {row?.size}
                                       </li>
-                                    )}
-                                    {row?.assembly && (
                                       <li>
-                                        <span>Assembly : </span> {row?.assembly}
+                                        <span>Finish :</span> {row?.quality}
                                       </li>
-                                    )}
-                                  </ul>
-
-                                  {/* <div className="text-start mt-2">              <span><b>Date : </b>
-                                    {timeAgo(orderDetails?.createdAt)}</span></div> */}
+                                      {row?.frameType && (
+                                        <li>
+                                          <span>Color : </span> {row?.frameType}
+                                        </li>
+                                      )}
+                                      {row?.assembly && (
+                                        <li>
+                                          <span>Assembly : </span> {row?.assembly}
+                                        </li>
+                                      )}
+                                    </ul>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
+                            </Link>
                           </Col>
                         ))}
                       </Row>

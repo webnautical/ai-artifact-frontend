@@ -5,7 +5,6 @@ import ReactApexChart from 'react-apexcharts';
 import { APICALL } from '../../../helper/api/api';
 import { auth } from '../../../helper/Utility';
 
-// Chart options
 const areaChartOptions = {
   chart: {
     height: 450,

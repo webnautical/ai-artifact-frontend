@@ -15,7 +15,7 @@ import { useDataContext } from "../../../helper/context/ContextProvider";
 import { useFrontDataContext } from "../../../helper/context/FrontContextProvider";
 import { imgBaseURL } from "../../../helper/Utility";
 import { APICALL } from "../../../helper/api/api";
-
+import Spinner from "react-bootstrap/Spinner";
 const RankingStatus = () => {
   const { getTierImgFun, getRankTier, loading } = useDataContext()
   const { getProductListFun, addRemoveWishList } = useFrontDataContext();
@@ -185,8 +185,21 @@ const RankingStatus = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
+             
                         {
-                          listLoading?.artist ? <>Loading....</> :
+                          listLoading?.artist ? <>
+                                   <TableCell colSpan={5} align="center">
+                          <Spinner
+                                                  animation="border"
+                                                  role="status"
+                                                >
+                                                  <span className="visually-hidden">
+                                                    Loading...
+                                                  </span>
+                                                </Spinner>
+
+                                               </TableCell>
+                          </> :
                             topArtist?.length > 0 ?
                               topArtist.map((row, i) => (
                                 <React.Fragment key={row.artistId}>
@@ -225,9 +238,11 @@ const RankingStatus = () => {
                               ))
                               :
                               <>
+                                 <TableCell colSpan={5} align="center">
                                 <div className="text-center mt-3">
                                   <h6>There are no artist on this rank !</h6>
                                 </div>
+                                </TableCell>
                               </>
                         }
                       </TableBody>

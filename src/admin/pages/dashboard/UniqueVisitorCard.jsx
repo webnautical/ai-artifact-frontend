@@ -27,7 +27,6 @@ export default function UniqueVisitorCard() {
     try {
       setListLoading({ ...listLoading, 'artwork': true })
       const res = await APICALL(`user/getSalesHistory`, 'post', { artistId: auth('admin')?.id, "period": slot })
-      console.log("getSalesHistory", res)
       if (res?.status) {
         setSalesHistory(res?.data)
       }
