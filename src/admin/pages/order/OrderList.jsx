@@ -124,7 +124,7 @@ const OrderList = () => {
                                                     </TableHead>
                                                     <TableBody>
                                                         {selectedRow?.orderItems?.map((row, index) => (
-                                                            <TableRow key={index} onClick={()=>navigate(`/admin/product-details/${row.productId?._id}`)} style={{cursor: 'pointer'}}>
+                                                            <TableRow key={index} onClick={() => navigate(`/admin/product-details/${row.productId?._id}`)} style={{ cursor: 'pointer' }}>
                                                                 <TableCell>{index + 1}</TableCell>
                                                                 <TableCell>
                                                                     {tableImg(row.productId?.thumbnail)}
@@ -336,6 +336,8 @@ const OrderList = () => {
                                                     <TableCell>Order ID</TableCell>
                                                     <TableCell>Customer Name</TableCell>
                                                     <TableCell>Price</TableCell>
+                                                    <TableCell>Order Status</TableCell>
+                                                    <TableCell>Gelato Status</TableCell>
                                                     <TableCell> Date </TableCell>
                                                     <TableCell align="right">Actions</TableCell>
                                                 </TableRow>
@@ -351,7 +353,12 @@ const OrderList = () => {
                                                                 row?.shippingAddress?.lastName}
                                                         </TableCell>
                                                         <TableCell>{row.totalPrice}</TableCell>
-                                                        {/* <TableCell>{row.status}</TableCell> */}
+                                                        <TableCell>{row.status}</TableCell>
+                                                        <TableCell>
+                                                            <Button className={`btn btn-sm ${row?.gelatoStatus  ? 'btn-success' : 'btn-warning'}`} >
+                                                                { row?.gelatoStatus ? "Success" : "Pending"  }
+                                                            </Button>
+                                                        </TableCell>
                                                         <TableCell>{timeAgo(row.createdAt)}</TableCell>
                                                         <TableCell align="right">
                                                             <Dropdown className="dorpdown-curtom">

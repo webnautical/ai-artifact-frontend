@@ -13,6 +13,7 @@ const OrderDetails = () => {
     const navigate = useNavigate()
     const [orderDetails, setOrderDetails] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [adminDetails, setAdminDetails] = useState('')
     useEffect(() => {
         if (order_id) {
             getOrderDetailsByID()
@@ -26,8 +27,8 @@ const OrderDetails = () => {
         setLoading(true)
         try {
             const res = await APICALL('/user/getOrderById', 'post', { id: order_id })
-            console.log(res)
             if (res?.status) {
+                setAdminDetails(res?.admin_mail)
                 setOrderDetails(res?.data)
                 setLoading(false)
             } else {
@@ -42,19 +43,18 @@ const OrderDetails = () => {
     const itemTotal = orderDetails?.orderItems?.reduce((acc, item) => {
         return acc + (item?.price * item?.quantity || 0);
     }, 0);
-    console.log("orderDetails", orderDetails)
     return (
         <>
             {
                 loading ? <FrontLoader /> :
                     <div className="order_details_single">
                         <h2 className='d-md-flex justify-content-between mb-4'>
-                     <div className='d-flex
+                            <div className='d-flex
                      
                      '>
-                     <div className='back_btn'><Link to="/customer/my-orders" className='global_btn me-3'><i class="fa-solid fa-arrow-left-long"></i></Link></div>
-                     <div > <span> Order Id :</span>#{order_id} </div>
-                     </div>
+                                <div className='back_btn'><Link to="/customer/my-orders" className='global_btn me-3'><i class="fa-solid fa-arrow-left-long"></i></Link></div>
+                                <div > <span> Order Id :</span>#{order_id} </div>
+                            </div>
                             <div className='date_order'>Date : {timeAgo(orderDetails?.createdAt)}</div>
                         </h2>
                         <div className="main_order_deatils">
@@ -167,6 +167,9 @@ const OrderDetails = () => {
                                 </Row>
                             </div>
 
+                        </div>
+                        <div className='mt-2 text-center'>
+                            <Link to={`mailto:${adminDetails}?subject=Order Support Request&body=Hello Support, I am experiencing an issue with my order ID: ${order_id}.`}>Need Help?</Link>
                         </div>
                     </div>
             }

@@ -4967,3 +4967,18 @@ nav.sidebr-admin .simplebar-scrollable-x {
   height:32px !important;
   width: 28px !important;
 }
+
+.artist_top_images_dash{ position: relative;}
+.artist_top_images_dash:after{ position: absolute; content: ""; bottom: 0px; height: 70%; width: 100%;  left: 0px; background: linear-gradient(180deg, #ffffff00 0%, #000000 100%); }
+ 
+.pos_cnt{ position: absolute;bottom: 0px; left: 0px; padding: 10px; width: 100%; z-index: 9;}
+.pos_cnt strong{ color: white;}
+.pos_cnt p{ color: white; font-weight: 600;}
+ 
+ 
+.banner_upload label{ flex-direction: column;}
+.banner_upload p{ margin: 0px;}
+ 
+ 
+.product_list .level_heading .tier_img img{width: 45px; }
+.product_list .level_heading .tier_img{ margin-left: 10px;}

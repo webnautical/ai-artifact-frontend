@@ -54,8 +54,7 @@ const OrderSuccess = () => {
                 <div className="order_details_single text-center">
                   <div className="top_space">
                     <img src={orderplaced} alt="" />
-                    <p className="order_dec mb-0">Your Order Will be processed with in 24 hour during working days. We will Notify you by email once your order has been shipped</p>
-
+                    <p className="order_dec mb-0">Thank you for your purchase! We have received your order and it is now being processed. You will receive another notification once your order has been shipped.</p>
                   </div>
                   <div className="main_order_deatils">
                     <div className="order_details_inner gloab_card">

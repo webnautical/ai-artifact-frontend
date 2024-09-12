@@ -11,6 +11,7 @@ import swal from "sweetalert";
 import { SOMETHING_ERR } from "../../../helper/Constant";
 import { useLocation, useNavigate } from "react-router";
 import artworkthumb from '../../../assets/images/placeholder.jpg'
+import { Alert, Stack } from "@mui/material";
 
 const ArtWorkUpload = () => {
   const {
@@ -21,6 +22,8 @@ const ArtWorkUpload = () => {
     // getCollectionFun,
     getDirectoryFun,
     directoryList,
+    getUserByIDFun,
+    userInfoByID
   } = useDataContext();
   const [loading, setLoading] = useState({ list: false, submit: false });
   const [directoryToggle, setDirectoryToggle] = useState(false);
@@ -192,7 +195,7 @@ const ArtWorkUpload = () => {
         ...prevData,
         ["category"]: e.target.value,
       }));
-    }else {
+    } else {
       setFormData((prevData) => ({
         ...prevData,
         [e.target.name]: e.target.value,
@@ -308,9 +311,10 @@ const ArtWorkUpload = () => {
         setLoading({ ...loading, submit: false });
         const params = {
           name: res?.data?.directoryId?.name,
-          _id : res?.data?.directoryId?._id
+          _id: res?.data?.directoryId?._id
         }
-        navigate(`/${auth('admin')?.user_role}/artworks`, {state: {params}});
+        getUserByIDFun(auth('admin')?.id)
+        navigate(`/${auth('admin')?.user_role}/artworks`, { state: { params } });
       } else {
         swal({
           title: SOMETHING_ERR,
@@ -328,6 +332,11 @@ const ArtWorkUpload = () => {
       setLoading({ ...loading, submit: false });
     }
   };
+
+  useEffect(() => {
+    getUserByIDFun(auth('admin')?.id)
+  }, [])
+
   return (
     <>
       <Paper className="table_samepattern">
@@ -340,6 +349,16 @@ const ArtWorkUpload = () => {
         >
           <h1 className="title-admins-table">Upload Art Work</h1>
         </div>
+        {
+          userInfoByID?.totalArtworks >= userInfoByID?.highestRank?.maxUploads &&
+          <div className="px-3">
+            <Stack sx={{ width: '100%' }} spacing={2}>
+              <Alert variant="filled" severity="error">
+                {`You have  reached your upload limit for the ${userInfoByID?.highestRank?.name}. You’ve already uploaded the maximum of ${userInfoByID?.highestRank?.maxUploads} artworks allowed for this tier.`}
+              </Alert>
+            </Stack>
+          </div>
+        }
 
         <Row className="p-4 justify-content-center align-items-center ">
           <Col md={4}>
@@ -522,23 +541,28 @@ const ArtWorkUpload = () => {
             </Form.Group>
             {/* <span className="errmsg">{error.description}</span> */}
             <div className="text-count mt-1 text-end">
-            <p>{formData.description.length}/1000 characters</p>
-          </div>
+              <p>{formData.description.length}/1000 characters</p>
+            </div>
           </Col>
-          <Col md={12} className="text-end">
-            {loading.submit ? (
-              <BTNLoader className={"artist-btn"} />
-            ) : (
-              <Button
-                className="artist-btn"
-                variant="primary"
-                onClick={() => validateFun()}
-              >
-                {" "}
-                {formData?.productId ? "Update Product" : "Upload"}{" "}
-              </Button>
-            )}
-          </Col>
+          {
+            userInfoByID?.totalArtworks >= userInfoByID?.highestRank?.maxUploads ?
+              <Col md={12} className="text-end">
+                <Button className="artist-btn" variant="primary" style={{cursor: "not-allowed"}}>
+                  {formData?.productId ? "Update Product" : "Upload"}{" "}
+                </Button>
+              </Col>
+              :
+              <Col md={12} className="text-end">
+                {loading.submit ? (
+                  <BTNLoader className={"artist-btn"} />
+                ) : (
+                  <Button  className="artist-btn"  variant="primary" onClick={() => validateFun()}>
+                    {formData?.productId ? "Update Product" : "Upload"}{" "}
+                  </Button>
+                )}
+              </Col>
+          }
+
         </Row>
       </Paper>
     </>

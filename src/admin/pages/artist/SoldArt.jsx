@@ -68,6 +68,7 @@ const SoldArt = () => {
     const handleViewChange = (row) => {
         setSelectedRow(row);
     };
+
     return (
         <>
             {

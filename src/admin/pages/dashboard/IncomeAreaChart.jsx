@@ -4,7 +4,12 @@ import { useTheme } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
 import { APICALL } from '../../../helper/api/api';
 import { auth } from '../../../helper/Utility';
-
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import MainCard from '../../components/MainCard';
 const areaChartOptions = {
   chart: {
     height: 450,
@@ -25,10 +30,11 @@ const areaChartOptions = {
   }
 };
 
-export default function IncomeAreaChart({ slot }) {
+export default function IncomeAreaChart({ forCharData }) {
   const theme = useTheme();
   const { primary, secondary } = theme.palette.text;
   const line = theme.palette.divider;
+  const [slot, setSlot] = useState('week');
 
   const myGraph2 = "#80008045";
   const myGraph1 = "#269393";
@@ -38,7 +44,7 @@ export default function IncomeAreaChart({ slot }) {
   const [listLoading, setListLoading] = useState({ artwork: false });
   const [series, setSeries] = useState([]);
 
-  // Update chart options when theme or slot changes
+
   useEffect(() => {
     setOptions((prevState) => ({
       ...prevState,
@@ -72,11 +78,23 @@ export default function IncomeAreaChart({ slot }) {
     }));
   }, [primary, secondary, line, theme, slot]);
 
-  // Fetch sales history based on the selected period (week or month)
+  const role = auth('admin')?.user_role;
+
   const getSalesHistroyByArtist = async () => {
     try {
       setListLoading((prevState) => ({ ...prevState, artwork: true }));
-      const res = await APICALL(`user/getSalesHistory`, 'post', { artistId: auth('admin')?.id, period: slot });
+      const params =
+        role === "artist" ? { artistId: auth('admin')?.id, "period": slot } :
+          role === "affiliate" ? { affiliateId: auth('admin')?.id, "period": slot } :
+            { "period": slot };
+
+      const fromAdminUserDetails = forCharData?.role === "artist" ? { artistId: forCharData?.id, "period": slot } :
+        forCharData?.role === "affiliate" ? { affiliateId: forCharData?.id, "period": slot } :
+          {};
+
+      const api = forCharData ? `user/getSalesHistory` : role === "admin" ? `admin/getAdminSalesHistory` : `user/getSalesHistory`
+
+      const res = await APICALL(api, 'post', forCharData ? fromAdminUserDetails : params);
       if (res?.status) {
         setSalesHistory(res?.data);
       }
@@ -115,7 +133,38 @@ export default function IncomeAreaChart({ slot }) {
   }, [salesHistroy, slot]);
 
   return (
-    <ReactApexChart options={options} series={series} type="area" height={450} />
+    <>
+      <Grid container alignItems="center" justifyContent="space-between">
+        <Grid item>
+          <Typography variant="h5">Growth</Typography>
+        </Grid>
+        <Grid item>
+          <Stack direction="row" alignItems="center" spacing={0}>
+            <Button
+              size="small"
+              onClick={() => setSlot('month')}
+              color={slot === 'month' ? 'primary' : 'secondary'}
+              variant={slot === 'month' ? 'outlined' : 'text'}
+            >
+              Month
+            </Button>
+            <Button
+              size="small"
+              onClick={() => setSlot('week')}
+              color={slot === 'week' ? 'primary' : 'secondary'}
+              variant={slot === 'week' ? 'outlined' : 'text'}
+            >
+              Week
+            </Button>
+          </Stack>
+        </Grid>
+      </Grid>
+      <MainCard content={false} sx={{ mt: 1.5 }}>
+        <Box sx={{ pt: 1, pr: 2 }}>
+          <ReactApexChart options={options} series={series} type="area" height={450} />
+        </Box>
+      </MainCard>
+    </>
   );
 }
 
