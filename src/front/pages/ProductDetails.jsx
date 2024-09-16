@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Form, Container, Modal } from "react-bootstrap";
+import { Col, Row, Form, Container, Modal, Button } from "react-bootstrap";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import tiericon from "../../assets/images/4 - Diamond.png";
@@ -182,20 +182,31 @@ const ProductDetail = () => {
       setLoader(prevLoader => ({ ...prevLoader, reviewList: false }));
     }
   }
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const [reviewVal, setReviewVal] = useState({
     "product_id": id,
     "artist_id": productDetails?.artist_id?._id,
     "star": 3,
+    "is_lottery": false,
     "comment": ""
   })
 
   const submitReview = async () => {
     setLoader(prevLoader => ({ ...prevLoader, submitReview: true }));
+    const formData = new FormData();
+    for (const key in reviewVal) {
+      formData.append(key, reviewVal[key]);
+    }
+    if (selectedImages?.length > 0) {
+      selectedImages.forEach((image, index) => {
+        formData.append(`images[${index}]`, image);
+      });
+    }
+
     try {
-      const res = await APICALL('user/addReview', 'post', reviewVal)
+      const res = await APICALL('user/addReview', 'post', formData)
       if (res?.status) {
-        // getProductReviewFun()
         setForm(false)
         toastifySuccess(res?.message)
       } else {
@@ -207,6 +218,7 @@ const ProductDetail = () => {
       setLoader(prevLoader => ({ ...prevLoader, submitReview: false }));
     }
   }
+
 
 
   const [sizeMap, setSizeMap] = useState({
@@ -399,7 +411,30 @@ const ProductDetail = () => {
     navigate(`/product-list`, { state: { data: data } });
   };
 
-  console.log("productDetails", productDetails)
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setSelectedImages([...selectedImages, ...files]);
+  };
+
+
+  const handleDeleteImage = (index) => {
+    const newImages = [...selectedImages];
+    newImages.splice(index, 1);
+    setSelectedImages(newImages);
+  };
+  const [show, setShow] = useState(false);
+  const [currentImage, setCurrentImage] = useState("");
+  const handleShow = (imageSrc) => {
+    setCurrentImage(imageSrc); // Use currentImage instead of selectedImage
+    setShow(true);
+  };
+
+  const handleClose = () => {
+    setShow(false);
+    setCurrentImage("");
+  };
+
+  const revphoto = "https://via.placeholder.com/70"; // Your image URL or path
 
   return (
     <>
@@ -632,6 +667,36 @@ const ProductDetail = () => {
                               onChange={(e) => setReviewVal({ ...reviewVal, 'star': e.target.value })}
                             />
                           </div>
+
+                          <div className="mb-3 col-sm-12">
+                            <label className="form-label d-block text-start">
+                              <b>Upload Image</b>
+                            </label>
+                            <div className="outuploadimg">
+                              <div className="uploadimg-vdieoouter">
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  multiple
+                                  onChange={handleImageChange}
+                                />
+                                <i className="fa fa-camera"></i>
+                              </div>
+                              {selectedImages.map((image, index) => (
+                                <div className="lis-timg-upload" key={index}>
+                                  <img
+                                    src={URL.createObjectURL(image)}
+                                    alt={`Uploaded image ${index}`}
+                                  />
+                                  <i
+                                    className="fa fa-trash"
+                                    onClick={() => handleDeleteImage(index)}
+                                  ></i>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
                           <div className="cutoms-login-artist text-end">
                             <Form>
                               <Form.Group
@@ -646,6 +711,11 @@ const ProductDetail = () => {
                                   maxLength={150}
                                 />
                               </Form.Group>
+                              <Form.Check
+                                type="checkbox"
+                                label="Participate in lottery"
+                                onChange={(e) => setReviewVal({ ...reviewVal, 'is_lottery': e.target.checked })}
+                              />
                             </Form>
                             {
                               loader?.submitReview ? <BTNLoader className={'global_btn w-100'} /> :
@@ -682,6 +752,67 @@ const ProductDetail = () => {
                                   </div>
 
                                   <p> “{item?.comment}</p>
+
+                                  <div className="d-inline-block upload_rev_image mt-3">
+                                    {/* Images */}
+                                    <img
+                                      src={revphoto}
+                                      alt="review_image"
+                                      style={{
+                                        width: "70px",
+                                        height: "70px",
+                                        objectFit: "contain",
+                                      }}
+                                      onClick={() => handleShow(revphoto)}
+                                    />
+                                    <img
+                                      src={revphoto}
+                                      alt="review_image"
+                                      style={{
+                                        width: "70px",
+                                        height: "70px",
+                                        objectFit: "contain",
+                                      }}
+                                      onClick={() => handleShow(revphoto)}
+                                    />
+                                    <img
+                                      src={revphoto}
+                                      alt="review_image"
+                                      style={{
+                                        width: "70px",
+                                        height: "70px",
+                                        objectFit: "contain",
+                                      }}
+                                      onClick={() => handleShow(revphoto)}
+                                    />
+
+                                    {/* Modal */}
+                                    <Modal
+                                      className="modal-all"
+                                      show={show}
+                                      onHide={handleClose}
+                                      centered
+                                    >
+                                      <Modal.Header closeButton>
+                                        <Modal.Title>Image Preview</Modal.Title>
+                                      </Modal.Header>
+                                      <Modal.Body>
+                                        <img
+                                          src={currentImage}
+                                          alt="Full-size review"
+                                          style={{ width: "100%" }}
+                                        />{" "}
+                                      </Modal.Body>
+                                      <Modal.Footer>
+                                        <Button
+                                          variant="secondary"
+                                          onClick={handleClose}
+                                        >
+                                          Close
+                                        </Button>
+                                      </Modal.Footer>
+                                    </Modal>
+                                  </div>
                                 </div>
 
                               ))

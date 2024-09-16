@@ -27,6 +27,14 @@ const dashboard = {
       breadcrumbs: false
     },
     {
+      id: 'withdrawal',
+      title: 'Withdrawal',
+      type: 'item',
+      url: '/admin/withdrawal',
+      icon: icons.Dashboard,
+      breadcrumbs: false
+    },
+    {
       id: 'RolesPermission',
       title: 'Roles & Permission',
       type: 'item',
@@ -116,29 +124,6 @@ const dashboard = {
         },  
       ] 
     },
-    // {
-    //   id: 'Commission',
-    //   title: 'Commission',
-    //   type: 'collapse',
-    //   icon: icons.PeopleAltOutlined,
-    //   children: [
-    //     {
-    //       id: 'artist_commission',
-    //       title: 'Artist Commission',
-    //       type: 'item',
-    //       url: `/admin/commission/artist`,
-    //       breadcrumbs: false
-    //     },
-
-    //     {
-    //       id: 'affiliate_commission',
-    //       title: 'affiliate Commission',
-    //       type: 'item',
-    //       url: `/admin/commission/affiliate`,
-    //       breadcrumbs: false
-    //     },  
-    //   ] 
-    // },
     {
       id: 'SubAdmin',
       title: 'Sub Admin',

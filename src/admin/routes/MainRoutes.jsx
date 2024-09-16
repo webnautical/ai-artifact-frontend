@@ -28,6 +28,7 @@ const SoldArt = Loadable( lazy(() => import("../pages/artist/SoldArt")));
 const TransactionList = Loadable( lazy(() => import("../pages/order/TransactionList")));
 const Commission = Loadable( lazy(() => import("../pages/Common/Commission")));
 const EditProfile = Loadable( lazy(() => import("../pages/Common/EditProfile")));
+const Withdrawal = Loadable( lazy(() => import("../pages/withdrawal/Withdrawal")));
 const BlogList = Loadable( lazy(() => import("../pages/blogs/BlogList")));
 const MainRoutes = {
   path: '/',
@@ -85,13 +86,13 @@ const MainRoutes = {
       path: '/pages/:route',
       element: <StaticPages />
     },
-    {
-      path: '/product-management',
-      element: <ComingSoon />
-    },
+    // {
+    //   path: '/product-management',
+    //   element: <ComingSoon />
+    // },
     {
       path: '/withdrawal',
-      element: <ComingSoon />
+      element: <Withdrawal/>
     },
     {
       path: "/collection",

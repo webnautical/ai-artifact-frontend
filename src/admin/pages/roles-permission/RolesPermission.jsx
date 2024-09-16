@@ -212,20 +212,20 @@ const RolesPermission = () => {
               }}
             >
               <h1 className="title-admins-table">Roles</h1>
-             <div className="d-flex align-items-center" style={{gap:'10px'}}>
-             <TextField
-                variant="outlined"
-                placeholder="Search..."
-                value={search}
-                onChange={handleSearchChange}
-                style={{ width: "300px" }}
-              />
+              <div className="d-flex align-items-center" style={{ gap: '10px' }}>
+                <TextField
+                  variant="outlined"
+                  placeholder="Search..."
+                  value={search}
+                  onChange={handleSearchChange}
+                  style={{ width: "300px" }}
+                />
 
-              <Button className="artist-btn " onClick={handleShowModal}>
-                Add Roles
-              </Button>
+                <Button className="artist-btn " onClick={handleShowModal}>
+                  Add Roles
+                </Button>
+              </div>
             </div>
-             </div>
             <TableContainer>
               <Table>
                 <TableHead>
@@ -284,16 +284,16 @@ const RolesPermission = () => {
                           </IconButton> */}
 
                           <Dropdown className="dorpdown-curtom">
-                              <Dropdown.Toggle as={IconButton} variant="link">
-                                <MoreVert />
-                              </Dropdown.Toggle>
-                              <Dropdown.Menu>
-                                <Dropdown.Item to="#" onClick={() => handleEditChange(row)}>
-                                  <Edit style={{ marginRight: "8px" }} />
-                                  Edit
-                                </Dropdown.Item>
-                              </Dropdown.Menu>
-                            </Dropdown>
+                            <Dropdown.Toggle as={IconButton} variant="link">
+                              <MoreVert />
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                              <Dropdown.Item to="#" onClick={() => handleEditChange(row)}>
+                                <Edit style={{ marginRight: "8px" }} />
+                                Edit
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -303,7 +303,7 @@ const RolesPermission = () => {
             <TablePagination
               rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
               component="div"
-              count={data?.length} // Replace with the total number of rows
+              count={data?.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
