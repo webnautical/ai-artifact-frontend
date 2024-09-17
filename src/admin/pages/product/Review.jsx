@@ -49,8 +49,8 @@ const Review = () => {
   const getListFun = async (pageNo, rowsPerPage) => {
     setListLoading(true);
     try {
-      const parem = { page: pageNo, limit: rowsPerPage };
-      const res = await APICALL("admin/getAllreviews", "post", parem);
+      const params = { page: pageNo, limit: rowsPerPage };
+      const res = await APICALL("admin/getAllreviews", "post", params);
       if (res?.status) {
         setTotalPages(res.totalCount);
         setData(res.data);
@@ -158,12 +158,7 @@ const Review = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {data
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
-                        .map((row, index) => (
+                      {data.map((row, index) => (
                           <TableRow key={index}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell>{row.product_id?.title}</TableCell>

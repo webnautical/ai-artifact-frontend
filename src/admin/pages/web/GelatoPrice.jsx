@@ -34,7 +34,6 @@ const GelatoPrice = () => {
         setLoading(true);
         try {
             const res = await APICALL("admin/getProductUid", "post", {});
-            console.log("setGelatoPrice", res);
             if (res?.status) {
                 setData(res?.data);
                 setLoading(false);

@@ -50,9 +50,9 @@ function ContactForm() {
         break;
       case 'query':
         if (!value.trim()) {
-          error = 'Query is required';
+          error = 'Message is required';
         } else if (value.length < 20) {
-          error = 'Query must be at least 20 characters';
+          error = 'Message must be at least 20 characters';
         }
         break;
       default:
@@ -83,9 +83,9 @@ function ContactForm() {
           break;
         case 'query':
           if (!form[key].trim()) {
-            error = 'Query is required';
+            error = 'Message is required';
           } else if (form[key].length < 20) {
-            error = 'Query must be at least 20 characters';
+            error = 'Message must be at least 20 characters';
           }
           break;
         default:
@@ -172,15 +172,19 @@ function ContactForm() {
                     <Form.Control
                       as="textarea"
                       rows={4}
-                      placeholder="Describe your problem in at least 20 characters"
+                      placeholder="Enter your message."
                       name="query"
                       value={form.query}
                       onChange={handleChange}
                       isInvalid={!!errors.query}
+                      maxLength={150}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.query}
                     </Form.Control.Feedback>
+                    <div className="text-end">
+                    <span>Charecter {form.query?.length}/150</span>
+                    </div>
                   </Form.Group>
                 </Col>
                 <Col md={12} className="text-md-end text-center">

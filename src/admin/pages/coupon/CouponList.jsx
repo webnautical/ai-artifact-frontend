@@ -40,7 +40,6 @@ const CouponList = () => {
         setLoading(true);
         try {
             const res = await APICALL("admin/getAllCoupons", "post", {});
-            console.log("getAllCoupons", res);
             if (res?.status) {
                 setData(res?.data);
                 setLoading(false);

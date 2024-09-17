@@ -87,7 +87,7 @@ const ShippingAddress = () => {
     firstName: "",
     lastName: "",
     addressLine1: "",
-    addressLine2: "",
+    // addressLine2: "",
     postalCode: "",
     city: "",
     state: "",
@@ -111,7 +111,7 @@ const ShippingAddress = () => {
       billingFirstName,
       billingLastName,
       billingAddressLine1,
-      billingAddressLine2,
+      // billingAddressLine2,
       billingPostalCode,
       billingCity,
       billingState,
@@ -124,7 +124,7 @@ const ShippingAddress = () => {
     if (firstName.trim() === "") errors.firstName = "Required *";
     if (lastName.trim() === "") errors.lastName = "Required *";
     if (addressLine1.trim() === "") errors.addressLine1 = "Required *";
-    if (addressLine2.trim() === "") errors.addressLine2 = "Required *";
+    // if (addressLine2.trim() === "") errors.addressLine2 = "Required *";
     if (postalCode.trim() === "") {
       errors.postalCode = "Required *";
     } else if (!/^\d+$/.test(postalCode)) {
@@ -145,7 +145,7 @@ const ShippingAddress = () => {
       if (billingFirstName.trim() === "") errors.billingFirstName = "Required *";
       if (billingLastName.trim() === "") errors.billingLastName = "Required *";
       if (billingAddressLine1.trim() === "") errors.billingAddressLine1 = "Required *";
-      if (billingAddressLine2.trim() === "") errors.billingAddressLine2 = "Required *";
+      // if (billingAddressLine2.trim() === "") errors.billingAddressLine2 = "Required *";
       if (billingPostalCode.trim() === "") {
         errors.billingPostalCode = "Required *";
       } else if (!/^\d+$/.test(billingPostalCode)) {
@@ -1054,7 +1054,7 @@ const ShippingAddress = () => {
                                       <span>Item</span>
                                       <p className="m-0">
                                         <b>
-                                          {orderDetails?.cartItem?.length} item
+                                          {orderDetails?.cartItem?.length}  {orderDetails?.cartItem?.length >1 ? "items" : "item"}
                                         </b>{" "}
                                       </p>
                                     </li>

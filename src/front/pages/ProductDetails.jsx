@@ -170,6 +170,7 @@ const ProductDetail = () => {
     setLoader(prevLoader => ({ ...prevLoader, reviewList: true }));
     try {
       const res = await APICALL('user/getProductReviews', 'post', { product_id: id })
+
       if (res?.status) {
         setReviewList(res?.data)
       } else {
@@ -192,16 +193,23 @@ const ProductDetail = () => {
     "comment": ""
   })
 
+  console.log("selectedImages", selectedImages)
+
   const submitReview = async () => {
     setLoader(prevLoader => ({ ...prevLoader, submitReview: true }));
     const formData = new FormData();
     for (const key in reviewVal) {
       formData.append(key, reviewVal[key]);
     }
-    if (selectedImages?.length > 0) {
-      selectedImages.forEach((image, index) => {
-        formData.append(`images[${index}]`, image);
-      });
+
+    // if (selectedImages?.length > 0) {
+    //   selectedImages.forEach((image, index) => {
+    //     formData.append(`images[${index}]`, image);
+    //   });
+    // }
+
+    for (let i = 0; i < selectedImages.length; i++) {
+      formData.append("images", selectedImages[i]);
     }
 
     try {
@@ -213,12 +221,11 @@ const ProductDetail = () => {
         toastifyError(SOMETHING_ERR)
       }
     } catch (error) {
-      toastifyError("Comment is required")
+      toastifyError("Something wen't wrong !!")
     } finally {
       setLoader(prevLoader => ({ ...prevLoader, submitReview: false }));
     }
   }
-
 
 
   const [sizeMap, setSizeMap] = useState({
@@ -425,7 +432,7 @@ const ProductDetail = () => {
   const [show, setShow] = useState(false);
   const [currentImage, setCurrentImage] = useState("");
   const handleShow = (imageSrc) => {
-    setCurrentImage(imageSrc); // Use currentImage instead of selectedImage
+    setCurrentImage(imageSrc);
     setShow(true);
   };
 
@@ -435,6 +442,8 @@ const ProductDetail = () => {
   };
 
   const revphoto = "https://via.placeholder.com/70"; // Your image URL or path
+
+  console.log("reviewList", reviewList)
 
   return (
     <>
@@ -750,68 +759,20 @@ const ProductDetail = () => {
                                       </span>
                                     </div>
                                   </div>
-
-                                  <p> “{item?.comment}</p>
-
+                                  <p> {item?.comment}</p>
                                   <div className="d-inline-block upload_rev_image mt-3">
-                                    {/* Images */}
-                                    <img
-                                      src={revphoto}
-                                      alt="review_image"
-                                      style={{
-                                        width: "70px",
-                                        height: "70px",
-                                        objectFit: "contain",
-                                      }}
-                                      onClick={() => handleShow(revphoto)}
-                                    />
-                                    <img
-                                      src={revphoto}
-                                      alt="review_image"
-                                      style={{
-                                        width: "70px",
-                                        height: "70px",
-                                        objectFit: "contain",
-                                      }}
-                                      onClick={() => handleShow(revphoto)}
-                                    />
-                                    <img
-                                      src={revphoto}
-                                      alt="review_image"
-                                      style={{
-                                        width: "70px",
-                                        height: "70px",
-                                        objectFit: "contain",
-                                      }}
-                                      onClick={() => handleShow(revphoto)}
-                                    />
 
-                                    {/* Modal */}
-                                    <Modal
-                                      className="modal-all"
-                                      show={show}
-                                      onHide={handleClose}
-                                      centered
-                                    >
-                                      <Modal.Header closeButton>
-                                        <Modal.Title>Image Preview</Modal.Title>
-                                      </Modal.Header>
-                                      <Modal.Body>
+                                    {
+                                      item?.images?.length > 0 &&
+                                      item?.images?.map((img, i) => (
                                         <img
-                                          src={currentImage}
-                                          alt="Full-size review"
-                                          style={{ width: "100%" }}
-                                        />{" "}
-                                      </Modal.Body>
-                                      <Modal.Footer>
-                                        <Button
-                                          variant="secondary"
-                                          onClick={handleClose}
-                                        >
-                                          Close
-                                        </Button>
-                                      </Modal.Footer>
-                                    </Modal>
+                                          src={imgBaseURL() + img}
+                                          alt="review_image"
+                                          style={{ width: "70px", height: "70px", objectFit: "contain", }}
+                                          onClick={() => handleShow(imgBaseURL() + img)}
+                                        />
+                                      ))
+                                    }
                                   </div>
                                 </div>
 
@@ -874,14 +835,39 @@ const ProductDetail = () => {
                       </span>
                     </div>
                   </div>
-
                   <p> “{item?.comment}</p>
+                  <div className="d-inline-block upload_rev_image mt-3">
+
+                    {
+                      item?.images?.length > 0 &&
+                      item?.images?.map((img, i) => (
+                        <img
+                          src={imgBaseURL() + img}
+                          alt="review_image"
+                          style={{ width: "70px", height: "70px", objectFit: "contain", }}
+                          onClick={() => handleShow(imgBaseURL() + img)}
+                        />
+                      ))
+                    }
+                  </div>
                 </div>
 
               ))
             }
           </div>
         </Modal.Body>
+      </Modal>
+
+      <Modal className="modal-all" show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Image Preview</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <img src={currentImage} alt="Full-size review" style={{ width: "100%" }} />{" "}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose} > Close</Button>
+        </Modal.Footer>
       </Modal>
     </>
   );

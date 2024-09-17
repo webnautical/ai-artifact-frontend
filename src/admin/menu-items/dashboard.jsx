@@ -276,6 +276,14 @@ const dashboard = {
       icon: LocalOfferIcon,
       breadcrumbs: false,
     },
+    {
+      id: "lottery",
+      title: "Lottery",
+      type: "item",
+      url: "/admin/lottery",
+      icon: LocalOfferIcon,
+      breadcrumbs: false,
+    },
   ]
 };
 
