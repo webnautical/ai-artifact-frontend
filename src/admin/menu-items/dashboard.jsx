@@ -73,7 +73,7 @@ const dashboard = {
     },
 
     {
-      id: 'Product Management',
+      id: 'Products',
       title: 'Product Management',
       type: 'collapse',
       icon: icons.PeopleAltOutlined,
@@ -245,7 +245,7 @@ const dashboard = {
       breadcrumbs: false
     },  
     {
-      id: "general-settings",
+      id: "GeneralSettings",
       title: "General Settings",
       type: "item",
       url: "/admin/general-settings",
@@ -253,7 +253,7 @@ const dashboard = {
       breadcrumbs: false,
     },
     {
-      id: "gelato-price",
+      id: "GelatoPrice",
       title: "Gelato Price",
       type: "item",
       url: "/admin/gelato-price",
@@ -261,7 +261,7 @@ const dashboard = {
       breadcrumbs: false,
     },
     {
-      id: "banner-images",
+      id: "bannerImages",
       title: "Banner & Images",
       type: "item",
       url: `/${auth('admin')?.user_role}/banner-images`,

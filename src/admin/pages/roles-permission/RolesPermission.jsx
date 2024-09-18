@@ -14,15 +14,15 @@ import {
   IconButton,
 } from "@mui/material";
 import { Col, Dropdown, Form, Modal, Row } from "react-bootstrap";
-import MainCard from "../../components/MainCard";
 import { APICALL } from "../../../helper/api/api";
-import { timeAgo } from "../../../helper/Utility";
-import EditIcon from '@mui/icons-material/Edit';
+import { filterByKey, timeAgo } from "../../../helper/Utility";
 import BTNLoader from "../../../components/BTNLoader";
 import TextMessage from "../../../components/TextMessage";
 import AdminLoader from "../../components/AdminLoader";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
 import { Edit, MoreVert } from "@mui/icons-material";
+import { useDataContext } from "../../../helper/context/ContextProvider";
+import TableMSG from "../../../components/TableMSG";
 
 const RolesPermission = () => {
   const [search, setSearch] = useState("");
@@ -35,15 +35,23 @@ const RolesPermission = () => {
   const [loading, setLoading] = useState(false)
   const [listLoading, setListLoading] = useState(false)
   const [resMsg, setResMsg] = useState(null)
+  const { permisionData, getPermision } = useDataContext();
+  const permisionCheck = filterByKey("rolesPermission", permisionData?.permissions);
+
   useEffect(() => {
-    getListFun()
+      getPermision()
   }, [])
+
+  useEffect(() => {
+    if (permisionCheck?.read) {
+      getListFun();
+    }
+  }, [permisionData])
   const getListFun = async () => {
     setListLoading(true)
     try {
       const res = await APICALL('admin/roles')
       setListLoading(false)
-      console.log(res)
       if (res?.status) {
         setData(res?.data)
       }
@@ -94,19 +102,83 @@ const RolesPermission = () => {
     name: '',
     description: '',
     permissions: {
+      dashboard: {
+        edit: false,
+        read: false,
+      },
+      withdrawal: {
+        edit: false,
+        read: false,
+      },
+      rolesPermission: {
+        edit: false,
+        read: false,
+      },
       userManagement: {
         edit: false,
         read: false,
       },
-      product: {
+      products: {
         edit: false,
         read: false,
       },
-      transactions: {
+      categories: {
         edit: false,
         read: false,
       },
-      users: {
+      reviews: {
+        edit: false,
+        read: false,
+      },
+      orders: {
+        edit: false,
+        read: false,
+      },
+      transaction: {
+        edit: false,
+        read: false,
+      },
+      subAdmin: {
+        edit: false,
+        read: false,
+      },
+      pages: {
+        edit: false,
+        read: false,
+      },
+      contactQuery: {
+        edit: false,
+        read: false,
+      },
+      subscribers: {
+        edit: false,
+        read: false,
+      },
+      blogs: {
+        edit: false,
+        read: false,
+      },
+      notifications: {
+        edit: false,
+        read: false,
+      },
+      generalSettings: {
+        edit: false,
+        read: false,
+      },
+      gelatoPrice: {
+        edit: false,
+        read: false,
+      },
+      bannerImages: {
+        edit: false,
+        read: false,
+      },
+      coupon: {
+        edit: false,
+        read: false,
+      },
+      lottery: {
         edit: false,
         read: false,
       },
@@ -193,10 +265,42 @@ const RolesPermission = () => {
   };
 
   const handleEditChange = (row) => {
-    setFormData(row?.roles)
-    setShowModal(true)
-  }
+    const updatedPermissions = {
+      ...formData.permissions,
+      ...row?.roles?.permissions,
+    };
 
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      name: row?.roles?.name || prevFormData.name,
+      description: row?.roles?.description || prevFormData.description,
+      permissions: {
+        ...prevFormData.permissions,
+        dashboard: { ...prevFormData.permissions.dashboard, ...updatedPermissions.dashboard },
+        withdrawal: { ...prevFormData.permissions.withdrawal, ...updatedPermissions.withdrawal },
+        rolesPermission: { ...prevFormData.permissions.rolesPermission, ...updatedPermissions.rolesPermission },
+        userManagement: { ...prevFormData.permissions.userManagement, ...updatedPermissions.userManagement },
+        products: { ...prevFormData.permissions.products, ...updatedPermissions.products },
+        categories: { ...prevFormData.permissions.categories, ...updatedPermissions.categories },
+        reviews: { ...prevFormData.permissions.reviews, ...updatedPermissions.reviews },
+        orders: { ...prevFormData.permissions.orders, ...updatedPermissions.orders },
+        transaction: { ...prevFormData.permissions.transaction, ...updatedPermissions.transaction },
+        subAdmin: { ...prevFormData.permissions.subAdmin, ...updatedPermissions.subAdmin },
+        pages: { ...prevFormData.permissions.pages, ...updatedPermissions.pages },
+        contactQuery: { ...prevFormData.permissions.contactQuery, ...updatedPermissions.contactQuery },
+        subscribers: { ...prevFormData.permissions.subscribers, ...updatedPermissions.subscribers },
+        blogs: { ...prevFormData.permissions.blogs, ...updatedPermissions.blogs },
+        notifications: { ...prevFormData.permissions.notifications, ...updatedPermissions.notifications },
+        generalSettings: { ...prevFormData.permissions.generalSettings, ...updatedPermissions.generalSettings },
+        gelatoPrice: { ...prevFormData.permissions.gelatoPrice, ...updatedPermissions.gelatoPrice },
+        bannerImages: { ...prevFormData.permissions.bannerImages, ...updatedPermissions.bannerImages },
+        coupon: { ...prevFormData.permissions.coupon, ...updatedPermissions.coupon },
+        lottery: { ...prevFormData.permissions.lottery, ...updatedPermissions.lottery },
+      },
+    }));
+
+    setShowModal(true);
+  };
 
   return (
     <Paper className="table_samepattern">
@@ -220,95 +324,103 @@ const RolesPermission = () => {
                   onChange={handleSearchChange}
                   style={{ width: "300px" }}
                 />
-
-                <Button className="artist-btn " onClick={handleShowModal}>
-                  Add Roles
-                </Button>
+                {
+                  permisionCheck?.create &&
+                  <Button className="artist-btn " onClick={handleShowModal}> Add Roles </Button>
+                }
               </div>
             </div>
             <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>
-                      <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
-                        S.No
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell>
+              {
+                permisionCheck?.read ?
+                  <>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>
+                            <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
+                              S.No
+                            </TableSortLabel>
+                          </TableCell>
+                          <TableCell>
 
-                      <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
-                        Role Name
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell>
-                      <TableSortLabel
-                        active={orderBy === "description"}
-                        direction={orderBy === "description" ? order : "asc"}
-                        onClick={() => handleRequestSort("description")}
-                      >
-                        Description
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell>
+                            <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
+                              Role Name
+                            </TableSortLabel>
+                          </TableCell>
+                          <TableCell>
+                            <TableSortLabel
+                              active={orderBy === "description"}
+                              direction={orderBy === "description" ? order : "asc"}
+                              onClick={() => handleRequestSort("description")}
+                            >
+                              Description
+                            </TableSortLabel>
+                          </TableCell>
+                          <TableCell>
 
-                      <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
-                        Users
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell>
-                      <TableSortLabel
-                        active={orderBy === "admins"}
-                        direction={orderBy === "admins" ? order : "asc"}
-                        onClick={() => handleRequestSort("admins")}
-                      >
-                        Date
-                      </TableSortLabel>
-                    </TableCell>
-                    <TableCell align="right">Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {sortedData
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{row?.roles.name}</TableCell>
-                        <TableCell>{row?.roles.description}</TableCell>
-                        <TableCell>{row?.total}</TableCell>
-                        <TableCell>{timeAgo(row?.roles.created_at)}</TableCell>
-                        <TableCell style={{ width: 160 }} align="right">
-                          {/* <IconButton aria-label="delete" onClick={() => handleEditChange(row)}>
-                            <EditIcon color='error' />
-                          </IconButton> */}
+                            <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
+                              Users
+                            </TableSortLabel>
+                          </TableCell>
+                          <TableCell>
+                            <TableSortLabel
+                              active={orderBy === "admins"}
+                              direction={orderBy === "admins" ? order : "asc"}
+                              onClick={() => handleRequestSort("admins")}
+                            >
+                              Date
+                            </TableSortLabel>
+                          </TableCell>
+                          <TableCell align="right">Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {sortedData
+                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map((row, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{index + 1}</TableCell>
+                              <TableCell>{row?.roles.name}</TableCell>
+                              <TableCell>{row?.roles.description}</TableCell>
+                              <TableCell>{row?.total}</TableCell>
+                              <TableCell>{timeAgo(row?.roles.created_at)}</TableCell>
+                              <TableCell style={{ width: 160 }} align="right">
+                                <Dropdown className="dorpdown-curtom">
+                                  <Dropdown.Toggle as={IconButton} variant="link">
+                                    <MoreVert />
+                                  </Dropdown.Toggle>
+                                  {
+                                    permisionCheck?.edit &&
+                                    <Dropdown.Menu>
+                                      <Dropdown.Item to="#" onClick={() => handleEditChange(row)}>
+                                        <Edit style={{ marginRight: "8px" }} />
+                                        Edit
+                                      </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                  }
+                                </Dropdown>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                    <TablePagination
+                      rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
+                      component="div"
+                      count={data?.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                  </>
 
-                          <Dropdown className="dorpdown-curtom">
-                            <Dropdown.Toggle as={IconButton} variant="link">
-                              <MoreVert />
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                              <Dropdown.Item to="#" onClick={() => handleEditChange(row)}>
-                                <Edit style={{ marginRight: "8px" }} />
-                                Edit
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
+                  :
+                  <TableMSG msg={"You don't have permision to view this data"} type={true} />
+              }
             </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
-              component="div"
-              count={data?.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+
           </>
       }
       <Modal

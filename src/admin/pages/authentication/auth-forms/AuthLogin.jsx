@@ -42,11 +42,11 @@ export default function AuthLogin({ isDemo = false }) {
     try {
       const res = await APICALL('/admin/loginAdminUser', 'post', values)
       if (res?.status) {
-        console.log(res)
         const dataParam = {
           token: res?.token,
-          name: res?.data?.first_name,
+          name: res?.data?.first_name + " " + res?.data?.last_name,
           email: res?.data?.email,
+          isSubadmin: res?.data?.isSubadmin,
           id: res?.data?._id,
           user_role: res?.data?.user_role,
         }

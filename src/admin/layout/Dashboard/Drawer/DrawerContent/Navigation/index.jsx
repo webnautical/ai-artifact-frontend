@@ -9,12 +9,7 @@ import artist from '../../../../../menu-items/artist';
 import affiliate from './../../../../../menu-items/affiliate';
 import { auth } from '../../../../../../helper/Utility';
 
-// ==============================|| DRAWER CONTENT - NAVIGATION ||============================== //
-
 export default function Navigation() {
-  // console.log("menuItems",menuItems)
-
-
   const getItems = () => {
     if(auth('admin')?.user_role === 'artist'){
       const artistItem = {items: [artist]};
@@ -26,6 +21,7 @@ export default function Navigation() {
       return menuItems
     }
   }
+
 
   const navGroups = getItems()?.items.map((item) => {
     switch (item.type) {

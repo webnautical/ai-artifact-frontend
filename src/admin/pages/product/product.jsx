@@ -18,7 +18,7 @@ import { Col, Dropdown, Form, Modal, OverlayTrigger, Row, Tooltip } from "react-
 import AdminLoader from "../../components/AdminLoader";
 import BTNLoader from "../../../components/BTNLoader";
 import { APICALL } from "../../../helper/api/api";
-import { timeAgo, tableImg, toastifyError, toastifySuccess } from "../../../helper/Utility";
+import { timeAgo, tableImg, toastifyError, toastifySuccess, filterByKey } from "../../../helper/Utility";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import {
   SOMETHING_ERR,
@@ -28,8 +28,12 @@ import {
 import "../../../App.css";
 import ConfirmModal from "../../../helper/ConfirmModal";
 import { Link } from "react-router-dom";
+import { useDataContext } from "../../../helper/context/ContextProvider";
+import TableMSG from "../../../components/TableMSG";
 
 const Product = () => {
+  const { permisionData, getPermision } = useDataContext();
+
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_PER_PAGE);
@@ -44,11 +48,20 @@ const Product = () => {
   const [show, setShow] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [actionType, setActionType] = useState(null);
-
   const [totalPages, setTotalPages] = useState(1);
+
+  const permisionCheck = filterByKey("products", permisionData?.permissions);
+  console.log("permisionCheck", permisionCheck)
+
   useEffect(() => {
-    getListFun(pageNo, rowsPerPage);
+      getPermision()
+  }, [])
+  useEffect(() => {
+    if (permisionCheck?.read) {
+      getListFun(pageNo, rowsPerPage);
+    }
   }, [pageNo, rowsPerPage]);
+
 
   const getListFun = async (pageNo, rowsPerPage) => {
     setListLoading(true);
@@ -105,7 +118,7 @@ const Product = () => {
 
   const handleViewChange = (row, type) => {
     setActionType(type)
-    if(type === 'delete'){
+    if (type === 'delete') {
       setModalOpen(true)
     }
     setSelectedRow(row);
@@ -154,7 +167,7 @@ const Product = () => {
   const deleteArtWork = async () => {
     setLoading(true)
     try {
-      const res = await APICALL("/admin/deleteArtwork", "post", {productId: selectedRow?._id});
+      const res = await APICALL("/admin/deleteArtwork", "post", { productId: selectedRow?._id });
       if (res?.status) {
         toastifySuccess(res?.message)
         setModalOpen(false)
@@ -170,146 +183,152 @@ const Product = () => {
     }
   };
 
+
   return (
     <>
-        <Paper className="table_samepattern">
-          {listLoading ? (
-            <AdminLoader />
-          ) : (
-            <>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "10px",
-                }}
-              >
-                <h1 className="title-admins-table">Artworks</h1>
-                <TextField
-                  variant="outlined"
-                  placeholder="Search..."
-                  value={search}
-                  onChange={handleSearchChange}
-                  style={{ width: "300px" }}
-                />
-              </div>
-
-              {data.length > 0 ? (
+      <Paper className="table_samepattern">
+        {listLoading ? (
+          <AdminLoader />
+        ) : (
+          <>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "10px",
+              }}
+            >
+              <h1 className="title-admins-table">Artworks</h1>
+              <TextField
+                variant="outlined"
+                placeholder="Search..."
+                value={search}
+                onChange={handleSearchChange}
+                style={{ width: "300px" }}
+              />
+            </div>
+            {
+              permisionCheck?.read ?
                 <>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>
-                            <TableSortLabel
-                              active={orderBy === "role"}
-                              direction={orderBy === "role" ? order : "asc"}
-                              onClick={() => handleRequestSort("role")}
-                            >
-                              S.No
-                            </TableSortLabel>
-                          </TableCell>
-                          <TableCell>
-                            <TableSortLabel
-                              active={orderBy === "role"}
-                              direction={orderBy === "role" ? order : "asc"}
-                              onClick={() => handleRequestSort("role")}
-                            >
-                              Artwork Name
-                            </TableSortLabel>
-                          </TableCell>
-                          <TableCell>Artist Name</TableCell>
-                          <TableCell>Category</TableCell>
-                          <TableCell>Sub Category</TableCell>
-                          <TableCell>Image</TableCell>
-                          <TableCell>Status</TableCell>
-                          <TableCell>
-                            <TableSortLabel
-                              active={orderBy === "admins"}
-                              direction={orderBy === "admins" ? order : "asc"}
-                              onClick={() => handleRequestSort("admins")}
-                            >
-                              Date
-                            </TableSortLabel>
-                          </TableCell>
-                          <TableCell align="right">Actions</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {data.map((row, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell>{row.title}</TableCell>
-                            <TableCell>
-                              {row.artist_id.first_name +
-                                " " +
-                                row.artist_id.last_name}
-                            </TableCell>
-                            <TableCell>{row?.category?.name}</TableCell>
-                            <TableCell>{row?.subcategory?.name}</TableCell>
-                            <TableCell>{tableImg(row.thumbnail)}</TableCell>
-                            <TableCell>
-                              <OverlayTrigger placement={'top'} overlay={<Tooltip id="tooltip-disabled" >Change product status to Click here!</Tooltip>}>
-                                <span className="d-inline-block">
-                                  <Button className={`btn btn-sm ${row?.rejectStatus === 1 ? "btn-danger" : row?.status ? 'btn-success' : 'btn-warning'}`} onClick={() => handleShow(row)}>
-                                    {
-                                      row?.rejectStatus === 1 ? "Rejected" :
-                                        row?.status ? "Approved" : "Pending"
-                                    }
-                                  </Button>
-                                </span>
-                              </OverlayTrigger>
-                            </TableCell>
-                            <TableCell>{timeAgo(row.createdAt)}</TableCell>
-                            <TableCell align="right">
-                              <Dropdown className="dorpdown-curtom">
-                                <Dropdown.Toggle
-                                  as={IconButton}
-                                  variant="link"
+                  {data.length > 0 ? (
+                    <>
+                      <TableContainer>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>
+                                <TableSortLabel
+                                  active={orderBy === "role"}
+                                  direction={orderBy === "role" ? order : "asc"}
+                                  onClick={() => handleRequestSort("role")}
                                 >
-                                  <MoreVert />
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                  <Dropdown.Item href="#" >
-                                    <Link to={`/admin/product-details/${row?._id}`}>
-                                    <RemoveRedEyeIcon style={{ marginRight: "8px" }} />View
-                                    </Link>
-                                  </Dropdown.Item>
-                                  <Dropdown.Item href="#" onClick={() => handleViewChange(row, "delete")}>
-                                    <Delete style={{ marginRight: "8px" }} />Delete
-                                  </Dropdown.Item>
-                                </Dropdown.Menu>
-                              </Dropdown>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
+                                  S.No
+                                </TableSortLabel>
+                              </TableCell>
+                              <TableCell>
+                                <TableSortLabel
+                                  active={orderBy === "role"}
+                                  direction={orderBy === "role" ? order : "asc"}
+                                  onClick={() => handleRequestSort("role")}
+                                >
+                                  Artwork Name
+                                </TableSortLabel>
+                              </TableCell>
+                              <TableCell>Artist Name</TableCell>
+                              <TableCell>Category</TableCell>
+                              <TableCell>Sub Category</TableCell>
+                              <TableCell>Image</TableCell>
+                              <TableCell>Status</TableCell>
+                              <TableCell>
+                                <TableSortLabel
+                                  active={orderBy === "admins"}
+                                  direction={orderBy === "admins" ? order : "asc"}
+                                  onClick={() => handleRequestSort("admins")}
+                                >
+                                  Date
+                                </TableSortLabel>
+                              </TableCell>
+                              <TableCell align="right">Actions</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {data.map((row, index) => (
+                              <TableRow key={index}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{row.title}</TableCell>
+                                <TableCell>
+                                  {row.artist_id.first_name +
+                                    " " +
+                                    row.artist_id.last_name}
+                                </TableCell>
+                                <TableCell>{row?.category?.name}</TableCell>
+                                <TableCell>{row?.subcategory?.name}</TableCell>
+                                <TableCell>{tableImg(row.thumbnail)}</TableCell>
+                                <TableCell>
+                                  <OverlayTrigger placement={'top'} overlay={<Tooltip id="tooltip-disabled" >Change product status to Click here!</Tooltip>}>
+                                    <span className="d-inline-block">
+                                      <Button className={`btn btn-sm ${row?.rejectStatus === 1 ? "btn-danger" : row?.status ? 'btn-success' : 'btn-warning'}`} onClick={() => handleShow(row)}>
+                                        {
+                                          row?.rejectStatus === 1 ? "Rejected" :
+                                            row?.status ? "Approved" : "Pending"
+                                        }
+                                      </Button>
+                                    </span>
+                                  </OverlayTrigger>
+                                </TableCell>
+                                <TableCell>{timeAgo(row.createdAt)}</TableCell>
+                                <TableCell align="right">
+                                  <Dropdown className="dorpdown-curtom">
+                                    <Dropdown.Toggle
+                                      as={IconButton}
+                                      variant="link"
+                                    >
+                                      <MoreVert />
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                      <Dropdown.Item href="#" >
+                                        <Link to={`/admin/product-details/${row?._id}`}>
+                                          <RemoveRedEyeIcon style={{ marginRight: "8px" }} />View
+                                        </Link>
+                                      </Dropdown.Item>
+                                      {
+                                        permisionCheck?.delete &&
+                                        <Dropdown.Item href="#" onClick={() => handleViewChange(row, "delete")}>
+                                          <Delete style={{ marginRight: "8px" }} />Delete
+                                        </Dropdown.Item>
+                                      }
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
 
-                  <TablePagination
-                    rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
-                    component="div"
-                    count={totalPages}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
+                      <TablePagination
+                        rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
+                        component="div"
+                        count={totalPages}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                      />
+                    </>
+                  ) : (
+                    <div className="col-12 text-center px-2 mt-3">
+                      <div className="alert alert-success " role="alert" >There are no data to display </div>
+                    </div>
+                  )}
                 </>
-              ) : (
-                <div className="col-12 text-center px-2 mt-3">
-                  <div
-                    className="alert alert-success text-capitalize"
-                    role="alert"
-                  >
-                    There are no data to display
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </Paper>
+                :
+                <TableMSG msg={"You don't have permision to view this data"} type={true} />
+            }
+
+          </>
+        )}
+      </Paper>
 
       <Modal className="modal-all" centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -347,7 +366,7 @@ const Product = () => {
         </Modal.Footer>
       </Modal>
 
-      <ConfirmModal modalOpen={modalOpen} setModalOpen={setModalOpen} funCall={deleteArtWork} submitLoading={loading} msg="Are you sure? you want to delete it" btn1={"No"} btn2={"Yes"}/>
+      <ConfirmModal modalOpen={modalOpen} setModalOpen={setModalOpen} funCall={deleteArtWork} submitLoading={loading} msg="Are you sure? you want to delete it" btn1={"No"} btn2={"Yes"} />
     </>
   );
 };

@@ -9,20 +9,43 @@ import NavItem from './NavItem';
 import NavCollapse from './NavCollapse';
 import { useGetMenuMaster } from '../../../../../api/menu';
 import { auth } from '../../../../../../helper/Utility';
-
+import { useDataContext } from '../../../../../../helper/context/ContextProvider';
+import { useEffect } from 'react';
 
 export default function NavGroup({ item }) {
+  const { permisionData, getPermision } = useDataContext();
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster.isDashboardDrawerOpened;
 
+  const isSubadmin = auth('admin')?.isSubadmin;
   const userRole = auth('admin')?.user_role;
 
-  const filteredItems = item.children?.filter(menuItem => {
-    if (userRole !== 'admin' && (menuItem.id === 'RolesPermission' || menuItem.id === 'SubAdmin')) {
-      return false;
-    }
-    return true;
-  });
+  useEffect(() => {
+    getPermision();
+  }, []);
+
+  const filteredItems = isSubadmin
+    ? item.children?.filter((menuItem) => {
+        if (userRole !== 'admin' && menuItem.id === 'RolesPermission') {
+          return false;
+        }
+
+        const permissionKey = Object.keys(permisionData?.permissions || {}).find(
+          (key) => key.toLowerCase() === menuItem.id.toLowerCase()
+        );
+  
+        const permission = permisionData?.permissions?.[permissionKey];
+
+        if (!permission || !permission.read) {
+          return false;
+        }
+
+        return true;
+      })
+    : item.children;
+
+  console.log('permisionData', permisionData);
+  console.log('filteredItems', filteredItems);
 
   const navCollapse = filteredItems?.map((menuItem) => {
     switch (menuItem.type) {
@@ -48,7 +71,6 @@ export default function NavGroup({ item }) {
             <Typography variant="subtitle2" color="textSecondary">
               {item.title}
             </Typography>
-            {/* only available in paid version */}
           </Box>
         )
       }

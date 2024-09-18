@@ -25,7 +25,7 @@ import "../../../assets/css/admin.css";
 import AdminLoader from "../../components/AdminLoader";
 import { useDataContext } from './../../../helper/context/ContextProvider';
 import TableMSG from "../../../components/TableMSG";
-import { filterByKey, getTierImg } from "../../../helper/Utility";
+import { auth, filterByKey, getTierImg } from "../../../helper/Utility";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from './../../../helper/Constant';
 import { useParams } from "react-router";
 import { Dropdown } from "react-bootstrap";
@@ -121,7 +121,7 @@ export default function UserManagement() {
     if (permisionCheck?.read) {
       getListFun();
     }
-  }, [type]);
+  }, [type,permisionData]);
 
   const getListFun = async () => {
     setLoading(true);
@@ -181,7 +181,6 @@ export default function UserManagement() {
       ) : (
         <>
           <TableContainer component={Paper}>
-
             {
               permisionCheck?.read ?
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
@@ -275,7 +274,7 @@ export default function UserManagement() {
 
                 </Table>
                 :
-                <TableMSG msg={"You Don't have permision to view this data"} type={true} />
+                <TableMSG msg={"You don't have permision to view this data"} type={true} />
             }
           </TableContainer>
         </>

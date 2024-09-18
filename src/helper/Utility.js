@@ -48,14 +48,14 @@ export const decryptId = (encryptedId) => {
 
 export const filterByKey = (key, obj) => {
 
-    if (auth('admin')?.user_role === 'admin') {
-        const data = { edit: true, read: true, delete: true, create: true }
-        return data
-    } else {
+    if (auth('admin')?.isSubadmin === true) {
         if (!obj || typeof obj !== 'object') {
             return null;
         }
         return obj.hasOwnProperty(key) ? obj[key] : null;
+    } else {
+        const data = { edit: true, read: true, delete: true, create: true }
+        return data
     }
 };
 

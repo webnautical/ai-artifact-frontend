@@ -12,6 +12,7 @@ export const ContextProvider = ({ children }) => {
     })
     const [directoryList, setDirectoryList] = useState([])
     useEffect(() => {
+        getPermision()
         getTierImgFun()
     }, [])
 

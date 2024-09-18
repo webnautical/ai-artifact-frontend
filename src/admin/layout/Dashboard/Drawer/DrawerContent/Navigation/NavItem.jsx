@@ -37,10 +37,8 @@ export default function NavItem({ item, level }) {
   const { pathname } = useLocation();
   const isSelected = !!matchPath({ path: item.url, end: false }, pathname) || openItem === item.id;
 
-  // active menu item on page load
   useEffect(() => {
     if (pathname === item.url) handlerActiveItem(item.id);
-    // eslint-disable-next-line
   }, [pathname]);
 
   const textColor = '#800080';

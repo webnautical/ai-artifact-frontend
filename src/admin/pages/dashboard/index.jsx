@@ -97,7 +97,6 @@ export default function DashboardDefault() {
     }
   }
 
-
   const handleClick = (item) => {
     const url = `/product-details/${item?.artworkId}`;
     window.open(url, '_blank');
