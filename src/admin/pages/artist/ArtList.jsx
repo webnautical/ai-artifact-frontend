@@ -41,12 +41,12 @@ const ArtList = () => {
         getDirectoryWiseArtworkFun()
     }, []);
 
-    useEffect(() =>{
-        if(locationDataOBJ){
+    useEffect(() => {
+        if (locationDataOBJ) {
             setTable(locationDataOBJ)
             getListFun(locationDataOBJ?._id)
         }
-    },[locationDataOBJ])
+    }, [locationDataOBJ])
 
     const getListFun = async (directory_id) => {
         setListLoading(true);
@@ -166,7 +166,7 @@ const ArtList = () => {
                                                                     <TableCell> {<StatusBtn btnName={
                                                                         row?.rejectStatus === 1 ? "Rejected" :
                                                                             row?.status ? "Approved" : "Pending"
-                                                                    } status={row.status} rejectStatus={row.rejectStatus} />}   
+                                                                    } status={row.status} rejectStatus={row.rejectStatus} />}
                                                                     </TableCell>
                                                                     <TableCell>{timeAgo(row.createdAt)}</TableCell>
                                                                     <TableCell align="right">
@@ -210,60 +210,53 @@ const ArtList = () => {
                         </>
                         :
                         <>
-                        {
-
-directoryList?.length > 0 ?
-
-                        <Row className="gx-md-5 row row-cols-1 row-cols-sm-2 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 g-3 pt-1 ">
-                    
                             {
-                                listLoading ? <AdminLoader />
-                                    :
-                                    <>
-                                        {
-                                                directoryList?.map((item, i) => (
-                                                    <Col className="mb-md-4 mb-3">
-                                                        <div className="popular_box" style={{ cursor: 'pointer' }} onClick={() => showTable(item)}>
-                                                            <Row>
-                                                                {
-                                                                    Array(4).fill(null).map((_, i) => (
-                                                                        <Col xs={6} sm={6} md={6} lg={6} className="mb-4" key={i}>
-                                                                            <div className="collection_grid">
-                                                                                <img
-                                                                                    className="w-100"
-                                                                                    src={
-                                                                                        item?.products?.[i]?.thumbnail
-                                                                                            ? imgBaseURL() + item.products[i].thumbnail
-                                                                                            : defaultIMG
-                                                                                    }
-                                                                                    alt="popular-collection-img"
-                                                                                />
-                                                                            </div>
-                                                                        </Col>
-                                                                    ))
-                                                                }
+                                listLoading ? <AdminLoader /> :
+                                    directoryList?.length > 0 ?
+                                        <Row className="gx-md-5 row row-cols-1 row-cols-sm-2 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 g-3 pt-1 ">
+                                            <>
+                                                {
+                                                    directoryList?.map((item, i) => (
+                                                        <Col className="mb-md-4 mb-3">
+                                                            <div className="popular_box" style={{ cursor: 'pointer' }} onClick={() => showTable(item)}>
+                                                                <Row>
+                                                                    {
+                                                                        Array(4).fill(null).map((_, i) => (
+                                                                            <Col xs={6} sm={6} md={6} lg={6} className="mb-4" key={i}>
+                                                                                <div className="collection_grid">
+                                                                                    <img
+                                                                                        className="w-100"
+                                                                                        src={
+                                                                                            item?.products?.[i]?.thumbnail
+                                                                                                ? imgBaseURL() + item.products[i].thumbnail
+                                                                                                : defaultIMG
+                                                                                        }
+                                                                                        alt="popular-collection-img"
+                                                                                    />
+                                                                                </div>
+                                                                            </Col>
+                                                                        ))
+                                                                    }
 
-                                                            </Row>
+                                                                </Row>
 
-                                                            <div className="collection_by">
-                                                                <div className="collection_by_details">
-                                                                    <h4>{item?.name}</h4>
+                                                                <div className="collection_by">
+                                                                    <div className="collection_by_details">
+                                                                        <h4>{item?.name}</h4>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </Col>
-                                                ))
-                                               
-                                        }
-                                    </>
-                            }
+                                                        </Col>
+                                                    ))
 
-                        </Row>
-                         :
-                         <div className="text-center d-block">
-                            <NoData msg={"Oops !! No Art Found"} img={noDataImg} />
-                         </div>
-                        }
+                                                }
+                                            </>
+                                        </Row>
+                                        :
+                                        <div className="text-center d-block">
+                                            <NoData msg={"Oops !! No Art Found"} img={noDataImg} />
+                                        </div>
+                            }
 
                         </>
                 }

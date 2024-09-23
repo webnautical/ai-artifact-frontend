@@ -34,7 +34,7 @@ const catslide = {
     '<i class="fas fa-chevron-left"></i>',
     '<i class="fas fa-chevron-right"></i>',
   ],
- 
+
   responsive: {
     0: {
       items: 1.3,
@@ -54,37 +54,60 @@ const catslide = {
 const ProductList = () => {
   const locationData = useLocation()
   const category = locationData?.state ? locationData?.state?.data?.category : null
- 
+
   const { categoryList, getCategoryFun } = useDataContext();
   const { addRemoveWishList } = useFrontDataContext();
   const [artWorkListing, setArtWorkListing] = useState([]);
   const [categoryObj, setCategoryObj] = useState(null)
   const [sortBy, setSortBy] = useState("")
- 
+  const [keyword, setKeyword] = useState(category?._id ? "" : category)
+
   const [loading, setLoading] = useState({
     list: false,
     submit: false,
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
- 
-  useEffect(() =>{
-    if(category){
+
+  function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+
+      return () => {
+        clearTimeout(handler);
+      };
+    }, [value, delay]);
+
+    return debouncedValue;
+  }
+  const debouncedKeyword = useDebounce(keyword, 500);
+
+  useEffect(() => {
+    setKeyword(category)
+  }, [category])
+
+  useEffect(() => {
+    if (category?._id) {
       setCategoryObj(category)
     }
-  },[category])
- 
- 
+  }, [category])
+
   useEffect(() => {
     getCategoryFun();
-    getArtWorkListFun(currentPage, sortBy, categoryObj, true);
-  }, [currentPage, sortBy, categoryObj, category]);
- 
+    getArtWorkListFun(currentPage, sortBy, categoryObj, true, debouncedKeyword);
+  }, [currentPage, sortBy, categoryObj, category, debouncedKeyword]);
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
- 
-  const getArtWorkListFun = async (page, sortBy, categoryObj, loader) => {
+
+
+
+  const getArtWorkListFun = async (page, sortBy, categoryObj, loader, keyword) => {
     if (loader) {
       setLoading({ ...loading, list: true });
     }
@@ -92,12 +115,11 @@ const ProductList = () => {
       const params = {
         page,
         categoryId: categoryObj?._id,
-        keyword: category,
+        keyword: keyword,
         sortBy: sortBy,
       };
       const res = await APICALL("user/allArtwork", "post", params);
       if (res?.status) {
-        console.log(res)
         setArtWorkListing(res?.data);
         setTotalPages(res?.totalPages);
         setLoading({ ...loading, list: false });
@@ -110,28 +132,28 @@ const ProductList = () => {
       setLoading({ ...loading, list: false });
     }
   };
- 
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
- 
+
   const handleFilterChange = (e) => {
     setSortBy(e.target.value);
     setCurrentPage(currentPage);
   };
- 
+
   const handleCategoryChange = (item) => {
     setCategoryObj(item)
   };
- 
- 
+
+
   return (
     <div className="product_list_page">
       <div className="sortlist_product mb-4">
         <Container>
           <Row className="align-items-center ">
-           
+
             <Col md={12} className="text-end">
               <div className="filter_mobile_menu ">
                 <div class="main_select me-3">
@@ -156,12 +178,12 @@ const ProductList = () => {
           </Row>
         </Container>
       </div>
- 
+
       <section className="productlist">
         <Container>
           <Row className="justify-content-between gx-lg-5">
             <Col lg={3}>
-              <FilterShop setCategoryObj={setCategoryObj} categoryObj={categoryObj} getArtWorkListFun={getArtWorkListFun} />
+              <FilterShop setCategoryObj={setCategoryObj} categoryObj={categoryObj} getArtWorkListFun={getArtWorkListFun} setKeyword={setKeyword} />
             </Col>
             <Col lg={9}>
               <div className="product_tags ">
@@ -183,7 +205,7 @@ const ProductList = () => {
               <h2 className="global_main_top_heading mt-md-4">
                 Posters & Art Prints
               </h2>
- 
+
               <div className="catgory_fliter_product mt-4">
                 {loading?.list ? (
                   <FrontLoader />
@@ -194,7 +216,7 @@ const ProductList = () => {
                         <Col md={3} sm={3} xs={6} className="mb-4" key={i}>
                           <div className="product_box_outer">
                             <Link to={`/product-details/${item?._id}`}>
- 
+
                               <div className="product_box">
                                 <div className="main_show_image">
                                   <img className="w-100" src={
@@ -206,7 +228,7 @@ const ProductList = () => {
                                     loading="lazy"
                                   />
                                 </div>
- 
+
                                 <div className="product_name">{item?.title}</div>
                                 <div className="product_rating">
                                   <Stack spacing={1}>
@@ -218,25 +240,23 @@ const ProductList = () => {
                                     />
                                   </Stack>
                                 </div>
- 
+
                                 <div className="tiear_stauts_name d-flex align-items-center">
                                   <span className="me-2">
-                                  {getTierImg(item?.artist?.currentRank)?.icon}
+                                    {getTierImg(item?.artist?.currentRank)?.icon}
                                   </span>
                                   <div className="name">
-                                    {item?.artist?.first_name +
-                                      " " +
-                                      item?.artist?.last_name}
+                                    {item?.artist?.userName}
                                   </div>
                                 </div>
- 
+
                               </div>
- 
+
                             </Link>
                             <button className="wishlist border-0" onClick={() => {
                               addRemoveWishList(item?._id, getArtWorkListFun, true)
                             }}>
-                              <WishlistIcon item={item}/>
+                              <WishlistIcon item={item} />
                             </button>
                           </div>
                         </Col>
@@ -246,57 +266,57 @@ const ProductList = () => {
                     )}
                   </Row>
                 )}
- 
+
                 {
                   totalPages > 1 &&
                   <Row>
                     <Col md={12}>
                       <div className="pagination_box">
-                      <Pagination
-      className="justify-content-center"
-      style={{ gap: "20px" }}
-    >
-      <Pagination.Prev className="prev_btn_page"
-        onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}
-      >
-       <i class="fa-solid fa-chevron-left"></i>
-      </Pagination.Prev>
-     
-      {[...Array(totalPages)].map((_, i) => (
-        <Pagination.Item
-          key={i}
-          active={i + 1 === currentPage}
-          onClick={() => handlePageChange(i + 1)}
-        >
-          {i + 1}
-        </Pagination.Item>
-      ))}
-     
-      <Pagination.Next className="next_btn_page"
-        onClick={() =>
-          handlePageChange(
-            currentPage < totalPages
-              ? currentPage + 1
-              : totalPages
-          )
-        }
-      >
-     <i class="fa-solid fa-chevron-right"></i>
-      </Pagination.Next>
-    </Pagination>
+                        <Pagination
+                          className="justify-content-center"
+                          style={{ gap: "20px" }}
+                        >
+                          <Pagination.Prev className="prev_btn_page"
+                            onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}
+                          >
+                            <i class="fa-solid fa-chevron-left"></i>
+                          </Pagination.Prev>
+
+                          {[...Array(totalPages)].map((_, i) => (
+                            <Pagination.Item
+                              key={i}
+                              active={i + 1 === currentPage}
+                              onClick={() => handlePageChange(i + 1)}
+                            >
+                              {i + 1}
+                            </Pagination.Item>
+                          ))}
+
+                          <Pagination.Next className="next_btn_page"
+                            onClick={() =>
+                              handlePageChange(
+                                currentPage < totalPages
+                                  ? currentPage + 1
+                                  : totalPages
+                              )
+                            }
+                          >
+                            <i class="fa-solid fa-chevron-right"></i>
+                          </Pagination.Next>
+                        </Pagination>
                       </div>
                     </Col>
                   </Row>
                 }
- 
+
               </div>
             </Col>
           </Row>
         </Container>
       </section>
- 
+
       <Newsletter />
- 
+
       <Offcanvas class="mobile_filter" show={show} onHide={handleClose}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title></Offcanvas.Title>
@@ -308,5 +328,5 @@ const ProductList = () => {
     </div>
   );
 };
- 
+
 export default ProductList;

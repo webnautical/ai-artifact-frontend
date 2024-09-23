@@ -151,17 +151,17 @@ const Artists = () => {
                       </TableHead>
                       <TableBody className="text-center w-100">
                         {listLoading?.artist ? (
-                            <TableCell colSpan={5} align="center">
-<div className="text-center">
-<Spinner
-                                                  animation="border"
-                                                  role="status"
-                                                >
-                                                  <span className="visually-hidden">
-                                                    Loading...
-                                                  </span>
-                                                </Spinner>
-</div>
+                          <TableCell colSpan={5} align="center">
+                            <div className="text-center">
+                              <Spinner
+                                animation="border"
+                                role="status"
+                              >
+                                <span className="visually-hidden">
+                                  Loading...
+                                </span>
+                              </Spinner>
+                            </div>
                           </TableCell>
                         ) : topArtist?.length > 0 ? (
                           topArtist.map((row, i) => (
@@ -200,16 +200,16 @@ const Artists = () => {
                                         <div className="row row-cols-5 row-cols-sm-5 row-cols-xl-5 row-cols-lg-5 row-cols-md-5 g-3 pt-1 ">
                                           {listLoading?.artwork ? (
                                             <div className="may_loader_box">
-                                             
-                                                <Spinner
-                                                  animation="border"
-                                                  role="status"
-                                                >
-                                                  <span className="visually-hidden">
-                                                    Loading...
-                                                  </span>
-                                                </Spinner>
-                                              
+
+                                              <Spinner
+                                                animation="border"
+                                                role="status"
+                                              >
+                                                <span className="visually-hidden">
+                                                  Loading...
+                                                </span>
+                                              </Spinner>
+
                                             </div>
                                           ) : topArtwork?.length > 0 ? (
                                             topArtwork?.map((item, i) => (
@@ -270,10 +270,10 @@ const Artists = () => {
                           ))
                         ) : (
                           <>
-                             <TableCell colSpan={5} align="center">
-                            <div className="text-center mt-3">
-                              <h6>There are no artist on this rank !</h6>
-                            </div>
+                            <TableCell colSpan={5} align="center">
+                              <div className="text-center mt-3">
+                                <h6>There are no artist on this rank !</h6>
+                              </div>
                             </TableCell>
                           </>
                         )}

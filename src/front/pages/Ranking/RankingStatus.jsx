@@ -36,7 +36,7 @@ const RankingStatus = () => {
 
   const categories = period === "week" ? salesHistroy?.map(item => item.dayName || '') : salesHistroy?.map(item => item.monthName || '');
   const salesAmounts = salesHistroy?.map(item => (item.totalSalesAmount ? item.totalSalesAmount.toFixed(2) : 0));
-  
+
   const options = {
     chart: {
       type: 'bar',
@@ -185,20 +185,20 @@ const RankingStatus = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-             
+
                         {
                           listLoading?.artist ? <>
-                                   <TableCell colSpan={5} align="center">
-                          <Spinner
-                                                  animation="border"
-                                                  role="status"
-                                                >
-                                                  <span className="visually-hidden">
-                                                    Loading...
-                                                  </span>
-                                                </Spinner>
+                            <TableCell colSpan={5} align="center">
+                              <Spinner
+                                animation="border"
+                                role="status"
+                              >
+                                <span className="visually-hidden">
+                                  Loading...
+                                </span>
+                              </Spinner>
 
-                                               </TableCell>
+                            </TableCell>
                           </> :
                             topArtist?.length > 0 ?
                               topArtist.map((row, i) => (
@@ -238,10 +238,10 @@ const RankingStatus = () => {
                               ))
                               :
                               <>
-                                 <TableCell colSpan={5} align="center">
-                                <div className="text-center mt-3">
-                                  <h6>There are no artist on this rank !</h6>
-                                </div>
+                                <TableCell colSpan={5} align="center">
+                                  <div className="text-center mt-3">
+                                    <h6>There are no artist on this rank !</h6>
+                                  </div>
                                 </TableCell>
                               </>
                         }

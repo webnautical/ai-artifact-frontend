@@ -41,11 +41,11 @@ const CollectionLIst = ({ title, data }) => {
 
                   <div className="collection_by">
                     <div className="review_person_img">
-                      <h5 className="first_letter" style={{background : '#849393 !important'}}>{item?.artist?.first_name.charAt(0)}</h5>
+                      <h5 className="first_letter" style={{background : '#849393 !important'}}>{item?.artist?.userName.charAt(0)}</h5>
                     </div>
                     <div className="collection_by_details">
                       <h4>{item?.directoryName}</h4>
-                      <p>By {item?.artist?.first_name + " " + item?.artist?.last_name}</p>
+                      <p>By {item?.artist?.userName}</p>
                     </div>
                   </div>
                 </Link>

@@ -1250,6 +1250,10 @@ footer {
 .filter_product .accordion-item {
   border: none !important;
 }
+.filter_product .active{
+  color: #036565 !important;
+  font-weight: 600;
+}
 
 .accordion-body {
   padding-top: 0px !important;

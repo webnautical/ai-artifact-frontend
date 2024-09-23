@@ -1,47 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Accordion from "react-bootstrap/Accordion";
 import { useDataContext } from "../helper/context/ContextProvider";
 import { useFrontDataContext } from "../helper/context/FrontContextProvider";
 
-const FilterShop = ({ setCategoryObj, categoryObj, getArtWorkListFun }) => {
+const FilterShop = ({ setCategoryObj, categoryObj, getArtWorkListFun,setKeyword }) => {
   const { categoryList, } = useDataContext()
   const { headerContent } = useFrontDataContext()
+  const [activeKey, setActiveKey] = useState("0");
 
-  const handleCategoryChange = (item) => {
+  const handleCategoryChange = (item,index) => {
+    setActiveKey(index.toString());
     setCategoryObj(item)
   }
+
+  useEffect(() => {
+    if (categoryObj) {
+      headerContent?.forEach((item, i) => {
+        if (item?.subcategories?.some(sub => sub?._id === categoryObj?._id)) {
+          setActiveKey(i.toString()); 
+        }
+      });
+    }
+  }, [categoryObj, headerContent]);
+
   const [showAll, setShowAll] = useState(false);
   const displayedCategories = showAll ? categoryList : categoryList?.slice(0, 10);
 
   const clearFilter = () => {
-    getArtWorkListFun(1)
     setCategoryObj(null)
+    setKeyword("")
+    getArtWorkListFun(1)
   }
-
-  // console.log("categoryList", categoryList)
-  // console.log("headerContent", headerContent)
 
   return (
     <>
       <div className="filter_product">
-        {/* <Accordion defaultActiveKey="0">
-          <Accordion.Item eventKey="0">
-            <Accordion.Header>Category</Accordion.Header>
-            <Accordion.Body> */}
-        {/* <div className="catehory_box"> */}
-        {/* <ul>
-                  {displayedCategories?.map((item, i) => (
-                    <li><Link to={'#'} onClick={() => handleCategoryChange(item)} className={item?._id === categoryObj?._id ? "active" : ''}> {item?.name}</Link></li>
-                  ))}
-                </ul>
-                {categoryList?.length > 10 && (
-                  <button onClick={() => setShowAll(!showAll)} className="global_light_btn">
-                    {showAll ? "Show Less" : "Show More"}
-                  </button>
-                )} */}
         <p>Category</p>
-        <Accordion defaultActiveKey="0">
+        <Accordion activeKey={activeKey} onSelect={setActiveKey}>
           {headerContent?.map((item, i) => (
             <Accordion.Item eventKey={i.toString()} key={i}>
               <Accordion.Header>{item?.name}</Accordion.Header>
@@ -52,7 +48,7 @@ const FilterShop = ({ setCategoryObj, categoryObj, getArtWorkListFun }) => {
                       <li key={j}>
                         <Link
                           to={'#'}
-                          onClick={() => handleCategoryChange(subItem)}
+                          onClick={() => handleCategoryChange(subItem, i)}
                           className={subItem?._id === categoryObj?._id ? "active" : ''}
                         >
                           {subItem?.name}

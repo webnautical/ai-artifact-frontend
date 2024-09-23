@@ -57,7 +57,7 @@ const ArtWorkUpload = () => {
     directoryId: "",
     directoryName: "",
   });
-
+// console.log("artData",artData)
   useEffect(() => {
     if (artData?.title) {
       setFormData({
@@ -71,7 +71,7 @@ const ArtWorkUpload = () => {
         directoryId: artData?.directoryId,
         directoryName: artData?.directoryName,
       });
-      setImgPreview({ ...imgPreview, image: imgBaseURL() + artData?.image });
+      setImgPreview({ ...imgPreview, image: imgBaseURL() + artData?.thumbnail });
       getSubCategoryFun(artData?.category?._id);
     } else {
       setFormData({
@@ -299,6 +299,7 @@ const ArtWorkUpload = () => {
       const msg = formData?.productId ? "Updated" : "Uploaded";
 
       const res = await APICALL(`/artist/${apiEnd}`, "post", params);
+
       if (res?.status) {
         swal({
           title: `Your Art ${msg} Successfully !!`,

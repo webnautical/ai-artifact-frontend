@@ -14,6 +14,7 @@ const EditProfile = () => {
     const [value, setValue] = useState({
         'first_name': '',
         'last_name': '',
+        'userName': '',
     })
 
     useEffect(() => {
@@ -25,6 +26,7 @@ const EditProfile = () => {
                 ...value,
                 'first_name': userDetails?.first_name,
                 'last_name': userDetails?.last_name,
+                'userName': userDetails?.userName,
             })
         }
     }, [userDetails])
@@ -47,6 +49,7 @@ const EditProfile = () => {
     const [errors, setErrors] = useState({
         'first_name': '',
         'last_name': '',
+        'userName': '',
     })
     const validate = (name, value) => {
         let error = '';
@@ -54,6 +57,9 @@ const EditProfile = () => {
             error = 'Required';
         }
         if (name === 'last_name' && value.trim() === '') {
+            error = 'Required';
+        }
+        if (name === 'userName' && value.trim() === '') {
             error = 'Required';
         }
         setErrors((prevErrors) => ({
@@ -106,7 +112,7 @@ const EditProfile = () => {
             ) : (
                 <Paper className="table_samepattern cutoms-login-artist ">
                     <div className="p-4">
-                    <h1 class="title-admins-table">Change Password</h1>
+                    <h1 class="title-admins-table">Update Profile</h1>
                         <Form onSubmit={updateUserDetails}>
                             <Row>
                                 <Col md={6}>
@@ -145,6 +151,19 @@ const EditProfile = () => {
                                             value={userDetails?.email}
                                             disabled
                                         />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                                        <Form.Label>Username*</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Enter your Last Name"
+                                            name='userName'
+                                            value={value?.userName}
+                                            onChange={handleChange}
+                                        />
+                                        <span className="error">{errors.userName}</span>
                                     </Form.Group>
                                 </Col>
 

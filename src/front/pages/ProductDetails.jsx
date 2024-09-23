@@ -465,7 +465,7 @@ const ProductDetail = () => {
                         <button onClick={() => habdleRedirect()} className="global_light_btn" style={{ color: '#8b96a5' }}>{productDetails?.category?.name} <i className="fa-solid fa-chevron-right"></i></button>
                       </li>
                       <li>
-                        <Link to={`/collection/${productDetails?.artist_id?._id}`}> {productDetails?.artist_id?.first_name + ' ' + productDetails?.artist_id?.last_name} <i className="fa-solid fa-chevron-right"></i></Link>
+                        <Link to={`/collection/${productDetails?.artist_id?._id}`}> {productDetails?.artist_id?.userName} <i className="fa-solid fa-chevron-right"></i></Link>
                       </li>
                       <li>
                         <Link to={`/product-list`}> {productDetails?.directoryId?.name} <i className="fa-solid fa-chevron-right"></i></Link>
@@ -551,7 +551,7 @@ const ProductDetail = () => {
                      
                           {getTierImg(productDetails?.artist_id?.currentRank)?.icon}
                       
-                        <p className="m-0">{productDetails?.artist_id?.first_name + ' ' + productDetails?.artist_id?.last_name}</p>
+                        <p className="m-0">{productDetails?.artist_id?.userName}</p>
                       </div>
                     </Link>
                     <div className="mb-4">
@@ -627,7 +627,7 @@ const ProductDetail = () => {
                       <h3 className="mb-4">Description</h3>
                       <ul className="p-0">
                         <li>
-                          Artist<span className="d-block"> {productDetails?.artist_id?.first_name + ' ' + productDetails?.artist_id?.last_name} </span>
+                          Artist<span className="d-block"> {productDetails?.artist_id?.userName} </span>
                         </li>
                         <li>
                           Collection

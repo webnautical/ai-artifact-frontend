@@ -79,9 +79,7 @@ const Wishlist = () => {
                                   }
                                 </span>
                                 <div className="name">
-                                  {item?.product_id?.artist_id?.first_name +
-                                    " " +
-                                    item?.product_id?.artist_id?.last_name}
+                                  {item?.product_id?.artist_id?.userName}
                                 </div>
                               </div>
                             </Link>

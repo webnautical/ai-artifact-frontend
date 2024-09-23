@@ -359,7 +359,7 @@ const Home = () => {
                                       <span className="me-2">
                                         {getTierImg(art?.artistId?.currentRank)?.icon}
                                       </span>
-                                      <Link to={`/collection/${art?.artistId?._id}`}><div className="name text-capitalize">{art?.artistId?.first_name + " " + art?.artistId?.last_name}</div></Link>
+                                      <Link to={`/collection/${art?.artistId?._id}`}><div className="name text-capitalize">{art?.artistId?.userName}</div></Link>
                                     </div>
                                   </div>
                                 </div>
@@ -418,9 +418,7 @@ const Home = () => {
                               {getTierImg(item?.artist?.currentRank)?.icon}
                             </span>
                             <div className="name">
-                              {item?.artist?.first_name +
-                                " " +
-                                item?.artist?.last_name}
+                              {item?.artist?.userName}
                             </div>
                           </div>
  

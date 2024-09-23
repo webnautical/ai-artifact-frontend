@@ -388,7 +388,7 @@ const Header = () => {
                                     <ul>
                                       {item?.subcategories?.slice(0, 7)?.map((sub, i) => (
                                         <li>
-                                          <button type="button" onClick={() => habdleRedirect(item)}>
+                                          <button type="button" onClick={() => habdleRedirect(sub)}>
                                             {sub?.name}
                                           </button>
                                         </li>
@@ -397,15 +397,8 @@ const Header = () => {
                                   </div>
                                   <div className="col-md-6">
                                     <Row>
-                                      {/* {(() => {
-                                        const filteredSubs = item?.subcategories?.filter((sub) => sub?.randomProduct);
-
-                                        if (filteredSubs?.length > 0) {
-                                          const randomSub = filteredSubs[Math.floor(Math.random() * filteredSubs.length)];
-                                          return ( */}
                                       <div
                                         className="col-md-12 mb-0"
-                                        onClick={() => habdleRedirect(item)}
                                         style={{ cursor: "pointer" }}
                                       >
                                         <Link to={`/product-details/${item?.randomProduct?._id}`}>
@@ -425,10 +418,6 @@ const Header = () => {
                                           </div>
                                         </Link>
                                       </div>
-                                      {/* );
-                                        }
-                                        return null;
-                                      })()} */}
                                     </Row>
                                   </div>
                                 </div>

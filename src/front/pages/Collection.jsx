@@ -41,8 +41,6 @@ const Collection = () => {
     }
   }
  
-  console.log("userInfoByID", userInfoByID)
- 
   return (
     <div className="Home_page">
       <section className="hero_section">
@@ -67,7 +65,7 @@ const Collection = () => {
                     <Col md={12}>
                       <div className="main_head">
                         <div className="level_heading">
-                          {userInfoByID?.first_name + " " + userInfoByID?.last_name} {" "}
+                          {userInfoByID?.userName} {" "}
                           <span className="tier_img">
                             {getTierImg(userInfoByID?.currentRank)?.icon}
                           </span>{" "}
@@ -178,7 +176,7 @@ const Collection = () => {
                                       </span>
  
                                       <div className="name">
-                                        <Link to={`/collection/${item?.artist_id?._id}`}>{item?.artist_id?.first_name + " " + item?.artist_id?.last_name}</Link>
+                                        <Link to={`/collection/${item?.artist_id?._id}`}>{item?.artist_id?.userName}</Link>
                                       </div>
                                     </div>
  
@@ -203,7 +201,7 @@ const Collection = () => {
                   <Row>
                     <div className="main_head mb-5">
                       <div className="level_heading">
-                        {userInfoByID?.first_name + " " + userInfoByID?.last_name}
+                        {userInfoByID?.userName}
                         <span className="tier_img">
                         {getTierImg(userInfoByID?.currentRank)?.icon}
                         </span>{" "}
@@ -237,11 +235,11 @@ const Collection = () => {
  
                             <div className="collection_by">
                               <div className="review_person_img">
-                                <h5 className="first_letter">{item?.artistId?.first_name.charAt(0)}</h5>
+                                <h5 className="first_letter">{item?.artistId?.userName.charAt(0)}</h5>
                               </div>
                               <div className="collection_by_details">
                                 <h4>{item?.name}</h4>
-                                <p>By {item?.artistId?.first_name + " " + item?.artistId?.last_name}</p>
+                                <p>By {item?.artistId?.userName}</p>
                               </div>
                             </div>
                           </Link>
