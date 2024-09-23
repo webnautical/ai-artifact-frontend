@@ -14,9 +14,9 @@ import AuthBackground from '../../assets/images/auth/AuthBackground';
 
 export default function AuthWrapper({ children }) {
   return (
-    <Box sx={{ minHeight: '100vh' }}>
+    <Box clas sx={{ minHeight: '100vh' }}>
       <AuthBackground />
-      <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
+      <Grid className='my_admin' container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
         <Grid item xs={12} sx={{ ml: 3, mt: 3 }}>
           {/* <img src={logo} /> */}
         </Grid>

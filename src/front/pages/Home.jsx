@@ -3,7 +3,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import sliderbanner from "../../assets/images/sliderbanner.png";
 import sliderbannertwo from "../../assets/images/bannertwo.webp";
 // import baughtlistnew from "../../assets/images/baughtlisttwo.png";
-
+import noDataImg from '../../assets/images/noart.gif'
 // import baughtlisttwo from "../../assets/images/baughtlist.png";
 // import baughtlistthree from "../../assets/images/baought-4.png";
 // import baughtlistfour from "../../assets/images/baought-3.png";
@@ -29,7 +29,7 @@ import topthree from "../../assets/images/top (3).png";
 import topfour from "../../assets/images/top (4).png";
 import topfive from "../../assets/images/top-5.png";
 import topsix from "../../assets/images/top-6.png";
-
+ 
 import firsttier from "../../assets/images/1 - Bronze.png";
 import silver from "../../assets/images/2 - Silver.png";
 import gold from "../../assets/images/3 - Gold.png";
@@ -64,14 +64,15 @@ import { APICALL } from "../../helper/api/api";
 import FrontLoader from "../../components/FrontLoader";
 import { useDataContext } from "../../helper/context/ContextProvider";
 import HTMLContent from "../../components/HTMLContent";
-
+import WishlistIcon from "../../components/WishlistIcon";
+ 
 const Home = () => {
-
+ 
   const { categoryList, getCategoryFun, getTierImgFun, getRankTier } = useDataContext()
   const navigate = useNavigate()
   const [key, setKey] = useState("one");
   const { getProductListFun, productList, contextLoader, addRemoveWishList, getHeaderContent, getGeneralSettingFun, generalSetting } = useFrontDataContext();
-
+ 
   const [loading, setLoading] = useState(false)
   const [listLoading, setListLoading] = useState({
     'artwork': false
@@ -85,12 +86,12 @@ const Home = () => {
     getHomePageData()
     getGeneralSettingFun()
   }, [])
-
+ 
   const handleSelect = (k) => {
     setSelected(k);
     getTop10Artwork(k?._id)
   };
-
+ 
   const [top10ArtworkList, setTop10ArtworkList] = useState([])
   const getTop10Artwork = async (tierId) => {
     setListLoading({ ...listLoading, 'artwork': true })
@@ -105,14 +106,14 @@ const Home = () => {
       setListLoading({ ...listLoading, 'artwork': false })
     }
   }
-
+ 
   useEffect(() => {
     if (getRankTier) {
       setSelected(getRankTier[0])
       getTop10Artwork(getRankTier[0]?._id)
     }
   }, [getRankTier])
-
+ 
   const knowledgebaseowl = {
     loop: true,
     autoplay: false,
@@ -123,7 +124,7 @@ const Home = () => {
     responsiveClass: true,
     infinite: true,
     speed: 100,
-
+ 
     responsive: {
       0: {
         items: 1,
@@ -133,12 +134,12 @@ const Home = () => {
       },
       1000: {
         items: 1,
-
+ 
         loop: true,
       },
     },
   };
-
+ 
   const article = {
     loop: true,
     autoplay: false,
@@ -149,7 +150,7 @@ const Home = () => {
     responsiveClass: true,
     infinite: true,
     speed: 100,
-
+ 
     responsive: {
       0: {
         items: 1.3,
@@ -159,12 +160,12 @@ const Home = () => {
       },
       1000: {
         items: 3,
-
+ 
         loop: true,
       },
     },
   };
-
+ 
   const newestartwork = {
     loop: true,
     autoplay: false,
@@ -179,7 +180,7 @@ const Home = () => {
       '<i class="fas fa-chevron-left"></i>',
       '<i class="fas fa-chevron-right"></i>',
     ], // Custom Font Awesome arrows
-
+ 
     responsive: {
       0: {
         items: 2,
@@ -191,13 +192,13 @@ const Home = () => {
       },
       1000: {
         items: 5,
-
+ 
         // loop: true,
       },
     },
   };
-
-
+ 
+ 
   const heroslider = {
     loop: false,
     autoplay: false,
@@ -212,7 +213,7 @@ const Home = () => {
       '<i class="fas fa-chevron-left"></i>',
       '<i class="fas fa-chevron-right"></i>',
     ], // Custom Font Awesome arrows
-
+ 
     responsive: {
       0: {
         items: 1,
@@ -224,22 +225,22 @@ const Home = () => {
       },
       1000: {
         items: 1,
-
+ 
         // loop: true,
       },
     },
   };
-
+ 
   const [selected, setSelected] = useState();
-
+ 
   const owlCarouselRef = useRef(null);
-
+ 
   const handlePrev = () => {
     if (owlCarouselRef.current) {
       owlCarouselRef.current.prev();
     }
   };
-
+ 
   const handleNext = () => {
     if (owlCarouselRef.current) {
       owlCarouselRef.current.next();
@@ -251,43 +252,43 @@ const Home = () => {
   const [popularCollection, setPopularCollection] = useState([])
   const [blogList, setBlogList] = useState([])
   const [bannerList, setBannerList] = useState([])
-
+ 
   const habdleRedirect = (page) => {
     const data = { category: page }
     navigate(`/product-list`, { state: { data: data } })
   }
-
+ 
   const getHomePageData = async () => {
     setLoading(true)
     const recentSold = await APICALL('user/recentSoldArtwork', 'post', {})
     setLoading(false)
     if (recentSold?.status) { setJustBought(recentSold?.data) } else { setJustBought([]) }
-
+ 
     const bestSellingRes = await APICALL('user/bestsellingArtwork', 'post', {})
     if (bestSellingRes?.status) { setBestSelling(bestSellingRes?.data) } else { setBestSelling([]) }
-
+ 
     const trendingRes = await APICALL('user/trendingArtworks', 'post', {})
     if (trendingRes?.status) { setTrendingArt(trendingRes?.data) } else { setTrendingArt([]) }
-
+ 
     const popularCollectionRes = await APICALL('user/getpopularCollection', 'post', {})
     if (popularCollectionRes?.status) { setPopularCollection(popularCollectionRes?.data) } else { setPopularCollection([]) }
-
+ 
   }
-
+ 
   const getBlogFun = async () => {
     setLoading(true)
     const banner = await APICALL('admin/getActiveBanners', 'post', {})
     setLoading(false)
     if (banner?.status) { setBannerList(banner?.data) } else { setBannerList([]) }
-
+ 
     const blogsRes = await APICALL('admin/allBlogs', 'post', {})
     if (blogsRes?.status) { setBlogList(blogsRes?.data) } else { setBlogList([]) }
   }
-
+ 
   const viewBlogDetails = (item) => {
     navigate('/blog-details', { state: { data: item } })
   }
-
+ 
   return (
     <div className="main_homapage">
       {
@@ -310,10 +311,10 @@ const Home = () => {
                         </div>
                       ))
                     }
-
+ 
                   </OwlCarousel>
                 </Col>
-
+ 
                 <Col lg={4} >
                   <div className="just_bought global_card">
                     <div className="d-flex justify-content-between align-items-center">
@@ -328,47 +329,47 @@ const Home = () => {
                       </div>
                     </div>
                     <OwlCarousel className=" owl-theme" {...knowledgebaseowl} ref={owlCarouselRef}>
-
+ 
                       {
                         justBought?.map((item, i) => (
                           <div className="item">
                             {item?.lists?.map((art, i) => (
-                             <div className="main_baught_list_box">
-                             <div className="main_baught_list_box_outer">
-                              <div>
-                                 <div className="baught_img">
-                                   <Link to={`/product-details/${art?.productId?._id}`} className="baought_list">
-                                     <img
-                                       className="list_tumb w-100"
-                                       src={imgBaseURL() + art?.productId?.thumbnail}
-                                       alt="poster-img"
-                                     />
-                                   </Link>
-
-                                 </div>
-                                 </div>
-                             <div>
-                                 <div className="sub_tittle"><Link to={`/collection/${art?.artistId?._id}/${art?.productId?.directoryId?._id}`}>{art?.productId?.directoryId?.name}</Link></div>
-
-                                 <Link to={`/product-details/${art?.productId?._id}`} className="baought_list">
-                                   {art?.productId?.title}
-                                 </Link>
-
-                                 <div className="tiear_stauts_name d-flex align-items-center">
-                                   <span className="me-2">
-                                     {getTierImg(art?.artistId?.currentRank)?.icon}
-                                   </span>
-                                   <Link to={`/collection/${art?.artistId?._id}`}><div className="name text-capitalize">{art?.artistId?.first_name + " " + art?.artistId?.last_name}</div></Link>
-                                 </div>
+                              <div className="main_baught_list_box">
+                                <div className="main_baught_list_box_outer">
+                                  <div>
+                                    <div className="baught_img">
+                                      <Link to={`/product-details/${art?.productId?._id}`} className="baought_list">
+                                        <img
+                                          className="list_tumb w-100"
+                                          src={imgBaseURL() + art?.productId?.thumbnail}
+                                          alt="poster-img"
+                                        />
+                                      </Link>
+ 
+                                    </div>
+                                  </div>
+                                  <div className="my_main_baught_list_box_width">
+                                    <div className="sub_tittle"><Link to={`/collection/${art?.artistId?._id}/${art?.productId?.directoryId?._id}`}>{art?.productId?.directoryId?.name}</Link></div>
+ 
+                                    <Link to={`/product-details/${art?.productId?._id}`} className="baought_list">
+                                      {art?.productId?.title}
+                                    </Link>
+ 
+                                    <div className="tiear_stauts_name d-flex align-items-center">
+                                      <span className="me-2">
+                                        {getTierImg(art?.artistId?.currentRank)?.icon}
+                                      </span>
+                                      <Link to={`/collection/${art?.artistId?._id}`}><div className="name text-capitalize">{art?.artistId?.first_name + " " + art?.artistId?.last_name}</div></Link>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                             </div>
-                           </div>
                             ))}
-
+ 
                           </div>
                         ))
                       }
-
+ 
                     </OwlCarousel>
                   </div>
                 </Col>
@@ -376,8 +377,8 @@ const Home = () => {
             </Container>
           </section>
       }
-
-
+ 
+ 
       <section className="newartwork">
         <Container>
           <h4 className="left_global_heading">Newest artworks</h4>
@@ -388,7 +389,7 @@ const Home = () => {
                   productList?.map((item, i) => (
                     <div className="product_box_outer">
                       <Link to={`/product-details/${item?._id}`}>
-
+ 
                         <div className="product_box">
                           <div className="main_show_image">
                             <img className="w-100" src={
@@ -399,7 +400,7 @@ const Home = () => {
                               alt="product-img"
                             />
                           </div>
-
+ 
                           <div className="product_name">{item?.title}</div>
                           <div className="product_rating">
                             <Stack spacing={1}>
@@ -411,7 +412,7 @@ const Home = () => {
                               />
                             </Stack>
                           </div>
-
+ 
                           <div className="tiear_stauts_name d-flex align-items-center">
                             <span className="me-2">
                               {getTierImg(item?.artist?.currentRank)?.icon}
@@ -422,34 +423,29 @@ const Home = () => {
                                 item?.artist?.last_name}
                             </div>
                           </div>
-
+ 
                         </div>
-
+ 
                       </Link>
                       <button className="wishlist border-0" onClick={() => {
                         addRemoveWishList(item?._id, getProductListFun, true)
                       }}>
-                        {
-                          item?.isWishlist ?
-                            <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i>
-                            :
-                            <i className="fa-regular fa-heart"></i>
-                        }
+                        <WishlistIcon item={item} />
                       </button>
                     </div>
                   ))
                 ) : (
                   <></>
                 )}
-
-
+ 
+ 
               </OwlCarousel>
             </div>
           </Row>
         </Container>
       </section>
-
-
+ 
+ 
       <section className="top_ten">
         <Container>
           <div className="shode_box " >
@@ -457,7 +453,7 @@ const Home = () => {
               <Col lg={6}>
                 <h4 class="left_global_heading">Top 10 by tier</h4>
               </Col>
-
+ 
               <Col lg={6} className="text-lg-end text-center">
                 <div className="tab-cus-buttons">
                   {
@@ -468,21 +464,28 @@ const Home = () => {
                     ))
                   }
                 </div>
-
+ 
               </Col>
-
+ 
             </Row>
-
+ 
             <Tabs class="d-none" defaultActiveKey={selected?._id} id="uncontrolled-tab-example" className="mb-3" activeKey={selected?._id}
             >
               <Tab eventKey={selected?._id} title={selected?._id}>
                 <Row className="row-cols-2 row-cols-sm-2 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 gx-md-5 pt-1">
                   {
-                    listLoading?.artwork ? <>Loading....</> :
+                    listLoading?.artwork ? <>
+                      <div className="col outer_top_ten text-center">
+ 
+                        <Spinner animation="border" role="status">
+                          <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                      </div>
+                    </> :
                       top10ArtworkList?.length > 0 ?
                         top10ArtworkList.map((row, i) => (
                           <Col className="mb-4">
-                            <div className="collection_grid" data-aos="zoom-in">
+                            <div className="collection_grid">
                               <Link to={`/product-details/${row?.product?._id}`}>
                                 <img className="w-100"
                                   src={imgBaseURL() + row?.product?.thumbnail}
@@ -494,24 +497,27 @@ const Home = () => {
                         ))
                         :
                         <>
-                          <div className="text-center mt-3">
-                            <h6>There are no artwork on this rank !</h6>
+                          <div className="outer_top_ten">
+                            <div className="top_ten_arts text-center mt-3">
+                              <img src={noDataImg} alt="no-art" />
+                              <h5 className="mt-3">There are no artwork on this rank !</h5>
+                            </div>
                           </div>
                         </>
                   }
                 </Row>
               </Tab>
-
+ 
             </Tabs>
           </div>
         </Container>
       </section>
-
+ 
       <CollectionLIst title={"Popular collections this week"} data={popularCollection} />
-
+ 
       <Artworks title={"Best Selling Artworks"} data={bestSelling} fun={getHomePageData} />
       <Artworks title={"Trending Artworks"} data={trendingArt} fun={getHomePageData} />
-
+ 
       <section className="all_categores">
         <Container>
           <h4 class="left_global_heading mb-4 text-center">
@@ -526,7 +532,7 @@ const Home = () => {
                gx-md-5
                pt-1"
           >
-
+ 
             {
               categoryList?.slice(0, 10)?.map((item, i) => (
                 <Col className="mb-2" key={i} style={{ cursor: 'pointer' }} onClick={() => habdleRedirect(item)}>
@@ -539,16 +545,16 @@ const Home = () => {
                 </Col>
               ))
             }
-
-
+ 
+ 
           </Row>
-
+ 
           <div className="text-center mt-3">
             <Link to={'/product-list'} class="global_btn">View All Category</Link>
           </div>
         </Container>
       </section>
-
+ 
       <section className="join_community">
         <Container>
           <div className="main_ouetr">
@@ -604,23 +610,23 @@ const Home = () => {
           </div>
         </Container>
       </section>
-
+ 
       <section className="article">
         <Container>
           <OwlCarousel className=" owl-theme" {...article}>
-
+ 
             {
               blogList?.length > 0 &&
               blogList?.map((item, i) => (
                 <div className="item">
-
+ 
                   <div className="blog_box">
-
+ 
                     <button onClick={() => viewBlogDetails(item)}>
                       <div className="blog_img">
                         <img className="w-100" src={imgBaseURL() + item?.image} alt="blog-img" />
                       </div>
-
+ 
                       <div className="d-flex align-items-center justify-content-between mt-4 mb-2">
                         <h6>{item?.title}</h6>
                         <div>
@@ -641,14 +647,14 @@ const Home = () => {
                           </svg>
                         </div>
                       </div>
-
+ 
                       <div className="d-flex"><HTMLContent data={item?.content.slice(0, 70)} /> </div>
-
+ 
                       <div
                         className="user_details d-flex align-items-center "
                         style={{ gap: "10px" }}
                       >
-
+ 
                         <div>
                           <h2>By Admin</h2>
                           <p>{timeAgo(item?.createdAt)}</p>
@@ -656,18 +662,18 @@ const Home = () => {
                       </div>
                     </button>
                   </div>
-
+ 
                 </div>
               ))
             }
-
+ 
           </OwlCarousel>
         </Container>
       </section>
-
+ 
       <Newsletter />
     </div>
   );
 };
-
+ 
 export default Home;

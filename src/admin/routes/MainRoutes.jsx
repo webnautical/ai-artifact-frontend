@@ -5,6 +5,8 @@ import Faq from '../pages/faq/Faq';
 import ArtWorkUpload from '../pages/artist/ArtWorkUpload';
 import ViewUserDetails from '../pages/user-management/ViewUserDetails';
 import ProductDetails from '../pages/product/ProductDetails';
+import ChangePassword from '../pages/Common/ChangePassword';
+const Tier = Loadable( lazy(() => import("../pages/web/Tier")));
 const DashboardDefault = Loadable(lazy(() => import('../pages/dashboard/index')));
 const RolesPermission = Loadable(lazy(() => import('../pages/roles-permission/RolesPermission')));
 const CategoriesList =  Loadable(lazy(() => import('../pages/categories/CategoriesList')));
@@ -32,7 +34,7 @@ const Withdrawal = Loadable( lazy(() => import("../pages/withdrawal/Withdrawal")
 const BlogList = Loadable( lazy(() => import("../pages/blogs/BlogList")));
 const Lottery = Loadable( lazy(() => import("../pages/lottery/Lottery")));
 const MainRoutes = {
-
+ 
   path: '/',
   element: <Dashboard />,
   children: [
@@ -148,9 +150,13 @@ const MainRoutes = {
       path: "/edit-profile",
       element: <EditProfile />,
     },
-    // 
+    {
+      path: "/change-password",
+      element: <ChangePassword />,
+    },
+    //
     // // // // // ARTIST ROUTES // // // //
-    // 
+    //
     {
       path: '/art-work-upload',
       element: <ArtWorkUpload />
@@ -163,7 +169,14 @@ const MainRoutes = {
       path: '/sold-art',
       element: <SoldArt />
     },
+
+    {
+      path: "/tier",
+      element: <Tier />,
+    },
+
+    
   ]
 };
-
+ 
 export default MainRoutes;

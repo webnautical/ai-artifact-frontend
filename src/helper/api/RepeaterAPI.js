@@ -31,6 +31,9 @@ export const useNotificationHandler = () => {
             case 'productrejection':
                 navigate(`/${auth('admin')?.user_role}/artworks`);
                 break;
+                case 'withdrawRequest':
+                navigate(`/${auth('admin')?.user_role}/withdrawal`);
+                break;
             case 'sale':
                 navigate(`/${auth('admin')?.user_role}/sold-art`);
                 break;

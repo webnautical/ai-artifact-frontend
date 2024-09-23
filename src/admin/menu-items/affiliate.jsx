@@ -1,5 +1,8 @@
 import { AccountCircleOutlined, AddModeratorOutlined, Dashboard, FolderSharedOutlined, NotificationsActiveOutlined, PaidOutlined, PeopleAltOutlined } from '@mui/icons-material';
 import { auth } from '../../helper/Utility';
+import DataThresholdingIcon from '@mui/icons-material/DataThresholding';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 const icons = {
   Dashboard,
   FolderSharedOutlined,
@@ -26,7 +29,7 @@ const affiliate = {
       title: 'Sold Art',
       type: 'item',
       url: `/${auth('admin')?.user_role}/sold-art`,
-      icon: icons.AddModeratorOutlined,
+      icon: DataThresholdingIcon,
       breadcrumbs: false
     }, 
     {
@@ -34,7 +37,7 @@ const affiliate = {
       title: 'Notifications',
       type: 'item',
       url: `/${auth('admin')?.user_role}/notifications`,
-      icon: icons.AddModeratorOutlined,
+      icon: NotificationsNoneIcon,
       breadcrumbs: false
     }, 
     {
@@ -42,7 +45,7 @@ const affiliate = {
       title: 'Withdrawal',
       type: 'item',
       url: `/${auth('admin')?.user_role}/withdrawal`,
-      icon: icons.Dashboard,
+      icon: AttachMoneyIcon,
       breadcrumbs: false
     },
   ]

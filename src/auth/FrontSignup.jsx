@@ -259,7 +259,7 @@ const FrontSignup = () => {
                               <Form.Group
                                 className={`form-group ${
                                   formData.first_name.length ? "not-empty" : ""
-                                }`}
+                                } mb-3`}
                               >
                                 <Form.Label
                                   htmlFor="first_name"
@@ -285,7 +285,7 @@ const FrontSignup = () => {
                               <Form.Group
                                 className={`form-group ${
                                   formData.last_name.length ? "not-empty" : ""
-                                }`}
+                                } mb-3`}
                               >
                                 <Form.Label
                                   htmlFor="last_name"
@@ -311,7 +311,7 @@ const FrontSignup = () => {
                             <Form.Group
                               className={`form-group ${
                                 formData.email.length ? "not-empty" : ""
-                              }`}
+                              } mb-3`}
                             >
                               <Form.Label
                                 htmlFor="email"
@@ -335,7 +335,7 @@ const FrontSignup = () => {
                           <Form.Group
                             className={`artist_tagg main_tagg form-group ${
                               formData.password.length ? "not-empty" : ""
-                            }`}
+                            } `}
                           >
                             <Form.Label
                               htmlFor="password"
@@ -421,8 +421,8 @@ const FrontSignup = () => {
                           </div>
 
                           <p className="signup-link">
-                            Don't have an account?
-                            <Link to={`/login/${role}`}>Log In now</Link>
+                            Already have an account ? 
+                            <Link to={`/login/${role}`}> Log In now</Link>
                           </p>
                           <p className="privacy-notice">
                             Our privacy notice includes information about how we

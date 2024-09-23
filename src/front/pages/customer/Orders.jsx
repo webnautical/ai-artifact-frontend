@@ -109,7 +109,7 @@ const Orders = () => {
                                                         <StyledTableCell>Order ID</StyledTableCell>
                                                         {/* <StyledTableCell>Customer Name</StyledTableCell> */}
                                                         <StyledTableCell>Price</StyledTableCell>
-                                                        {/* <StyledTableCell>Status</StyledTableCell> */}
+                                                        <StyledTableCell>Status</StyledTableCell>
                                                         <StyledTableCell>Payment</StyledTableCell>
                                                         <StyledTableCell> Date </StyledTableCell>
                                                         <StyledTableCell align="right">Actions</StyledTableCell>
@@ -122,7 +122,7 @@ const Orders = () => {
                                                             <StyledTableCell>{row._id}</StyledTableCell>
                                                             {/* <StyledTableCell>{row.shippingAddress?.firstName + " " + row?.shippingAddress?.lastName}</StyledTableCell> */}
                                                             <StyledTableCell>${row.totalPrice?.toFixed(2)}</StyledTableCell>
-                                                            {/* <StyledTableCell>{row.status}</StyledTableCell> */}
+                                                            <StyledTableCell>{row.status}</StyledTableCell>
                                                             <StyledTableCell>{row.paymentGateway}</StyledTableCell>
                                                             <StyledTableCell>{timeAgo(row.createdAt)}</StyledTableCell>
                                                             <StyledTableCell align="right">

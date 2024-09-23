@@ -19,6 +19,7 @@ import NoData from "../../components/NoData";
 import noDataImg from '../../assets/images/animasi-emptystate.gif'
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
 import { Rating, Stack } from "@mui/material";
+import WishlistIcon from "../../components/WishlistIcon";
 const catslide = {
   loop: false,
   autoplay: false,
@@ -33,7 +34,7 @@ const catslide = {
     '<i class="fas fa-chevron-left"></i>',
     '<i class="fas fa-chevron-right"></i>',
   ],
-
+ 
   responsive: {
     0: {
       items: 1.3,
@@ -53,36 +54,36 @@ const catslide = {
 const ProductList = () => {
   const locationData = useLocation()
   const category = locationData?.state ? locationData?.state?.data?.category : null
-
+ 
   const { categoryList, getCategoryFun } = useDataContext();
   const { addRemoveWishList } = useFrontDataContext();
   const [artWorkListing, setArtWorkListing] = useState([]);
   const [categoryObj, setCategoryObj] = useState(null)
   const [sortBy, setSortBy] = useState("")
-
+ 
   const [loading, setLoading] = useState({
     list: false,
     submit: false,
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
+ 
   useEffect(() =>{
     if(category){
       setCategoryObj(category)
     }
   },[category])
-
-
+ 
+ 
   useEffect(() => {
     getCategoryFun();
     getArtWorkListFun(currentPage, sortBy, categoryObj, true);
   }, [currentPage, sortBy, categoryObj, category]);
-
+ 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+ 
   const getArtWorkListFun = async (page, sortBy, categoryObj, loader) => {
     if (loader) {
       setLoading({ ...loading, list: true });
@@ -91,6 +92,7 @@ const ProductList = () => {
       const params = {
         page,
         categoryId: categoryObj?._id,
+        keyword: category,
         sortBy: sortBy,
       };
       const res = await APICALL("user/allArtwork", "post", params);
@@ -108,48 +110,28 @@ const ProductList = () => {
       setLoading({ ...loading, list: false });
     }
   };
-
+ 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
+ 
   const handleFilterChange = (e) => {
     setSortBy(e.target.value);
     setCurrentPage(currentPage);
   };
-
+ 
   const handleCategoryChange = (item) => {
     setCategoryObj(item)
   };
-
-
+ 
+ 
   return (
     <div className="product_list_page">
       <div className="sortlist_product mb-4">
         <Container>
           <Row className="align-items-center ">
-            {/* <Col md={6}>
-              <div className="breadcrumbs">
-                <ul className="m-0 p-0">
-                  <li>
-                    <Link to={'/'}>Home <i className="fa-solid fa-chevron-right"></i></Link>
-                  </li>
-                  <li>
-                    <Link>Poster <i className="fa-solid fa-chevron-right"></i></Link>
-                  </li>
-                  <li>
-                    <Link>Poster & Art Prints </Link>
-                  </li>
-                  {
-                    categoryObj?.name &&
-                    <li>
-                      <Link><i className="fa-solid fa-chevron-right"></i> {categoryObj?.name}</Link>
-                    </li>
-                  }
-                </ul>
-              </div>
-            </Col> */}
+           
             <Col md={12} className="text-end">
               <div className="filter_mobile_menu ">
                 <div class="main_select me-3">
@@ -174,7 +156,7 @@ const ProductList = () => {
           </Row>
         </Container>
       </div>
-
+ 
       <section className="productlist">
         <Container>
           <Row className="justify-content-between gx-lg-5">
@@ -201,7 +183,7 @@ const ProductList = () => {
               <h2 className="global_main_top_heading mt-md-4">
                 Posters & Art Prints
               </h2>
-
+ 
               <div className="catgory_fliter_product mt-4">
                 {loading?.list ? (
                   <FrontLoader />
@@ -212,7 +194,7 @@ const ProductList = () => {
                         <Col md={3} sm={3} xs={6} className="mb-4" key={i}>
                           <div className="product_box_outer">
                             <Link to={`/product-details/${item?._id}`}>
-
+ 
                               <div className="product_box">
                                 <div className="main_show_image">
                                   <img className="w-100" src={
@@ -224,7 +206,7 @@ const ProductList = () => {
                                     loading="lazy"
                                   />
                                 </div>
-
+ 
                                 <div className="product_name">{item?.title}</div>
                                 <div className="product_rating">
                                   <Stack spacing={1}>
@@ -236,7 +218,7 @@ const ProductList = () => {
                                     />
                                   </Stack>
                                 </div>
-
+ 
                                 <div className="tiear_stauts_name d-flex align-items-center">
                                   <span className="me-2">
                                   {getTierImg(item?.artist?.currentRank)?.icon}
@@ -247,19 +229,14 @@ const ProductList = () => {
                                       item?.artist?.last_name}
                                   </div>
                                 </div>
-
+ 
                               </div>
-
+ 
                             </Link>
                             <button className="wishlist border-0" onClick={() => {
                               addRemoveWishList(item?._id, getArtWorkListFun, true)
                             }}>
-                              {
-                                item?.isWishlist ?
-                                  <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i>
-                                  :
-                                  <i className="fa-regular fa-heart"></i>
-                              }
+                              <WishlistIcon item={item}/>
                             </button>
                           </div>
                         </Col>
@@ -269,7 +246,7 @@ const ProductList = () => {
                     )}
                   </Row>
                 )}
-
+ 
                 {
                   totalPages > 1 &&
                   <Row>
@@ -279,12 +256,12 @@ const ProductList = () => {
       className="justify-content-center"
       style={{ gap: "20px" }}
     >
-      <Pagination.Prev
+      <Pagination.Prev className="prev_btn_page"
         onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}
       >
        <i class="fa-solid fa-chevron-left"></i>
       </Pagination.Prev>
-      
+     
       {[...Array(totalPages)].map((_, i) => (
         <Pagination.Item
           key={i}
@@ -294,8 +271,8 @@ const ProductList = () => {
           {i + 1}
         </Pagination.Item>
       ))}
-      
-      <Pagination.Next
+     
+      <Pagination.Next className="next_btn_page"
         onClick={() =>
           handlePageChange(
             currentPage < totalPages
@@ -311,15 +288,15 @@ const ProductList = () => {
                     </Col>
                   </Row>
                 }
-
+ 
               </div>
             </Col>
           </Row>
         </Container>
       </section>
-
+ 
       <Newsletter />
-
+ 
       <Offcanvas class="mobile_filter" show={show} onHide={handleClose}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title></Offcanvas.Title>
@@ -331,5 +308,5 @@ const ProductList = () => {
     </div>
   );
 };
-
+ 
 export default ProductList;

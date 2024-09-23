@@ -104,8 +104,9 @@ const EditProfile = () => {
             {loading ? (
                 <AdminLoader />
             ) : (
-                <Paper className="table_samepattern">
+                <Paper className="table_samepattern cutoms-login-artist ">
                     <div className="p-4">
+                    <h1 class="title-admins-table">Change Password</h1>
                         <Form onSubmit={updateUserDetails}>
                             <Row>
                                 <Col md={6}>

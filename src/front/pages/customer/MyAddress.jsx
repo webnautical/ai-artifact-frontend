@@ -8,23 +8,24 @@ import FrontLoader from './../../../components/FrontLoader';
 import { Autocomplete, Box, TextField } from "@mui/material";
 import ReactCountryFlag from "react-country-flag";
 import { Country, State, City } from "country-state-city";
-
+import PlacesAutocomplete from "react-places-autocomplete";
+ 
 const MyAddress = () => {
-
+ 
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [submitLoading, setSubmitLoading] = useState(false)
     const [userDetails, setUserDetails] = useState({})
     const [resMsg, setResMsg] = useState(false)
     const [stateList, setStateList] = useState([]);
-
+ 
     useEffect(() => {
         if (!auth('customer')) {
             navigate('/login/customer')
         }
         getCustomerDetailsFunt()
     }, [])
-
+ 
     const countryOptions = Country?.getAllCountries()?.map((country) => ({
         value: country.isoCode,
         label: (
@@ -38,7 +39,7 @@ const MyAddress = () => {
             </div>
         ),
     }));
-
+ 
     const [value, setValue] = useState({
         "address1": "",
         "address2": "",
@@ -48,8 +49,8 @@ const MyAddress = () => {
         "postalCode": "",
         "phone": ""
     })
-
-
+ 
+ 
     useEffect(() => {
         if (userDetails?._id) {
             setValue({
@@ -65,7 +66,7 @@ const MyAddress = () => {
             getStateFun(userDetails?.country)
         }
     }, [userDetails])
-
+ 
     const getCustomerDetailsFunt = async () => {
         setLoading(true)
         try {
@@ -84,14 +85,10 @@ const MyAddress = () => {
     }
     const [errors, setErrors] = useState({
         'address1': '',
-        'address2': '',
     })
     const validate = (name, value) => {
         let error = '';
         if (name === 'address1' && value.trim() === '') {
-            error = 'Required';
-        }
-        if (name === 'address2' && value.trim() === '') {
             error = 'Required';
         }
         setErrors((prevErrors) => ({
@@ -123,7 +120,7 @@ const MyAddress = () => {
         }));
         setStateList(stateData);
     };
-
+ 
     const updateUserDetails = async (e) => {
         e.preventDefault()
         setSubmitLoading(true)
@@ -141,8 +138,44 @@ const MyAddress = () => {
             setSubmitLoading(false)
         }
     }
-
-
+    const handleLocationSelect = async (value) => {
+        try {
+            setValue((prevValue) => ({
+                ...prevValue,
+                address1: value
+            }));
+        } catch (error) {
+            console.error('Error selecting address', error);
+        }
+    };
+    const handleLocationChange = (value) => {
+        setValue((prevValue) => ({
+            ...prevValue,
+            address1: value
+        }));
+    };
+    const handleLocationSelect2 = async (value) => {
+        try {
+            setValue((prevValue) => ({
+                ...prevValue,
+                address2: value
+            }));
+        } catch (error) {
+            console.error('Error selecting address', error);
+        }
+    };
+    const handleLocationChange2 = (value) => {
+        setValue((prevValue) => ({
+            ...prevValue,
+            address2: value
+        }));
+    };
+ 
+    const searchOptions = {
+        // componentRestrictions: { country: 'IND' }
+        componentRestrictions: { country: value.country }
+    };
+ 
     return (
         <>
             {
@@ -153,38 +186,77 @@ const MyAddress = () => {
                         </div>
                         <div className="account-content-box cutoms-login-artist ship_address ">
                             <Form onSubmit={updateUserDetails}>
+ 
                                 <Row>
                                     <Col md={12}>
-                                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                                            <Form.Label>Address 1</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                as={'textarea'}
-                                                placeholder="Address 1"
-                                                name='address1'
+                                        <div className="group error">
+                                            <PlacesAutocomplete
                                                 value={value?.address1}
-                                                onChange={handleChange}
-                                                maxLength={35}
-                                            />
-                                            <span className="error">{errors.address1}</span>
-                                        </Form.Group>
+                                                name="street"
+                                                onChange={handleLocationChange}
+                                                onSelect={handleLocationSelect}
+                                            // searchOptions={searchOptions}
+                                            >
+                                                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                                    <div className="location_input mb-0">
+                                                        <span className="top_text mb-0">Address 1 * <span className='dot_alert'></span></span>
+                                                        <input className='mb-0' {...getInputProps({ placeholder: 'Start Typing' })} />
+                                                        <div className="autocomplete-dropdown-container">
+                                                            {loading ? <div>Loading...</div> : null}
+                                                            {suggestions?.map((suggestion) => {
+                                                                const style = {
+                                                                    backgroundColor: suggestion.active ? 'whitesmoke' : '#fff',
+                                                                    padding: '10px 10px',
+                                                                    cursor: 'pointer'
+                                                                };
+                                                                return (
+                                                                    <div {...getSuggestionItemProps(suggestion, { style })} key={suggestion.placeId}>
+                                                                        {suggestion.description}
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </PlacesAutocomplete>
+                                            <span className="errmsg">{errors.address1}</span>
+                                        </div>
                                     </Col>
+ 
                                     <Col md={12}>
-                                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                                            <Form.Label>Address 2</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                as={'textarea'}
-                                                placeholder="Address 2"
-                                                name='address2'
+                                        <div className="group error">
+                                            <PlacesAutocomplete
                                                 value={value?.address2}
-                                                onChange={handleChange}
-                                                maxLength={35}
-                                            />
-                                            <span className="error">{errors.address2}</span>
-
-                                        </Form.Group>
+                                                name="street"
+                                                onChange={handleLocationChange2}
+                                                onSelect={handleLocationSelect2}
+                                            // searchOptions={searchOptions}
+                                            >
+                                                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                                    <div className="location_input mb-0">
+                                                        <span className="top_text mb-0">Address 2 * <span className='dot_alert'></span></span>
+                                                        <input className='mb-0' {...getInputProps({ placeholder: 'Start Typing' })} />
+                                                        <div className="autocomplete-dropdown-container">
+                                                            {loading ? <div>Loading...</div> : null}
+                                                            {suggestions?.map((suggestion) => {
+                                                                const style = {
+                                                                    backgroundColor: suggestion.active ? 'whitesmoke' : '#fff',
+                                                                    padding: '10px 10px',
+                                                                    cursor: 'pointer'
+                                                                };
+                                                                return (
+                                                                    <div {...getSuggestionItemProps(suggestion, { style })} key={suggestion.placeId}>
+                                                                        {suggestion.description}
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </PlacesAutocomplete>
+                                        </div>
                                     </Col>
+ 
                                     <Col md={6} className="mb-3">
                                         <Form.Label>Choose Country</Form.Label>
                                         <Autocomplete
@@ -208,7 +280,7 @@ const MyAddress = () => {
                                             onChange={handleCountryChange}
                                         />
                                     </Col>
-
+ 
                                     <Col md={6} className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Choose State</Form.Label>
@@ -225,7 +297,7 @@ const MyAddress = () => {
                                                     </option>
                                                 ))}
                                             </Form.Control>
-
+ 
                                         </Form.Group>
                                     </Col>
                                     <Col md={6}>
@@ -238,7 +310,7 @@ const MyAddress = () => {
                                                 value={value?.city}
                                                 onChange={handleChange}
                                                 maxLength={30}
-
+ 
                                             />
                                         </Form.Group>
                                     </Col>
@@ -252,7 +324,7 @@ const MyAddress = () => {
                                                 value={value?.postalCode}
                                                 onChange={handleChange}
                                                 maxLength={8}
-
+ 
                                             />
                                         </Form.Group>
                                     </Col>
@@ -266,7 +338,7 @@ const MyAddress = () => {
                                                 value={value?.phone}
                                                 onChange={handleChange}
                                                 maxLength={12}
-
+ 
                                             />
                                         </Form.Group>
                                     </Col>
@@ -290,7 +362,7 @@ const MyAddress = () => {
                                                     <Button className="global_btn" type="submit" block>Save Changes</Button>
                                                     {/* :
                                                             <Button className="global_btn" type="button" block disabled>Save Changes</Button>
-
+ 
                                                     } */}
                                                 </>
                                         }
@@ -300,9 +372,9 @@ const MyAddress = () => {
                         </div>
                     </>
             }
-
+ 
         </>
     )
 }
-
+ 
 export default MyAddress

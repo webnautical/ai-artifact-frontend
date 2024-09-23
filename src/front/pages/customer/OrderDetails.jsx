@@ -90,7 +90,12 @@ const OrderDetails = () => {
 
                                     <Col md={4} className='mb-3'>
                                         <h3>Order Summary</h3>
+                                        
                                         <ul className="p-0 m-0">
+                                        <li>
+                                                <p> Order Status</p>
+                                                <p>{orderDetails?.status}</p>
+                                            </li>
                                             <li>
                                                 <p> Item</p>
                                                 <p>{orderDetails?.orderItems?.length}</p>
@@ -168,8 +173,8 @@ const OrderDetails = () => {
                             </div>
 
                         </div>
-                        <div className='mt-2 text-center'>
-                            <Link to={`mailto:${adminDetails}?subject=Order Support Request&body=Hello Support, I am experiencing an issue with my order ID: ${order_id}.`}>Need Help?</Link>
+                        <div className='mt-2 text-end'>
+                            <Link to={`mailto:${adminDetails}?subject=Order Support Request&body=Hello Support, I am experiencing an issue with my order ID: ${order_id}.`}><i class="fa-solid fa-headset me-2"></i><b>Need Help?</b></Link>
                         </div>
                     </div>
             }

@@ -19,7 +19,7 @@ import { handlerDrawerOpen, useGetMenuMaster } from '../../../api/menu';
 // ==============================|| MAIN LAYOUT - DRAWER ||============================== //
 
 export default function MainDrawer({ window }) {
-  const drawerWidth = 260
+  const drawerWidth = 280
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster.isDashboardDrawerOpened;
   const matchDownMD = useMediaQuery((theme) => theme.breakpoints.down('lg'));

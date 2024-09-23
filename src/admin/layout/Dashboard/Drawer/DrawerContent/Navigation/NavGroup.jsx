@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
+ 
 // project import
 import NavItem from './NavItem';
 import NavCollapse from './NavCollapse';
@@ -11,43 +11,54 @@ import { useGetMenuMaster } from '../../../../../api/menu';
 import { auth } from '../../../../../../helper/Utility';
 import { useDataContext } from '../../../../../../helper/context/ContextProvider';
 import { useEffect } from 'react';
-
+ 
+ 
 export default function NavGroup({ item }) {
   const { permisionData, getPermision } = useDataContext();
+ 
   const { menuMaster } = useGetMenuMaster();
   const drawerOpen = menuMaster.isDashboardDrawerOpened;
-
-  const isSubadmin = auth('admin')?.isSubadmin;
+ 
   const userRole = auth('admin')?.user_role;
-
+  const isSubadmin = auth('admin')?.isSubadmin;
+ 
   useEffect(() => {
-    getPermision();
-  }, []);
-
-  const filteredItems = isSubadmin
-    ? item.children?.filter((menuItem) => {
-        if (userRole !== 'admin' && menuItem.id === 'RolesPermission') {
-          return false;
-        }
-
-        const permissionKey = Object.keys(permisionData?.permissions || {}).find(
-          (key) => key.toLowerCase() === menuItem.id.toLowerCase()
-        );
-  
-        const permission = permisionData?.permissions?.[permissionKey];
-
-        if (!permission || !permission.read) {
-          return false;
-        }
-
-        return true;
-      })
-    : item.children;
-
-  console.log('permisionData', permisionData);
-  console.log('filteredItems', filteredItems);
-
-  const navCollapse = filteredItems?.map((menuItem) => {
+    getPermision()
+  }, [])
+ 
+  const filteredItems1 = item.children?.filter(menuItem => {
+    if (userRole !== 'admin' && (menuItem.id === 'RolesPermission')) {
+      return false;
+    }
+    return true;
+  });
+ 
+ 
+  const filteredItems2 = item.children?.filter((menuItem) => {
+ 
+    const permissionKey = Object.keys(permisionData?.permissions || {}).find(
+      (key) => key.toLowerCase() === menuItem.id.toLowerCase()
+    );
+ 
+    const permission = permisionData?.permissions?.[permissionKey];
+ 
+    if (!permission || !permission.read) {
+      return false;
+    }
+ 
+    return true;
+  })
+ 
+  const menuData = isSubadmin ? filteredItems2 : filteredItems1
+ 
+  // console.log("auth", auth('admin'))
+  // console.log("permisionData", permisionData)
+  // console.log("filteredItems", menuData)
+  // console.log("filteredItems1",filteredItems1)
+  // console.log("filteredItems2",filteredItems2)
+ 
+ 
+  const navCollapse = menuData?.map((menuItem) => {
     switch (menuItem.type) {
       case 'collapse':
         return <NavCollapse key={menuItem.id} menu={menuItem} level={1} />;
@@ -61,7 +72,7 @@ export default function NavGroup({ item }) {
         );
     }
   });
-
+ 
   return (
     <List
       subheader={
@@ -80,5 +91,5 @@ export default function NavGroup({ item }) {
     </List>
   );
 }
-
+ 
 NavGroup.propTypes = { item: PropTypes.object };

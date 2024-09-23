@@ -8,12 +8,12 @@ const Newsletter = () => {
   const [email, setEmail] = useState('')
   const handleSubmit = async () => {
     if (email.trim() === "") {
-      setMsg(<span className="text-danger">Email is required</span>);
+      setMsg(<span className="succes_email_error text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>Email is required</span>);
       return false;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setMsg(<span className="text-danger">Please enter a valid email address</span>);
+      setMsg(<span className="succes_email_error text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>Please enter a valid email address</span>);
       return false;
     }
     setMsg("");
@@ -21,7 +21,7 @@ const Newsletter = () => {
     try {
       const res = await APICALL('user/createSubscribe', 'post', { email })
       if (res?.status) {
-        setMsg(<span className="text-success">{res?.message}</span>)
+        setMsg(<span className="succes_email text-success"><i class="fa-solid fa-circle-check me-2"></i>{res?.message}</span>)
         setEmail('')
       }
     } catch (error) {

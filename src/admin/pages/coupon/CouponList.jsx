@@ -21,21 +21,26 @@ import AdminLoader from "../../components/AdminLoader";
 import swal from "sweetalert";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
 import BTNLoader from "../../../components/BTNLoader";
-import { formatdedDate, timeAgo } from "../../../helper/Utility";
+import { filterByKey, formatdedDate, timeAgo } from "../../../helper/Utility";
 import AddUpdateCoupon from "./AddUpdateCoupon";
 import { Delete, Edit, MoreVert } from "@mui/icons-material";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { useDataContext } from "../../../helper/context/ContextProvider";
 const CouponList = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_PER_PAGE);
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false);
-
+    const { permisionData, getPermision } = useDataContext();
+    const permisionCheck = filterByKey("coupon", permisionData?.permissions);
+    useEffect(() => {
+        getPermision()
+    }, [])
     const [addUpdPage, setAddUpdPage] = useState(false)
     useEffect(() => {
         getListFun();
     }, []);
-
+ 
     const getListFun = async () => {
         setLoading(true);
         try {
@@ -48,22 +53,22 @@ const CouponList = () => {
             setLoading(false);
         }
     };
-
+ 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
-
+ 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
+ 
     const [editData, setEditData] = useState(null)
     const handleAction = async (item, type) => {
-        if(type === 'delete'){
+        if (type === 'delete') {
             // setSubmitLoading(true)
             try {
-                const res = await APICALL(`admin/deleteCoupon`, 'post', {id: item?._id})
+                const res = await APICALL(`admin/deleteCoupon`, 'post', { id: item?._id })
                 if (res?.status) {
                     swal({
                         title: res?.message,
@@ -87,12 +92,12 @@ const CouponList = () => {
             } finally {
                 // setSubmitLoading(false)
             }
-        }else{
+        } else {
             setAddUpdPage(true)
             setEditData(item)
         }
     };
-
+ 
     const startIndex = page * rowsPerPage;
     return (
         <Paper className="table_samepattern">
@@ -103,7 +108,10 @@ const CouponList = () => {
                     <CardHeader>
                         <div style={{ display: "flex", justifyContent: "space-between", padding: '10px 14px 0px 14px' }} >
                             <h1 className="title-admins-table">Coupon</h1>
-                            <Button type="button" className="artist-btn btn-sm" onClick={() => {setAddUpdPage(!addUpdPage); setEditData(null)}}>Create Coupon</Button>
+                            {
+                                permisionCheck?.create &&
+                                <Button type="button" className="artist-btn btn-sm" onClick={() => { setAddUpdPage(!addUpdPage); setEditData(null) }}>Create Coupon</Button>
+                            }
                         </div>
                     </CardHeader>
                     {
@@ -150,14 +158,25 @@ const CouponList = () => {
                                                                 <Dropdown.Toggle as={IconButton} variant="link">
                                                                     <MoreVert />
                                                                 </Dropdown.Toggle>
-                                                                <Dropdown.Menu>
-                                                                    <Dropdown.Item href="#" onClick={() => handleAction(row, 'edit')}>
-                                                                        <Edit style={{ marginRight: "8px" }} />Edit
-                                                                    </Dropdown.Item>
-                                                                    <Dropdown.Item href="#" onClick={() => handleAction(row, 'delete')}>
-                                                                        <Delete style={{ marginRight: "8px" }} />Delete
-                                                                    </Dropdown.Item>
-                                                                </Dropdown.Menu>
+                                                                {(permisionCheck?.edit || permisionCheck?.delete) && (
+                                                                    <Dropdown.Menu>
+ 
+                                                                        {
+                                                                            permisionCheck?.edit &&
+                                                                            <Dropdown.Item href="#" onClick={() => handleAction(row, 'edit')}>
+                                                                                <Edit style={{ marginRight: "8px" }} />Edit
+                                                                            </Dropdown.Item>
+                                                                        }
+                                                                        {
+                                                                            permisionCheck?.delete &&
+                                                                            <Dropdown.Item href="#" onClick={() => handleAction(row, 'delete')}>
+                                                                                <Delete style={{ marginRight: "8px" }} />Delete
+                                                                            </Dropdown.Item>
+                                                                        }
+ 
+                                                                    </Dropdown.Menu>
+                                                                )}
+ 
                                                             </Dropdown>
                                                         </TableCell>
                                                     </TableRow>
@@ -181,5 +200,5 @@ const CouponList = () => {
         </Paper>
     );
 };
-
+ 
 export default CouponList;

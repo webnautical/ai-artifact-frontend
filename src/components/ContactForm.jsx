@@ -1,27 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Form, Button, Container } from "react-bootstrap";
 import { APICALL } from "../helper/api/api";
-import swal from 'sweetalert';
-import BTNLoader from './BTNLoader';
+import swal from "sweetalert";
+import BTNLoader from "./BTNLoader";
 import HTMLContent from "./HTMLContent";
+import { useFrontDataContext } from "../helper/context/FrontContextProvider";
+import { Link } from "react-router-dom";
 
 function ContactForm() {
-  const [submitLoading, setSubmitLoading] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const { getGeneralSettingFun, generalSetting } = useFrontDataContext();
+
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    query: '',
+    name: "",
+    email: "",
+    query: "",
   });
 
   const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    query: '',
+    name: "",
+    email: "",
+    query: "",
   });
 
-  useEffect(() =>{
-    getPageContentFun()
-  },[])
+  useEffect(() => {
+    getPageContentFun();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,25 +38,25 @@ function ContactForm() {
   };
 
   const validateField = (name, value) => {
-    let error = '';
+    let error = "";
     switch (name) {
-      case 'name':
+      case "name":
         if (!value.trim()) {
-          error = 'Name is required';
+          error = "Name is required";
         }
         break;
-      case 'email':
+      case "email":
         if (!value.trim()) {
-          error = 'Email is required';
+          error = "Email is required";
         } else if (!/\S+@\S+\.\S+/.test(value)) {
-          error = 'Email address is invalid';
+          error = "Email address is invalid";
         }
         break;
-      case 'query':
+      case "query":
         if (!value.trim()) {
-          error = 'Message is required';
+          error = "Message is required";
         } else if (value.length < 20) {
-          error = 'Message must be at least 20 characters';
+          error = "Message must be at least 20 characters";
         }
         break;
       default:
@@ -67,25 +71,25 @@ function ContactForm() {
   const validateForm = () => {
     const formErrors = {};
     Object.keys(form).forEach((key) => {
-      let error = '';
+      let error = "";
       switch (key) {
-        case 'name':
+        case "name":
           if (!form[key].trim()) {
-            error = 'Name is required';
+            error = "Name is required";
           }
           break;
-        case 'email':
+        case "email":
           if (!form[key].trim()) {
-            error = 'Email is required';
+            error = "Email is required";
           } else if (!/\S+@\S+\.\S+/.test(form[key])) {
-            error = 'Email address is invalid';
+            error = "Email address is invalid";
           }
           break;
-        case 'query':
+        case "query":
           if (!form[key].trim()) {
-            error = 'Message is required';
+            error = "Message is required";
           } else if (form[key].length < 20) {
-            error = 'Message must be at least 20 characters';
+            error = "Message must be at least 20 characters";
           }
           break;
         default:
@@ -101,30 +105,45 @@ function ContactForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitLoading(true)
+    setSubmitLoading(true);
     if (validateForm()) {
-      const res = await APICALL('/user/contactQuery', 'post', form);
+      const res = await APICALL("/user/contactQuery", "post", form);
       if (res?.status) {
-        setSubmitLoading(false)
-        swal({ title: "Your Query Submitted Successfully !!", icon: "success", button: { text: "OK", className: "swal_btn_ok" } });
-        setForm({ name: '', email: '', query: '' });
+        setSubmitLoading(false);
+        swal({
+          title: "Your Query Submitted Successfully !!",
+          icon: "success",
+          button: { text: "OK", className: "swal_btn_ok" },
+        });
+        setForm({ name: "", email: "", query: "" });
       } else {
-        setSubmitLoading(false)
-        swal({ title: "Something Went Wrong !!", icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
+        setSubmitLoading(false);
+        swal({
+          title: "Something Went Wrong !!",
+          icon: "error",
+          button: { text: "OK", className: "swal_btn_ok" },
+        });
       }
     } else {
-      setSubmitLoading(false)
+      setSubmitLoading(false);
     }
   };
-  const [loading, setLoading] = useState(false)
-  const [pageData, setPageData] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [pageData, setPageData] = useState(null);
   const getPageContentFun = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const res = await APICALL('user/getPageByRoute', 'post', { route: "contact-us" })
-      if (res?.status) { setPageData(res?.data); setLoading(false) }
-    } catch (error) { setLoading(false) }
-  }
+      const res = await APICALL("user/getPageByRoute", "post", {
+        route: "contact-us",
+      });
+      if (res?.status) {
+        setPageData(res?.data);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+    }
+  };
 
   return (
     <Container className="mb-md-5 mb-4">
@@ -133,6 +152,12 @@ function ContactForm() {
           <Col md={6} className="text-left">
             <h3>{pageData?.mainTitle}</h3>
             <HTMLContent data={pageData?.editorContent1} />
+            <div>
+              <i class="fa-solid fa-envelope me-2"></i>For Other Querry{" "}
+              <b>
+                <Link>{generalSetting?.adminEmail}</Link>
+              </b>
+            </div>
           </Col>
           <Col md={6}>
             <Form onSubmit={handleSubmit}>
@@ -182,16 +207,19 @@ function ContactForm() {
                     <Form.Control.Feedback type="invalid">
                       {errors.query}
                     </Form.Control.Feedback>
-                    <div className="text-end">
-                    <span>Charecter {form.query?.length}/150</span>
+                    <div className="text-end mt-2">
+                      <span>Charecter {form.query?.length}/150</span>
                     </div>
                   </Form.Group>
                 </Col>
                 <Col md={12} className="text-md-end text-center">
-                  {
-                    submitLoading ? <BTNLoader className={"global_btn"} /> :
-                      <Button className="global_btn" type="submit">Send Message</Button>
-                  }
+                  {submitLoading ? (
+                    <BTNLoader className={"global_btn"} />
+                  ) : (
+                    <Button className="global_btn" type="submit">
+                      Send Message
+                    </Button>
+                  )}
                 </Col>
               </Row>
             </Form>

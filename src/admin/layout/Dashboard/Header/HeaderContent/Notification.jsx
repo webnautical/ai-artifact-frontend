@@ -175,10 +175,12 @@ export default function Notification() {
                     {
                       data?.slice(0,5).map((item, i) => (
                         <ListItemButton onClick={()=>{handleNotificationClick(item); setOpen(false)}} 
-                        style={{ cursor: 'pointer', background: item?.status === "unread" ? "#E8FFE7": "" }}
+                        style={{ cursor: 'pointer', background: item?.status === "unread" ? "#c4e2e2": "" }}
                         >
                           <ListItemAvatar>
-                            <Avatar sx={{color: "primary.main",bgcolor: "primary.lighter"}}><MessageOutlined /></Avatar>
+                          <Avatar sx={{ color: "#ffffff", bgcolor: "#008080" }}>
+  <MessageOutlined />
+</Avatar>
                           </ListItemAvatar>
                           <ListItemText
                             primary={<Typography variant="h6" sx={{ color: '#000' }}>{item?.message}</Typography>}

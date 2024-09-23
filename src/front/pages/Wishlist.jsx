@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import badge from "../../assets/images/badge (1).png";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
@@ -10,16 +10,26 @@ import { P_UID, UID_OBJ } from "../../helper/Constant";
 import wishlistempty from "../../assets/images/wishlistempty.png";
 
 const Wishlist = () => {
-  const navigate = useNavigate()
-  const { getWishListFun, wishlist, contextLoader, addToCartFun, addRemoveWishList } = useFrontDataContext();
+  const navigate = useNavigate();
+  const {
+    getWishListFun,
+    wishlist,
+    contextLoader,
+    addToCartFun,
+    addRemoveWishList,
+    guestWishlist,
+    getGuestWishListProduct,
+  } = useFrontDataContext();
 
   useEffect(() => {
-    if (auth('customer')) {
-      getWishListFun()
+    if (auth("customer")) {
+      getWishListFun();
     } else {
-      navigate('/login/customer')
+      // if (guestWishlist?.length > 0) {
+      getGuestWishListProduct(guestWishlist);
+      // }
     }
-  }, [])
+  }, [guestWishlist]);
 
   return (
     <>
@@ -32,25 +42,28 @@ const Wishlist = () => {
             ) : (
               <>
                 <div className="">
-                {wishlist?.length > 0 ? (
-                  <Row
-                    className="row-cols-2 
+                  {wishlist?.length > 0 ? (
+                    <Row
+                      className="row-cols-2
                row-cols-sm-2
                row-cols-xl-5
                row-cols-lg-4
                row-cols-md-3
-               gx-md-5
+              
                pt-1 justify-content-start wiaslist_sec"
-                  >
-                    {
-                      wishlist?.map((item, i) => (
+                    >
+                      {wishlist?.map((item, i) => (
                         <Col className="mb-4">
                           <div className="product_box">
-                            <Link to={`/product-details/${item?.product_id?._id}`}>
+                            <Link
+                              to={`/product-details/${item?.product_id?._id}`}
+                            >
                               <div className="main_show_image">
                                 <img
                                   className="w-100"
-                                  src={imgBaseURL() + item?.product_id?.thumbnail}
+                                  src={
+                                    imgBaseURL() + item?.product_id?.thumbnail
+                                  }
                                   alt="product-img"
                                 />
                               </div>
@@ -59,7 +72,11 @@ const Wishlist = () => {
                               </div>
                               <div className="tiear_stauts_name d-flex align-items-center">
                                 <span className="me-2">
-                                {getTierImg(item?.product_id?.artist_id?.currentRank)?.icon}
+                                  {
+                                    getTierImg(
+                                      item?.product_id?.artist_id?.currentRank
+                                    )?.icon
+                                  }
                                 </span>
                                 <div className="name">
                                   {item?.product_id?.artist_id?.first_name +
@@ -67,11 +84,22 @@ const Wishlist = () => {
                                     item?.product_id?.artist_id?.last_name}
                                 </div>
                               </div>
-
                             </Link>
-                              <button className="wishlist border-0" onClick={() => { addRemoveWishList(item?.product_id?._id, getWishListFun, true)}}>
-                                <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i>
-                              </button>
+                            <button
+                              className="wishlist border-0"
+                              onClick={() => {
+                                addRemoveWishList(
+                                  item?.product_id?._id,
+                                  getWishListFun,
+                                  true
+                                );
+                              }}
+                            >
+                              <i
+                                class="fa-solid fa-heart"
+                                style={{ color: "#008080" }}
+                              ></i>
+                            </button>
 
                             {contextLoader?.addToCart[item?.product_id?._id] ? (
                               <BTNLoader className="global_btn w-100 mt-2" />
@@ -79,34 +107,46 @@ const Wishlist = () => {
                               <button
                                 className="global_btn w-100 mt-2"
                                 onClick={() => {
-                                  addToCartFun(item?.product_id?._id, 1, P_UID,UID_OBJ);
+                                  addToCartFun(
+                                    item?.product_id?._id,
+                                    1,
+                                    P_UID,
+                                    UID_OBJ
+                                  );
                                 }}
                               >
-                                <i class="fa-solid fa-bag-shopping me-2"></i>Add to Cart
+                                <i class="fa-solid fa-bag-shopping me-2"></i>Add
+                                to Cart
                               </button>
                             )}
                           </div>
                         </Col>
-                      ))
-                    }
-
-
-                  </Row>
-                ) : (
-                  <>
-                    <div className="cart_em_img text-center mt-mb-4">
-                      <img style={{ width: '128px' }} src={wishlistempty} alt="" />
-                      <h5 className="mt-2 mb-2">Your wishlist is empty.</h5>
-                      <p>Your wishlist is currently empty. Start adding items to your cart!</p>
-                      <Link className="global_btn d-inline-block " to="/product-list">
-                        Shop
-                      </Link>
-                    </div>
-                  </>
-                )}
+                      ))}
+                    </Row>
+                  ) : (
+                    <>
+                      <div className="cart_em_img text-center mt-mb-4">
+                        <img
+                          style={{ width: "128px" }}
+                          src={wishlistempty}
+                          alt=""
+                        />
+                        <h5 className="mt-2 mb-2">Your wishlist is empty.</h5>
+                        <p>
+                          Your wishlist is currently empty. Start adding items
+                          to your cart!
+                        </p>
+                        <Link
+                          className="global_btn d-inline-block "
+                          to="/product-list"
+                        >
+                          Shop
+                        </Link>
+                      </div>
+                    </>
+                  )}
                 </div>
               </>
-
             )}
           </Container>
         </section>

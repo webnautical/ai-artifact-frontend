@@ -25,9 +25,9 @@ export const FrontContextProvider = ({ children }) => {
             getCustomerInfoFun()
         }
     }, [customer_id])
-    useEffect(() =>{
+    useEffect(() => {
         getGelatoPriceArrayFun()
-    },[])
+    }, [])
  
     const getCustomerInfoFun = async () => {
         try {
@@ -41,11 +41,11 @@ export const FrontContextProvider = ({ children }) => {
             setCustomerInfo(null)
         }
     }
-
+ 
     const [userInfoByID, setUserInfoByID] = useState(null)
     const getUserByIDFun = async (id) => {
         try {
-            const res = await APICALL('/user/userData', 'post', {id: id})
+            const res = await APICALL('/user/userData', 'post', { id: id })
             if (res?.status) {
                 setUserInfoByID(res?.user)
             } else {
@@ -78,6 +78,54 @@ export const FrontContextProvider = ({ children }) => {
         }
     };
  
+    const [guestWishlist, setGuestWishlist] = useState(() => {
+        const savedWishlist = localStorage.getItem('guestWishlist');
+        return savedWishlist ? JSON.parse(savedWishlist) : [];
+    });
+ 
+    const addToWishlist = (item) => {
+        setGuestWishlist((prev) => {
+            const updatedWishlist = [...prev, item];
+            localStorage.setItem('guestWishlist', JSON.stringify(updatedWishlist));
+            return updatedWishlist;
+        });
+    };
+ 
+    const removeFromWishlist = (itemId) => {
+        setGuestWishlist((prev) => {
+            const updatedWishlist = prev.filter(item => item.id !== itemId);
+            localStorage.setItem('guestWishlist', JSON.stringify(updatedWishlist));
+            return updatedWishlist;
+        });
+    };
+ 
+    const isItemInGuestWishlist = (itemId) => {
+        return guestWishlist.some(item => item.id === itemId);
+    };
+   
+ 
+    const clearWishlist = () => {
+        localStorage.removeItem('guestWishlist');
+        setGuestWishlist([]);
+    };
+ 
+    const getGuestWishListProduct = async (ids) => {
+        setContextLoader({ ...contextLoader, 'wishlist': true })
+        try {
+            const params = { ids: ids }
+            const res = await APICALL('user/getGuestWishlist', 'post', params)
+            if (res?.status) {
+                setWishlist(res?.data)
+            } else {
+                setWishlist([])
+            }
+        } catch (error) {
+            setWishlist([])
+        } finally {
+            setContextLoader({ ...contextLoader, 'wishlist': false })
+        }
+    }
+ 
     const addRemoveWishList = async (product_id, getArtWorkListFun, call = false) => {
         if (auth('customer')) {
             try {
@@ -95,7 +143,15 @@ export const FrontContextProvider = ({ children }) => {
                 console.log(error)
             }
         } else {
-            navigate('/login/customer')
+            const isItemInWishlist = guestWishlist.some(item => item.id === product_id);
+            if (isItemInWishlist) {
+                toastifySuccess("Product removed from wishlist !!")
+                removeFromWishlist(product_id);
+            } else {
+                toastifySuccess("Product added into wishlist !!")
+                const product = { id: product_id };
+                addToWishlist(product);
+            }
         }
     }
  
@@ -117,7 +173,7 @@ export const FrontContextProvider = ({ children }) => {
     }
  
     const getCartListFun = async (loader) => {
-        if(!loader){
+        if (!loader) {
             setContextLoader({ ...contextLoader, 'cartList': true })
         }
         try {
@@ -134,9 +190,61 @@ export const FrontContextProvider = ({ children }) => {
         }
     }
  
+    const getGestCartListFun = async (data, loader) => {
+        if (!loader) {
+            setContextLoader({ ...contextLoader, 'cartList': true })
+        }
+        const params = {products: data}
+        try {
+            const res = await APICALL('user/getGuestCart', 'post', params)
+            if (res?.status) {
+                setCartList(res?.data)
+            } else {
+                setCartList([])
+            }
+        } catch (error) {
+            setCartList([])
+        } finally {
+            setContextLoader({ ...contextLoader, 'cartList': false })
+        }
+    }
+ 
+ 
+    const [guestCart, setGuestCart] = useState(() => {
+        const savedCart = localStorage.getItem('guestCart');
+        return savedCart ? JSON.parse(savedCart) : [];
+    });
+ 
+    const removeFromGuestCart = (productId) => {
+        setGuestCart((prev) => {
+            const updatedCart = prev.filter(item => item.id !== productId);
+            localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+            return updatedCart;
+        });
+    };
+ 
+    const addToGuestCart = (product, quantity) => {
+        toastifySuccess("Product added into cart !!")
+        setGuestCart((prev) => {
+            const existingProduct = prev.find(item => item.id === product.id);
+            let updatedCart;
+            if (existingProduct) {
+                updatedCart = prev.map(item =>
+                    item.id === product.id
+                        ? { ...item, quantity: item.quantity + quantity }
+                        : item
+                );
+            } else {
+                updatedCart = [...prev, { ...product, quantity }];
+            }
+            localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+            return updatedCart;
+        });
+    };
+ 
     const addToCartFun = async (product_id, qnt, puid, p_obj, type) => {
         if (auth('customer')) {
-            if(type !== "qntChange"){
+            if (type !== "qntChange") {
                 setContextLoader((prevLoader) => ({
                     ...prevLoader,
                     addToCart: { ...prevLoader.addToCart, [product_id]: true },
@@ -165,7 +273,8 @@ export const FrontContextProvider = ({ children }) => {
                 }));
             }
         } else {
-            navigate('/login/customer')
+            const product = { id: product_id, quantity: qnt, puid: puid, ...p_obj };
+            addToGuestCart(product, qnt);
         }
     }
  
@@ -220,7 +329,10 @@ export const FrontContextProvider = ({ children }) => {
             getHeaderContent, headerContent,
             getGelatoPriceArrayFun, gelatoPriceArr,
             customerInfo, getCustomerInfoFun,
-            userInfoByID, getUserByIDFun
+            userInfoByID, getUserByIDFun,
+ 
+            // FOR GUEST CONTEST STATE & METHODE/FUNCTIONS
+            guestWishlist, getGuestWishListProduct, guestCart, getGestCartListFun,removeFromGuestCart,isItemInGuestWishlist
         }}>
             {children}
         </ContextData.Provider>

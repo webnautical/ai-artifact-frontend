@@ -15,7 +15,8 @@ import { Link } from "react-router-dom";
 import { Rating, Stack } from "@mui/material";
 import { defaultIMG, getTierImg, imgBaseURL } from "../../helper/Utility";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
-
+import WishlistIcon from "../../components/WishlistIcon";
+ 
 const Collection = () => {
   const { userInfoByID, getUserByIDFun, addRemoveWishList } = useFrontDataContext();
   const { artist, directory } = useParams()
@@ -25,7 +26,7 @@ const Collection = () => {
     getUserByIDFun(artist)
     getData(true)
   }, [artist, directory])
-
+ 
   const getData = async (load) => {
     setLoading(load)
     try {
@@ -39,9 +40,9 @@ const Collection = () => {
       console.log(error)
     }
   }
-
+ 
   console.log("userInfoByID", userInfoByID)
-
+ 
   return (
     <div className="Home_page">
       <section className="hero_section">
@@ -53,7 +54,7 @@ const Collection = () => {
           </Row>
         </Container>
       </section>
-
+ 
       <section className="product_list">
         <Container>
           {loading ? (
@@ -72,7 +73,7 @@ const Collection = () => {
                           </span>{" "}
                           {getTierImg(userInfoByID?.currentRank)?.text}
                         </div>
-
+ 
                         {/* <div className=" right_btn">
                           <button className="global_btn">
                             Follow
@@ -109,7 +110,7 @@ const Collection = () => {
                           </button>
                         </div> */}
                       </div>
-
+ 
                       {/* <div className="item_product_outer">
                         <div className="sort_llist d-flex align-items-center ">
                           <span
@@ -121,28 +122,28 @@ const Collection = () => {
                           <div className="main_select ">
                             <select>
                               <option>Featured</option>
-
+ 
                               <option>Most Popular</option>
-
+ 
                               <option>Low To High</option>
-
+ 
                               <option>High to low</option>
                             </select>
-
+ 
                             <div className="arrwoicon">
                               <i class="fa-solid fa-chevron-down"></i>
                             </div>
                           </div>
                         </div>
                       </div> */}
-
+ 
                       <div className="product_list_box">
                         <Row className="gx-2 row row-cols-1 row-cols-sm-2 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 g-3 pt-1">
                           {list?.length > 0 ? (
                             list?.map((item, i) => (
                               <Col md={3} sm={3} xs={6} className="mb-4" key={i}>
                                 <div className="product_box_outer">
-
+ 
                                   <div className="product_box">
                                     <Link to={`/product-details/${item?._id}`}>
                                       <div className="main_show_image">
@@ -155,11 +156,11 @@ const Collection = () => {
                                           loading="lazy"
                                         />
                                       </div>
-
+ 
                                       <div className="product_name">{item?.title}</div>
-
+ 
                                     </Link>
-
+ 
                                     <div className="product_rating">
                                       <Stack spacing={1}>
                                         <Rating
@@ -170,28 +171,23 @@ const Collection = () => {
                                         />
                                       </Stack>
                                     </div>
-
+ 
                                     <div className="tiear_stauts_name d-flex align-items-center">
                                       <span className="me-2">
                                         {getTierImg(item?.artist_id?.currentRank)?.icon}
                                       </span>
-
+ 
                                       <div className="name">
                                         <Link to={`/collection/${item?.artist_id?._id}`}>{item?.artist_id?.first_name + " " + item?.artist_id?.last_name}</Link>
                                       </div>
                                     </div>
-
+ 
                                   </div>
-
+ 
                                   <button className="wishlist border-0" onClick={() => {
                                     addRemoveWishList(item?._id, getData, true)
                                   }}>
-                                    {
-                                      item?.isWishlist ?
-                                        <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i>
-                                        :
-                                        <i className="fa-regular fa-heart"></i>
-                                    }
+                                    <WishlistIcon item={item}/>
                                   </button>
                                 </div>
                               </Col>
@@ -213,42 +209,7 @@ const Collection = () => {
                         </span>{" "}
                         {getTierImg(userInfoByID?.currentRank)?.text}
                       </div>
-
-                      {/* <div className=" right_btn">
-                        <button className="global_btn">
-                          Follow
-                          <svg
-                            className="mx-2"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2C17.5 2 22 6.5 22 12C22 17.5 17.5 22 12 22Z"
-                              stroke="white"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M16 12L8 12"
-                              stroke="white"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <path
-                              d="M12 16L12 8"
-                              stroke="white"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </button>
-                      </div> */}
+                     
                     </div>
                     {
                       list?.map((item, i) => (
@@ -273,7 +234,7 @@ const Collection = () => {
                                 ))
                               }
                             </Row>
-
+ 
                             <div className="collection_by">
                               <div className="review_person_img">
                                 <h5 className="first_letter">{item?.artistId?.first_name.charAt(0)}</h5>
@@ -288,21 +249,21 @@ const Collection = () => {
                       ))
                     }
                   </Row>
-
-
-
+ 
+ 
+ 
               }
-
+ 
             </>
           )}
         </Container>
       </section>
-
+ 
       {/* <CollectionLIst className="hello" title={"Popular collections this week"} /> */}
-
-
+ 
+ 
     </div>
   );
 };
-
+ 
 export default Collection;

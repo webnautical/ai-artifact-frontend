@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 
 // ==============================|| HEADER - APP BAR STYLED ||============================== //
-const drawerWidth = 260
+const drawerWidth = 280
 const AppBarStyled = styled(AppBar, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
   left: 0,

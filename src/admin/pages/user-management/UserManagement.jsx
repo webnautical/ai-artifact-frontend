@@ -235,7 +235,7 @@ export default function UserManagement() {
                               <Dropdown.Menu>
                                 <Dropdown.Item>
                                   <Link to={`/admin/user-management-details/${row?._id}`}>
-                                    <EyeFilled style={{ marginRight: "8px" }} />Views Details
+                                    <EyeFilled style={{ marginRight: "8px" }} />View Details
                                   </Link>
                                 </Dropdown.Item>
                               </Dropdown.Menu>

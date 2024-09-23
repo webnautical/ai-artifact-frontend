@@ -163,7 +163,7 @@ const FrontLogin = () => {
 
                   <div>
                   <Form.Group
-                      className={`form-group ${
+                      className={`form-group mb-3 ${
                         formData.email.length ? "not-empty" : ""
                       }`}
                     >
@@ -214,7 +214,7 @@ const FrontLogin = () => {
 
                     <div className="remember_forgot d-flex justify-content-between">
                       <Form>
-                        <div className="mb-3 p-0">
+                        <div className=" p-0">
                           <Form.Check
                             inline
                             label="Remember Me"
@@ -246,7 +246,7 @@ const FrontLogin = () => {
                             </button>
                           ) : (
                             <button
-                              className="global_btn w-100"
+                              className="mt-2 global_btn w-100"
                               onClick={() => handleLogin()}
                             >
                               Log In
@@ -255,7 +255,7 @@ const FrontLogin = () => {
                         </>
                       ) : (
                         <button
-                          className="global_btn w-100"
+                          className="mt-2 global_btn w-100"
                           disabled
                           style={{ cursor: "not-allowed" }}
                         >
@@ -292,11 +292,9 @@ const FrontLogin = () => {
 
                   <div className="cutoms-login-artist">
                     <Form>
-                      <Form.Group
-                        className={`form-group ${
-                          formData.email.length ? "not-empty" : ""
-                        }`}
-                      >
+                    <Form.Group
+  className={`form-group ${formData.email.length ? "not-empty" : ""} mb-3`}
+>
                         <Form.Label htmlFor="email" className="animated-label">
                           Email Or Phone Number
                         </Form.Label>
@@ -347,7 +345,7 @@ const FrontLogin = () => {
                         className="d-flex justify-content-between mb-4 mt-3"
                       >
                         <Form>
-                          <div className="mb-3 p-0">
+                          <div className="   p-0">
                             <Form.Check
                               inline
                               label="Remember Me"
@@ -364,7 +362,7 @@ const FrontLogin = () => {
                         </Link>
                       </Form.Group>
                       {serverMsg && <Alert severity="error">{serverMsg}</Alert>}
-                      <div class="submit mt-2">
+                      <div class="submit mt-4">
                         {isFormFilled() ? (
                           <>
                             {loading ? (
@@ -396,8 +394,8 @@ const FrontLogin = () => {
                         )}
                       </div>
                       <p className="signup-link">
-                        Don't have an account?{" "}
-                        <Link to={`/signup/${role}`}>Sign Up now</Link>
+                        Don't have an account ?{" "}
+                        <Link to={`/signup/${role}`}> Sign Up now</Link>
                       </p>
                       <p className="privacy-notice">
                         Our privacy notice includes information about how we use

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { APICALL } from '../../../helper/api/api';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-
+import price from '../../../assets/images/prize.png'
 import {
   Table,
   TableBody,
@@ -160,21 +160,24 @@ const Lottery = () => {
             <button className="spin" onClick={letsSpin}>SPIN</button>
             {spinFinished && winner && (
               <div className="winner-spot">
-                <p>{winner.winner_name}</p>
-                <p>{winner.email}</p>
+<img style={{ width:'70px'}} src={price} alt='icon-img'/>
+                <p><strong>{winner.winner_name}</strong></p>
+                <p><strong>{winner.email}</strong></p>
               </div>
             )}
           </div>
         </div>
         <div className='text-center'>
           {spinFinished && winner && (
-            <Button variant="primary" onClick={handleShow}> Award Winner</Button>
+            <Button className='global_btn' onClick={handleShow}> <i class="fa-solid fa-trophy me-2"></i> Award Winner</Button>
           )}
         </div>
       </div>
 
-      <TableContainer>
-        <strong className='mx-3'>All Winners</strong>
+
+
+      <TableContainer className='p-4 mt-3'>
+      <h1 class="title-admins-table">All Winners</h1>
         <Table>
           <TableHead>
             <TableRow>
@@ -217,8 +220,12 @@ const Lottery = () => {
           <Modal.Title>Award Winner</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className='row'>
+          <div className='row cutoms-login-artist'>
             <div className="col-md-12">
+
+          <div className='text-center mb-4'>
+          <img style={{ width:'100px'}} src={price} alt='icon-img'/>
+          </div>
               <select
                 name="coupon_code"
                 value={selectedCoupon?.code || ''}
@@ -235,24 +242,24 @@ const Lottery = () => {
               {
                 selectedCoupon &&
                 <div className="details-box-lottery">
-                  <p><strong>Discount Type : {selectedCoupon?.discountType}</strong></p>
-                  {selectedCoupon?.discountValue && <p><strong>Discount Value : {selectedCoupon?.discountValue}</strong></p>}
-                  <p><strong>Min Purchase Amount : ${selectedCoupon?.minPurchaseAmount}</strong></p>
+                  <p><strong>Discount Type : </strong> <span>{selectedCoupon?.discountType}</span></p>
+                  {selectedCoupon?.discountValue && <p><strong>Discount Value : </strong> <span>{selectedCoupon?.discountValue}</span></p>}
+                  <p><strong>Min Purchase Amount : </strong><span>${selectedCoupon?.minPurchaseAmount}</span></p>
                   <p><strong>Used Count : {selectedCoupon?.usedCount}</strong></p>
-                  <p><strong>Total Usage Limit : {selectedCoupon?.totalUsageLimit}</strong></p>
-                  <p><strong>Start Date : {formatdedDate(selectedCoupon?.startDate)}</strong></p>
-                  <p><strong>End Date : {formatdedDate(selectedCoupon?.endDate)}</strong></p>
+                  <p><strong>Total Usage Limit : </strong><span>{selectedCoupon?.totalUsageLimit}</span></p>
+                  <p><strong>Start Date : </strong><spam>{formatdedDate(selectedCoupon?.startDate)}</spam></p>
+                  <p><strong>End Date : </strong><span>{formatdedDate(selectedCoupon?.endDate)}</span></p>
                 </div>
               }
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}> Close</Button>
+          <Button className='line-close-btn' onClick={handleClose}> Close</Button>
           {
-            loading ? <BTNLoader className={"btn btn-primary"} />
+            loading ? <BTNLoader className={"btn global_btn"} />
               :
-              <Button variant="primary" onClick={giveCoupon}>Award Winner</Button>
+              <Button className='global_btn' onClick={giveCoupon}><i class="fa-solid fa-trophy me-2"></i> Award Winner</Button>
           }
         </Modal.Footer>
       </Modal>

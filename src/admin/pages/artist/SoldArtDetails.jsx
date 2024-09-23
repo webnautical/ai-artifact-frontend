@@ -12,18 +12,20 @@ const SoldArtDetails = ({ selectedRow }) => {
 
 
                     <Col md={12}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <div>
-                                <h5>Order Details:</h5>
+                        <div className='row'>
+                        <div className='col-md-4 mb-3'>
+                                <img className='w-100' src={imgBaseURL() + selectedRow?.productId?.thumbnail} alt="" />
+                            </div>
+                            <div className='col-md-12 table_border'>
+                                <h6>Order Details:</h6>
                                 <hr />
-                                <p> <strong><strong>Order ID:</strong> #{selectedRow.orderId?._id}</strong> </p>
+                                <p> <strong>Order ID:</strong> #{selectedRow.orderId?._id} </p>
                                 <p> <strong>Quantity:</strong> {selectedRow?.quantity}</p>
                                 <p> <strong>Price:</strong> {selectedRow?.price}</p>
                                 <p><strong>Order Date:</strong> {timeAgo(selectedRow.createdAt)}</p>
 
-                                <div className="my-5">
-                                    <h5>Product Details:</h5>
-                                    <hr />
+                                <div className="mt-2">
+                               
                                     <p> <strong>Product Title:</strong> {selectedRow?.productId?.title}</p>
                                     <p> <strong>Product Description:</strong> {selectedRow.productId?.description}</p>
                                 </div>
@@ -36,9 +38,7 @@ const SoldArtDetails = ({ selectedRow }) => {
                                 </div> */}
 
                             </div>
-                            <div>
-                                <img src={imgBaseURL() + selectedRow?.productId?.thumbnail} alt="" />
-                            </div>
+                        
                         </div>
                         {/* <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                             <div>

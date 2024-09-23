@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useFrontDataContext } from "../helper/context/FrontContextProvider";
-import { imgBaseURL } from "../helper/Utility";
+import { auth, imgBaseURL } from "../helper/Utility";
 import { Link } from "react-router-dom";
 import BTNLoader from "./BTNLoader";
 import { P_UID, UID_OBJ } from "../helper/Constant";
 import { APICALL } from "../helper/api/api";
-
+ 
 const Artworks = ({ title, type, category_id, data, fun }) => {
   const { addToCartFun, contextLoader, addRemoveWishList } = useFrontDataContext();
   const obj = { limit: 6, categoryId: category_id }
-
+ 
   useEffect(() => {
     relatedProduct()
   }, [])
-
+ 
   const [productList, setProductList] = useState([])
   const relatedProduct = async () => {
     const res = await APICALL("user/allArtwork", "post", obj);
@@ -24,7 +24,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
       setProductList([]);
     }
   }
-
+ 
   return (
     <section className="artworks">
       <Container>
@@ -33,7 +33,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
             <h4 class="left_global_heading mb-4">{title || "Best Selling Artworks"}</h4>
           </Col>
         </Row>
-
+ 
         {
           type === 'related_art' ?
             productList?.length > 0 ?
@@ -59,13 +59,16 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   <button type="button" onClick={() => addToCartFun(productList[0]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                     <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                               }
-
-                              <button className="wish_list bg-none border-0" onClick={() => {
-                                addRemoveWishList(productList[0]?._id, relatedProduct, true)
-                              }}>
-                                {productList[0]?.isWishlist ?
-                                  <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                              </button>
+ 
+                              {
+                                auth('customer') &&
+                                <button className="wish_list bg-none border-0" onClick={() => {
+                                  addRemoveWishList(productList[0]?._id, relatedProduct, true)
+                                }}>
+                                  {productList[0]?.isWishlist ?
+                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                </button>
+                              }
                             </div>
                           </div>
                         </Col>
@@ -88,13 +91,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     <button type="button" onClick={() => addToCartFun(productList[1]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                       <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
-
-                                <button className="wish_list bg-none border-0" onClick={() => {
-                                  addRemoveWishList(productList[1]?._id, relatedProduct, true)
-                                }}>
-                                  {productList[1]?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                                </button>
+                                {
+                                  auth('customer') &&
+                                  <button className="wish_list bg-none border-0" onClick={() => {
+                                    addRemoveWishList(productList[1]?._id, relatedProduct, true)
+                                  }}>
+                                    {productList[1]?.isWishlist ?
+                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                  </button>
+                                }
                               </div>
                             </div>
                           }
@@ -114,13 +119,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     <button type="button" onClick={() => addToCartFun(productList[2]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                       <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
-
-                                <button className="wish_list bg-none border-0" onClick={() => {
-                                  addRemoveWishList(productList[2]?._id, relatedProduct, true)
-                                }}>
-                                  {productList[2]?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                                </button>
+                                {
+                                  auth('customer') &&
+                                  <button className="wish_list bg-none border-0" onClick={() => {
+                                    addRemoveWishList(productList[2]?._id, relatedProduct, true)
+                                  }}>
+                                    {productList[2]?.isWishlist ?
+                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                  </button>
+                                }
                               </div>
                             </div>
                           }
@@ -129,7 +136,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                     </Row>
                   </div>
                 </Col>
-
+ 
                 <Col lg={6} className="mb-lg-0 mb-4">
                   <div className="artworks_box">
                     <Row>
@@ -151,13 +158,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   <button type="button" onClick={() => addToCartFun(productList[3]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                     <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                               }
-
-                              <button className="wish_list bg-none border-0" onClick={() => {
-                                addRemoveWishList(productList[3]?._id, relatedProduct, true)
-                              }}>
-                                {productList[3]?.isWishlist ?
-                                  <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                              </button>
+                              {
+                                auth('customer') &&
+                                <button className="wish_list bg-none border-0" onClick={() => {
+                                  addRemoveWishList(productList[3]?._id, relatedProduct, true)
+                                }}>
+                                  {productList[3]?.isWishlist ?
+                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                </button>
+                              }
                             </div>
                           </div>
                         </Col>
@@ -180,13 +189,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     <button type="button" onClick={() => addToCartFun(productList[4]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                       <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
-
-                                <button className="wish_list bg-none border-0" onClick={() => {
-                                  addRemoveWishList(productList[4]?._id, relatedProduct, true)
-                                }}>
-                                  {productList[4]?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                                </button>
+                                {
+                                  auth('customer') &&
+                                  <button className="wish_list bg-none border-0" onClick={() => {
+                                    addRemoveWishList(productList[4]?._id, relatedProduct, true)
+                                  }}>
+                                    {productList[4]?.isWishlist ?
+                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                  </button>
+                                }
                               </div>
                             </div>
                           }
@@ -206,13 +217,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     <button type="button" onClick={() => addToCartFun(productList[5]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                       <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
-
-                                <button className="wish_list bg-none border-0" onClick={() => {
-                                  addRemoveWishList(productList[5]?._id, relatedProduct, true)
-                                }}>
-                                  {productList[5]?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                                </button>
+                                {
+                                  auth('customer') &&
+                                  <button className="wish_list bg-none border-0" onClick={() => {
+                                    addRemoveWishList(productList[5]?._id, relatedProduct, true)
+                                  }}>
+                                    {productList[5]?.isWishlist ?
+                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                  </button>
+                                }
                               </div>
                             </div>
                           }
@@ -221,7 +234,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                     </Row>
                   </div>
                 </Col>
-
+ 
               </Row>
               :
               <>There are no related art</>
@@ -249,13 +262,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   <button type="button" onClick={() => addToCartFun(data[0]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                     <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                               }
-
-                              <button className="wish_list bg-none border-0" onClick={() => {
-                                addRemoveWishList(data[0]?.product?._id, fun, true)
-                              }}>
-                                {data[0]?.product?.isWishlist ?
-                                  <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                              </button>
+                              {
+                                auth('customer') &&
+                                <button className="wish_list bg-none border-0" onClick={() => {
+                                  addRemoveWishList(data[0]?.product?._id, fun, true)
+                                }}>
+                                  {data[0]?.product?.isWishlist ?
+                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                </button>
+                              }
                             </div>
                           </div>
                         </Col>
@@ -278,13 +293,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     <button type="button" onClick={() => addToCartFun(data[1]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                       <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
-
-                                <button className="wish_list bg-none border-0" onClick={() => {
-                                  addRemoveWishList(data[1]?.product?._id, fun, true)
-                                }}>
-                                  {data[1]?.product?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                                </button>
+                                {
+                                  auth('customer') &&
+                                  <button className="wish_list bg-none border-0" onClick={() => {
+                                    addRemoveWishList(data[1]?.product?._id, fun, true)
+                                  }}>
+                                    {data[1]?.product?.isWishlist ?
+                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                  </button>
+                                }
                               </div>
                             </div>
                           }
@@ -304,13 +321,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     <button type="button" onClick={() => addToCartFun(data[2]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                       <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
-
-                                <button className="wish_list bg-none border-0" onClick={() => {
-                                  addRemoveWishList(data[2]?.product?._id, fun, true)
-                                }}>
-                                  {data[2]?.product?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                                </button>
+                                {
+                                  auth('customer') &&
+                                  <button className="wish_list bg-none border-0" onClick={() => {
+                                    addRemoveWishList(data[2]?.product?._id, fun, true)
+                                  }}>
+                                    {data[2]?.product?.isWishlist ?
+                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                  </button>
+                                }
                               </div>
                             </div>
                           }
@@ -319,7 +338,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                     </Row>
                   </div>
                 </Col>
-
+ 
                 <Col lg={6} className="mb-lg-0 mb-4">
                   <div className="artworks_box">
                     <Row>
@@ -341,13 +360,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   <button type="button" onClick={() => addToCartFun(data[3]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                     <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                               }
-
-                              <button className="wish_list bg-none border-0" onClick={() => {
-                                addRemoveWishList(data[3]?.product?._id, fun, true)
-                              }}>
-                                {data[3]?.product?.isWishlist ?
-                                  <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                              </button>
+                              {
+                                auth('customer') &&
+                                <button className="wish_list bg-none border-0" onClick={() => {
+                                  addRemoveWishList(data[3]?.product?._id, fun, true)
+                                }}>
+                                  {data[3]?.product?.isWishlist ?
+                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                </button>
+                              }
                             </div>
                           </div>
                         </Col>
@@ -370,13 +391,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     <button type="button" onClick={() => addToCartFun(data[4]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                       <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
-
-                                <button className="wish_list bg-none border-0" onClick={() => {
-                                  addRemoveWishList(data[4]?.product?._id, fun, true)
-                                }}>
-                                  {data[4]?.product?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                                </button>
+                                {
+                                  auth('customer') &&
+                                  <button className="wish_list bg-none border-0" onClick={() => {
+                                    addRemoveWishList(data[4]?.product?._id, fun, true)
+                                  }}>
+                                    {data[4]?.product?.isWishlist ?
+                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                  </button>
+                                }
                               </div>
                             </div>
                           }
@@ -396,13 +419,15 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     <button type="button" onClick={() => addToCartFun(data[5]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
                                       <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
-
-                                <button className="wish_list bg-none border-0" onClick={() => {
-                                  addRemoveWishList(data[5]?.product?._id, fun, true)
-                                }}>
-                                  {data[5]?.product?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
-                                </button>
+                                {
+                                  auth('customer') &&
+                                  <button className="wish_list bg-none border-0" onClick={() => {
+                                    addRemoveWishList(data[5]?.product?._id, fun, true)
+                                  }}>
+                                    {data[5]?.product?.isWishlist ?
+                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                  </button>
+                                }
                               </div>
                             </div>
                           }
@@ -411,13 +436,13 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                     </Row>
                   </div>
                 </Col>
-
+ 
               </Row>
               :
               <>There are no art to display</>
         }
-
-
+ 
+ 
         <div className="text-center mt-md-5 mt-0 ">
           <Link to='/product-list' class="global_btn">View More</Link>
         </div>
@@ -425,5 +450,5 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
     </section>
   );
 };
-
+ 
 export default Artworks;

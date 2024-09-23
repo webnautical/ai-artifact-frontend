@@ -6,7 +6,16 @@ const FrontLoader = () => {
     <div className="loaders-fix">
       <div>
         <img src={loaders} alt="Logo" className="logo" />
-        <div className="line-animation"></div>
+        <div class="loder">
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>
       </div>
     </div>
   );

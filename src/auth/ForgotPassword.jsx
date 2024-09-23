@@ -217,7 +217,7 @@ const ForgotPassword = () => {
                                 <div className="outer_login">
 
                                     <form action="#" class="custom-form">
-                                        <h1>Forgot Password</h1>
+                                        <h1 className="mb-5">Forgot Password</h1>
                                         <Form.Group className={`form-group ${formData.email.length ? 'not-empty' : ''}`}>
                                             <Form.Control
                                                 type="text"

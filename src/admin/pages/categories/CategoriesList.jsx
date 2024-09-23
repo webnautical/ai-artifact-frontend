@@ -15,10 +15,12 @@ import { IconButton, TablePagination, TableSortLabel } from "@mui/material";
 import { Delete, Edit, MoreVert, TramSharp } from "@mui/icons-material";
 import { SERVER_ERR, SOMETHING_ERR, TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
 import { APICALL } from "../../../helper/api/api";
-import { imgBaseURL, tableImg, timeAgo } from "../../../helper/Utility";
+import { filterByKey, imgBaseURL, tableImg, timeAgo } from "../../../helper/Utility";
 import swal from "sweetalert";
 import BTNLoader from "../../../components/BTNLoader";
-
+import { useDataContext } from "../../../helper/context/ContextProvider";
+import TableMSG from "../../../components/TableMSG";
+ 
 const CategoriesList = () => {
   const [loading, setLoading] = useState({
     'list': false,
@@ -30,6 +32,11 @@ const CategoriesList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_PER_PAGE);
   const [show, setShow] = useState(false);
   const [categoryList, setCategoryList] = useState([])
+  const { permisionData, getPermision } = useDataContext();
+  const permisionCheck = filterByKey("categories", permisionData?.permissions);
+  useEffect(() => {
+    getPermision()
+  }, [])
   const handleClose = () => {
     setShow(false)
     setFormData(initialFormData)
@@ -38,19 +45,20 @@ const CategoriesList = () => {
   const handleShow = (type) => {
     setShow(true)
   };
-
+ 
   const [listingTab, setListingTab] = useState('category')
   useEffect(() => {
-    getListFun()
+    if (permisionCheck?.read) {
+      getListFun();
+    }
     categoryListFun()
-  }, [listingTab])
+  }, [listingTab, permisionData])
   const getListFun = async () => {
     setLoading({ ...loading, 'list': true })
     const params = { type: listingTab }
     try {
       const res = await APICALL('admin/getAllCategory', 'post', params)
       setLoading({ ...loading, 'list': false })
-      console.log("List", res?.data)
       if (res?.status) { setData(res?.data) }
     } catch (error) {
       setLoading({ ...loading, 'list': false })
@@ -68,7 +76,7 @@ const CategoriesList = () => {
     }
   }
   const filteredData = data.filter((item) => item.name?.toLowerCase().includes(search?.toLowerCase()));
-
+ 
   const initialFormData = {
     id: '',
     category_name: '',
@@ -84,14 +92,14 @@ const CategoriesList = () => {
     setRowsPerPage(parseInt(event.target.value, TABLE_ROW_PER_PAGE));
     setPage(0);
   };
-
+ 
   const handleEditChange = (row) => {
     setShow(true)
     console.log(row)
-    setFormData({ ...formData, 'category_name': row?.name, 'id': row?._id, 'image': row.image, parentCategoryId : row.parentCategoryId?._id })
+    setFormData({ ...formData, 'category_name': row?.name, 'id': row?._id, 'image': row.image, parentCategoryId: row.parentCategoryId?._id })
     setImgPreview({ ...imgPreview, 'image': imgBaseURL() + row?.image })
   }
-
+ 
   const handleChange = (e) => {
     if (e.target.name === "image") {
       setFormData({ ...formData, image: e.target.files[0] });
@@ -110,14 +118,14 @@ const CategoriesList = () => {
       }));
     }
   }
-
-
+ 
+ 
   const handleSubmit = async () => {
-    if(formData.category_name == ""){
+    if (formData.category_name == "") {
       swal({ title: `${listingTab == "category" ? "Category" : "Sub Category"} is required !!`, icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
       return false
     }
-
+ 
     setLoading({ ...loading, 'submit': true })
     const params = new FormData();
     formData.id && params.append("id", formData.id);
@@ -141,10 +149,10 @@ const CategoriesList = () => {
       swal({ title: error?.response?.data?.message, icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
     }
   };
-
+ 
   const handleDelete = async (id) => {
     try {
-      const params = listingTab == "category" ? { categoryId: id} : { subcategoryId: id}
+      const params = listingTab == "category" ? { categoryId: id } : { subcategoryId: id }
       const apiEnd = listingTab == "category" ? "deleteCategory" : "deleteSubcategory"
       const res = await APICALL(`admin/${apiEnd}`, 'post', params);
       if (res?.status) {
@@ -157,82 +165,102 @@ const CategoriesList = () => {
       swal({ title: SERVER_ERR, icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
     }
   }
-
-
+ 
   return (
     <>
       <Paper className="table_samepattern">
         <div style={{ display: "flex", justifyContent: "space-between", padding: "16px", }}>
           <h1 className="title-admins-table"> {listingTab == "category" ? " Categories" : "Sub Categories"}</h1>
-          <button variant="primary" onClick={() => handleShow("addCategory")} className="artist-btn">  Add New</button>
+          {
+            permisionCheck?.create &&
+            <button variant="primary" onClick={() => handleShow("addCategory")} className="artist-btn">  Add New</button>
+          }
         </div>
         <div className="tab_design">
-          <button  onClick={() => setListingTab('category')} className={`${listingTab == "category" ? "acitive" : ""}`}>Category</button>
+          <button onClick={() => setListingTab('category')} className={`${listingTab == "category" ? "acitive" : ""}`}>Category</button>
           <button onClick={() => setListingTab('subcategory')} className={`${listingTab == "subcategory" ? "acitive" : ""}`}>Sub Category</button>
         </div>
-
+ 
         {loading?.list ? <AdminLoader /> :
           <>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>S.No </TableCell>
-                    <TableCell>Image </TableCell>
-                    <TableCell> {listingTab == "category" ? " Category Name" : "Sub Category Name"}  </TableCell>
-                    {
-                      listingTab == "subcategory" &&
-                      <TableCell>Category Name </TableCell>
-                    }
-                    <TableCell>Date </TableCell>
-                    <TableCell align="right">Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{tableImg(row.image)}</TableCell>
-                        <TableCell>{row?.name}</TableCell>
-                        {
-                          listingTab == "subcategory" &&
-                          <TableCell>{row?.parentCategoryId?.name}</TableCell>
-                        }
-                        <TableCell>{timeAgo(row?.created_at)}</TableCell>
-                        <TableCell style={{ width: 160 }} align="right">
-                          <Dropdown className="dorpdown-curtom">
-                            <Dropdown.Toggle as={IconButton} variant="link">
-                              <MoreVert />
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                              <Dropdown.Item to="#" onClick={() => handleEditChange(row, 'editCategory')}>
-                                <Edit style={{ marginRight: "8px" }} />Edit
-                              </Dropdown.Item>
-                              <Dropdown.Item to="#" onClick={() => handleDelete(row?._id)}>
-                                <Delete style={{ marginRight: "8px" }} />Delete
-                              </Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
-              component="div"
-              count={data?.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+ 
+            {
+              permisionCheck?.read ?
+                <>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>S.No </TableCell>
+                          <TableCell>Image </TableCell>
+                          <TableCell> {listingTab == "category" ? " Category Name" : "Sub Category Name"}  </TableCell>
+                          {
+                            listingTab == "subcategory" &&
+                            <TableCell>Category Name </TableCell>
+                          }
+                          <TableCell>Date </TableCell>
+                          <TableCell align="right">Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map((row, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{index + 1}</TableCell>
+                              <TableCell>{tableImg(row.image)}</TableCell>
+                              <TableCell>{row?.name}</TableCell>
+                              {
+                                listingTab == "subcategory" &&
+                                <TableCell>{row?.parentCategoryId?.name}</TableCell>
+                              }
+                              <TableCell>{timeAgo(row?.created_at)}</TableCell>
+                              <TableCell style={{ width: 160 }} align="right">
+                                <Dropdown className="dorpdown-curtom">
+                                  <Dropdown.Toggle as={IconButton} variant="link">
+                                    <MoreVert />
+                                  </Dropdown.Toggle>
+                                  {(permisionCheck?.edit || permisionCheck?.delete) && (
+                                    <Dropdown.Menu>
+                                      {
+                                        permisionCheck?.edit &&
+                                        <Dropdown.Item to="#" onClick={() => handleEditChange(row, 'editCategory')}>
+                                          <Edit style={{ marginRight: "8px" }} />Edit
+                                        </Dropdown.Item>
+                                      }
+                                      {
+                                        permisionCheck?.delete &&
+                                        <Dropdown.Item to="#" onClick={() => handleDelete(row?._id)}>
+                                          <Delete style={{ marginRight: "8px" }} />Delete
+                                        </Dropdown.Item>
+                                      }
+                                    </Dropdown.Menu>
+                                  )}
+                                </Dropdown>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+ 
+                  <TablePagination
+                    rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
+                    component="div"
+                    count={data?.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </>
+                :
+                <TableMSG msg={"You don't have permision to view this data"} type={true} />
+            }
+ 
           </>
         }
       </Paper>
-
+ 
       <Modal
         className="modal-all"
         show={show}
@@ -243,10 +271,10 @@ const CategoriesList = () => {
       >
         <Modal.Header closeButton>
           {
-            formData?.id ? 
-            <Modal.Title> {listingTab == "category" ? "Edit Categories" : "Edit Sub Categories"} </Modal.Title>
-            :
-            <Modal.Title> {listingTab == "category" ? "Add New Categories" : " Add New Sub Categories"} </Modal.Title>
+            formData?.id ?
+              <Modal.Title> {listingTab == "category" ? "Edit Categories" : "Edit Sub Categories"} </Modal.Title>
+              :
+              <Modal.Title> {listingTab == "category" ? "Add New Categories" : " Add New Sub Categories"} </Modal.Title>
           }
         </Modal.Header>
         <Modal.Body>
@@ -254,16 +282,16 @@ const CategoriesList = () => {
             <Col md={12} className="mb-3">
               <div class="file-uploader">
                 <label for="logoID" class="global_file_upload_deisgn">
-                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                  <i class="fa-solid fa-arrow-up-from-bracket"></i>
                   Upload categories image here
                   <input type="file" id="logoID" name="image" value={formData.name} onChange={handleChange} />
                 </label>
               </div>
               {imgPreview.image && (
-              <div className="text-end">  <img src={imgPreview.image} style={{ height: '60px', width: '60px', marginTop:'20px' }} alt="alt" /></div>
+                <div className="text-end">  <img src={imgPreview.image} style={{ height: '60px', width: '60px', marginTop: '20px' }} alt="alt" /></div>
               )}
             </Col>
-
+ 
             <Col md={12} className="mb-3">
               <Form.Group className="mb-3" controlId="formmainTitle">
                 <Form.Label>Category Name</Form.Label>
@@ -275,7 +303,7 @@ const CategoriesList = () => {
                 />
               </Form.Group>
             </Col>
-
+ 
             {
               listingTab == "subcategory" &&
               <Col md={12} className="mb-3">
@@ -296,7 +324,7 @@ const CategoriesList = () => {
             loading.submit ?
               <BTNLoader className={"artist-btn"} /> :
               <Button className="artist-btn" variant="primary" onClick={() => handleSubmit()}>
-                {formData?.id ? "Update" :"Add"}
+                {formData?.id ? "Update" : "Add"}
               </Button>
           }
         </Modal.Footer>
@@ -304,5 +332,5 @@ const CategoriesList = () => {
     </>
   );
 };
-
+ 
 export default CategoriesList;

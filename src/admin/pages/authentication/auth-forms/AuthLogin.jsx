@@ -166,11 +166,11 @@ export default function AuthLogin({ isDemo = false }) {
               <Grid item xs={12}>
                 {
                   isSubmitting ?
-                    <Button disableElevation fullWidth size="large" type="submit" variant="contained" color="primary">
+                    <Button disableElevation fullWidth size="large" type="submit" variant="contained" className='global_btn'>
                       Loading ...
                     </Button>
                     :
-                    <Button fullWidth size="large" type="submit" variant="contained" color="primary">Login</Button>
+                    <Button fullWidth size="large" type="submit" variant="contained" className='global_btn'>Login</Button>
                 }
               </Grid>
             </Grid>

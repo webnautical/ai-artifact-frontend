@@ -12,9 +12,9 @@ import {
     IconButton,
 } from "@mui/material";
 import '../../../App.css'
-
+ 
 import { APICALL } from "../../../helper/api/api";
-import { auth, tableImg, timeAgo } from "../../../helper/Utility";
+import { auth, filterByKey, tableImg, timeAgo } from "../../../helper/Utility";
 import AdminLoader from "../../components/AdminLoader";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
 import { Dropdown } from "react-bootstrap";
@@ -22,7 +22,8 @@ import { Delete, Edit, MoreVert } from "@mui/icons-material";
 import swal from "sweetalert";
 import AddUpdBlog from "./AddUpdBlog";
 import HTMLContent from "../../../components/HTMLContent";
-
+import { useDataContext } from "../../../helper/context/ContextProvider";
+ 
 const BlogList = () => {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(0);
@@ -32,10 +33,16 @@ const BlogList = () => {
     const [data, setData] = useState([])
     const [listLoading, setListLoading] = useState(false)
     const [addUpdPage, setAddUpdPage] = useState(false)
-
+    const { permisionData, getPermision } = useDataContext();
+    const permisionCheck = filterByKey("blogs", permisionData?.permissions);
     useEffect(() => {
-        getListFun()
+        getPermision()
     }, [])
+    useEffect(() => {
+        if (permisionCheck?.read) {
+            getListFun();
+        }
+    }, [permisionData])
     const getListFun = async () => {
         setListLoading(true)
         try {
@@ -49,27 +56,27 @@ const BlogList = () => {
             setListLoading(false)
         }
     }
-
+ 
     const handleSearchChange = (event) => {
         setSearch(event.target.value);
         setPage(0);
     };
-
+ 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
-
+ 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
+ 
     const filteredData = data.filter(
         (item) =>
             item.content?.toLowerCase().includes(search?.toLowerCase()) ||
             item.title?.toLowerCase().includes(search?.toLowerCase())
     );
-
+ 
     const sortedData = React.useMemo(() => {
         if (orderBy === "") return filteredData;
         return [...filteredData].sort((a, b) => {
@@ -80,11 +87,10 @@ const BlogList = () => {
             }
         });
     }, [orderBy, order, filteredData]);
-
+ 
     const [editData, setEditData] = useState(null)
     const handleAction = async (item, type) => {
         if (type === 'delete') {
-            // setSubmitLoading(true)
             try {
                 const res = await APICALL(`admin/deleteBlog`, 'post', { id: item?._id })
                 if (res?.status) {
@@ -118,7 +124,7 @@ const BlogList = () => {
     return (
         <>
             {
-
+ 
                 <Paper className="table_samepattern">
                     {
                         listLoading ? <AdminLoader />
@@ -136,11 +142,14 @@ const BlogList = () => {
                                                 onChange={handleSearchChange}
                                                 style={{ width: "300px" }}
                                             />
-                                            <button type="button" onClick={() => { setAddUpdPage(true); setEditData(null) }} className="artist-btn ms-2"> Add New</button>
+                                            {
+                                                permisionCheck?.create &&
+                                                <button type="button" onClick={() => { setAddUpdPage(true); setEditData(null) }} className="artist-btn ms-2"> Add New</button>
+                                            }
                                         </div>
                                     }
                                 </div>
-
+ 
                                 {
                                     addUpdPage ? <> <AddUpdBlog addUpdPage={addUpdPage} setAddUpdPage={setAddUpdPage} getListFun={getListFun} editData={editData} setEditData={setEditData} /> </>
                                         :
@@ -167,8 +176,8 @@ const BlogList = () => {
                                                                                 <TableCell>{index + 1}</TableCell>
                                                                                 <TableCell>{tableImg(row.image)}</TableCell>
                                                                                 <TableCell>{row?.title}</TableCell>
-                                                                                <TableCell> <div className="d-flex"><HTMLContent data={row?.content.slice(0, 70)}/> {row?.content?.length > 70 &&  <div>...</div>} </div> </TableCell>
-
+                                                                                <TableCell> <div className="d-flex"><HTMLContent data={row?.content.slice(0, 70)} /> {row?.content?.length > 70 && <div>...</div>} </div> </TableCell>
+ 
                                                                                 {/* <TableCell> <HTMLContent data={row?.content.slice(0, 70)} /> </TableCell> */}
                                                                                 <TableCell>{timeAgo(row?.created_at || row?.createdAt)}</TableCell>
                                                                                 <TableCell style={{ width: 160 }} align="right">
@@ -176,14 +185,23 @@ const BlogList = () => {
                                                                                         <Dropdown.Toggle as={IconButton} variant="link">
                                                                                             <MoreVert />
                                                                                         </Dropdown.Toggle>
-                                                                                        <Dropdown.Menu>
-                                                                                            <Dropdown.Item href="#" onClick={() => handleAction(row, 'edit')}>
-                                                                                                <Edit style={{ marginRight: "8px" }} />Edit
-                                                                                            </Dropdown.Item>
-                                                                                            <Dropdown.Item href="#" onClick={() => handleAction(row, 'delete')}>
-                                                                                                <Delete style={{ marginRight: "8px" }} />Delete
-                                                                                            </Dropdown.Item>
-                                                                                        </Dropdown.Menu>
+ 
+                                                                                        {(permisionCheck?.edit || permisionCheck?.delete) && (
+                                                                                            <Dropdown.Menu>
+                                                                                                {
+                                                                                                    permisionCheck?.edit &&
+                                                                                                    <Dropdown.Item href="#" onClick={() => handleAction(row, 'edit')}>
+                                                                                                        <Edit style={{ marginRight: "8px" }} />Edit
+                                                                                                    </Dropdown.Item>
+                                                                                                } {
+                                                                                                    permisionCheck?.delete &&
+                                                                                                    <Dropdown.Item href="#" onClick={() => handleAction(row, 'delete')}>
+                                                                                                        <Delete style={{ marginRight: "8px" }} />Delete
+                                                                                                    </Dropdown.Item>
+                                                                                                }
+                                                                                            </Dropdown.Menu>
+                                                                                        )}
+ 
                                                                                     </Dropdown>
                                                                                 </TableCell>
                                                                             </TableRow>
@@ -191,7 +209,7 @@ const BlogList = () => {
                                                                 </TableBody>
                                                             </Table>
                                                         </TableContainer>
-
+ 
                                                         <TablePagination
                                                             rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
                                                             component="div"
@@ -211,16 +229,16 @@ const BlogList = () => {
                                             }
                                         </>
                                 }
-
-
-
+ 
+ 
+ 
                             </>
                     }
                 </Paper>
             }
-
+ 
         </>
     );
 };
-
+ 
 export default BlogList;

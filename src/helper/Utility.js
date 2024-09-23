@@ -10,6 +10,8 @@ import { utils, writeFileXLSX } from 'xlsx';
 var CryptoJS = require("crypto-js");
 // export const defaultUserIMG = img1
 export const defaultIMG = dfIMG
+
+export const libraries = ['places'];
 // export const logo = logoimg
 
 export const imgBaseURL = () => {

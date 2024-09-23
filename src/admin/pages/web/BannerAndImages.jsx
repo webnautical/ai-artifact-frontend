@@ -5,12 +5,13 @@ import Modal from "react-bootstrap/Modal";
 import { Col, Row } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import AdminLoader from './../../components/AdminLoader';
-import { SERVER_ERR, SOMETHING_ERR, TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
+import { SERVER_ERR, SOMETHING_ERR } from "../../../helper/Constant";
 import { APICALL } from "../../../helper/api/api";
-import { imgBaseURL, tableImg, timeAgo } from "../../../helper/Utility";
+import { filterByKey, imgBaseURL } from "../../../helper/Utility";
 import swal from "sweetalert";
 import BTNLoader from "../../../components/BTNLoader";
-
+import { useDataContext } from "../../../helper/context/ContextProvider";
+ 
 const BannerAndImages = () => {
     const [loading, setLoading] = useState({
         'list': false,
@@ -18,6 +19,11 @@ const BannerAndImages = () => {
     })
     const [bannerList, setBannerList] = useState([])
     const [show, setShow] = useState(false);
+    const { permisionData, getPermision } = useDataContext();
+    const permisionCheck = filterByKey("bannerImages", permisionData?.permissions);
+    useEffect(() => {
+        getPermision()
+    }, [])
     const handleClose = () => {
         setShow(false)
         setFormData(initialFormData)
@@ -26,7 +32,7 @@ const BannerAndImages = () => {
     const handleShow = (type) => {
         setShow(true)
     };
-
+ 
     useEffect(() => {
         getListFun()
     }, [])
@@ -35,13 +41,12 @@ const BannerAndImages = () => {
         try {
             const res = await APICALL('admin/getActiveBanners', 'post', { type: 'admin' })
             setLoading({ ...loading, 'list': false })
-            console.log("List", res?.data)
             if (res?.status) { setBannerList(res?.data) }
         } catch (error) {
             setLoading({ ...loading, 'list': false })
         }
     }
-
+ 
     const initialFormData = {
         id: '',
         redirectUrl: '',
@@ -51,15 +56,14 @@ const BannerAndImages = () => {
     };
     const [imgPreview, setImgPreview] = useState({ image: "" });
     const [formData, setFormData] = useState(initialFormData);
-
-
+ 
     const handleEditChange = (row) => {
         setShow(true)
         console.log(row)
         setFormData({ ...formData, 'redirectUrl': row?.redirectUrl, 'id': row?._id, 'image': row.image, title: row.title, status: row.status })
         setImgPreview({ ...imgPreview, 'image': imgBaseURL() + row?.image })
     }
-
+ 
     const handleChange = (e) => {
         if (e.target.name === "image") {
             setFormData({ ...formData, image: e.target.files[0] });
@@ -78,8 +82,7 @@ const BannerAndImages = () => {
             }));
         }
     }
-
-
+ 
     const handleSubmit = async () => {
         if (formData.category_name == "") {
             swal({ title: `Banner is required !!`, icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
@@ -110,7 +113,7 @@ const BannerAndImages = () => {
             swal({ title: error?.response?.data?.message, icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
         }
     };
-
+ 
     const handleDelete = async (item) => {
         try {
             const params = { id: item?._id }
@@ -126,16 +129,16 @@ const BannerAndImages = () => {
             swal({ title: SERVER_ERR, icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
         }
     }
-
-    console.log("bannerList", bannerList)
-
-
+ 
     return (
         <>
             <Paper className="table_samepattern">
                 <div style={{ display: "flex", justifyContent: "space-between", padding: "16px", }}>
                     <h1 className="title-admins-table">Banner</h1>
-                    <button variant="primary" onClick={() => handleShow("addCategory")} className="artist-btn">  Add New Banner</button>
+                    {
+                        permisionCheck?.create &&
+                        <button variant="primary" onClick={() => handleShow("addCategory")} className="artist-btn">  Add New Banner</button>
+                    }
                 </div>
                 {loading?.list ? <AdminLoader /> :
                     <>
@@ -152,8 +155,14 @@ const BannerAndImages = () => {
                                                     <div class={`spinner-grow ${item.status ? "text-success" : "text-danger"} `} role="status" style={{ height: '20px', width: '20px' }}>
                                                         <span class="visually-hidden">Loading...</span>
                                                     </div>
-                                                    <button onClick={() => handleEditChange(item)} className="btn-icon __warning me-2"> <i className="fa fa-edit"></i> </button>
-                                                    <button className="btn-icon __danger" onClick={() => handleDelete(item)}><i className="fa fa-trash"></i></button>
+                                                    {
+                                                        permisionCheck?.edit &&
+                                                        <button onClick={() => handleEditChange(item)} className="btn-icon __warning me-2"> <i className="fa fa-edit"></i> </button>
+                                                    }
+                                                    {
+                                                        permisionCheck?.delete &&
+                                                        <button className="btn-icon __danger" onClick={() => handleDelete(item)}><i className="fa fa-trash"></i></button>
+                                                    }
                                                 </div>
                                                 <div className="bannar-title">
                                                     <p> {item?.title}</p>
@@ -168,7 +177,7 @@ const BannerAndImages = () => {
                     </>
                 }
             </Paper>
-
+ 
             <Modal
                 className="modal-all"
                 show={show}
@@ -190,7 +199,7 @@ const BannerAndImages = () => {
                         <Col md={12} className="mb-3">
                             <div class="file-uploader">
                                 <label for="logoID" class="global_file_upload_deisgn">
-                                    <p> <i class="fa-solid fa-arrow-up-from-bracket"></i>Upload  image here</p> <br />
+                                    <p> <i class="fa-solid fa-arrow-up-from-bracket me-2"></i>Upload  image here</p> <br />
                                     <p>(Recommended size 856 x 653)</p>
                                     <input type="file" id="logoID" name="image" value={formData.name} onChange={handleChange} />
                                 </label>
@@ -199,7 +208,7 @@ const BannerAndImages = () => {
                                 <div className="text-end">  <img src={imgPreview.image} style={{ height: '60px', width: '60px', marginTop: '20px' }} alt="alt" /></div>
                             )}
                         </Col>
-
+ 
                         <Col md={12} className="mb-3">
                             <Form.Group className="mb-3" controlId="formmainTitle">
                                 <Form.Label>Title</Form.Label>
@@ -211,7 +220,7 @@ const BannerAndImages = () => {
                                 />
                             </Form.Group>
                         </Col>
-
+ 
                         <Col md={12} className="mb-3">
                             <Form.Group className="mb-3" controlId="formmainTitle">
                                 <Form.Label>Redirect Url</Form.Label>
@@ -223,7 +232,7 @@ const BannerAndImages = () => {
                                 />
                             </Form.Group>
                         </Col>
-
+ 
                         {
                             <Col md={12} className="mb-3">
                                 <Form.Label>Status</Form.Label>
@@ -249,5 +258,5 @@ const BannerAndImages = () => {
         </>
     );
 };
-
+ 
 export default BannerAndImages;

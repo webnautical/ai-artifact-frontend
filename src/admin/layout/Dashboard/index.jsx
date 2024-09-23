@@ -29,13 +29,13 @@ export default function DashboardLayout() {
   if (menuMasterLoading) return <Loader />;
 
   return (
-    <Box sx={{ display: "flex", width: "100%" }}>
+    <Box className="my_header" sx={{ display: "flex", width: "100%" }}>
       <Header />
       <Drawer />
       <Box
         component="main"
         sx={{
-          width: "calc(100% - 260px)",
+          width: "calc(100% - 280px)",
           flexGrow: 1,
           pt: "60px",
           p: { xs: 2, sm: 3 },

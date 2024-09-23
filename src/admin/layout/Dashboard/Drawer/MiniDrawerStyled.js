@@ -4,7 +4,7 @@ import Drawer from '@mui/material/Drawer';
 
 // project import
 // import drawerWidth from '../../../config'
-const drawerWidth = 260
+const drawerWidth = 280
 
 
 const openedMixin = (theme) => ({

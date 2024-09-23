@@ -90,21 +90,19 @@ const Footer = () => {
                 <h6>Support</h6>
 
                 <ul className="p-0">
+            
                   <li>
-                    <Link>Check Order Status</Link>
+                    <Link to={'/shipping'}>Shipping  & Returns</Link>
                   </li>
                   <li>
-                    <Link to={'/shipping'}>Shippng & Returns</Link>
-                  </li>
-                  <li>
-                    <Link to={'/faq'}>HelpFAQ</Link>
+                    <Link to={'/faq'}>Help / FAQ</Link>
                   </li>
                   <li>
                     <Link to={'/terms-of-use'}>Terms of Use</Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link to={'/mounting-instructions'}>Mounting instructions</Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link to={'/contact-us'}>Contact us</Link>
                   </li>
@@ -197,7 +195,7 @@ const Footer = () => {
           </Row>
           <hr></hr>
 
-          <div className="copy_right text-center m-0">Copyright All right reserved. </div>
+          <div className="copy_right text-center m-0">Copyright © 2024 <b>AIARTIFACT</b>. All rights reserved. design and developed by <Link to="https://www.webnautical.com/"> <b>webnautical</b></Link>. </div>
         </Container>
       </footer>
     </div>

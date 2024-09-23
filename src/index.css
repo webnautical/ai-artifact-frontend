@@ -67,8 +67,15 @@ code {
 .pagination_box li.page-item.active span.page-link{
 
 
-  background: #c9c9c9;
-    color: teal !important;
+  background-color: #008080 !important;
+  color: white!important;
+  /* color: teal !important; */
+  height: 36px;
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
 
 }
 
@@ -168,7 +175,7 @@ code {
   .choose_method label{    background: #00808014;
     font-weight: 600;
     background: #ffffff14;
-    padding: 17px;
+    padding: 3px 17px;
     display: block;
     border: 1px solid #d2d2d2;
     border-radius: 11px; margin-bottom: 15px; cursor: pointer; justify-content: space-between; display: flex; align-items: center;}

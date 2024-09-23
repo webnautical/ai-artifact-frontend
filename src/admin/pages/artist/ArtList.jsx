@@ -12,6 +12,8 @@ import {
     TablePagination,
     Button,
 } from "@mui/material";
+import NoData from "../../../components/NoData";
+import noDataImg from '../../../assets/images/animasi-emptystate.gif'
 import { Col, Row } from "react-bootstrap";
 import { Edit, MoreVert } from "@mui/icons-material";
 import { Dropdown } from "react-bootstrap";
@@ -207,13 +209,18 @@ const ArtList = () => {
                             )}
                         </>
                         :
+                        <>
+                        {
+
+directoryList?.length > 0 ?
+
                         <Row className="gx-md-5 row row-cols-1 row-cols-sm-2 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 g-3 pt-1 ">
+                    
                             {
                                 listLoading ? <AdminLoader />
                                     :
                                     <>
                                         {
-                                            directoryList?.length > 0 ?
                                                 directoryList?.map((item, i) => (
                                                     <Col className="mb-md-4 mb-3">
                                                         <div className="popular_box" style={{ cursor: 'pointer' }} onClick={() => showTable(item)}>
@@ -246,13 +253,19 @@ const ArtList = () => {
                                                         </div>
                                                     </Col>
                                                 ))
-                                                :
-                                                <h5>There are no art to display !!</h5>
+                                               
                                         }
                                     </>
                             }
 
                         </Row>
+                         :
+                         <div className="text-center d-block">
+                            <NoData msg={"Oops !! No Art Found"} img={noDataImg} />
+                         </div>
+                        }
+
+                        </>
                 }
             </Paper>
 

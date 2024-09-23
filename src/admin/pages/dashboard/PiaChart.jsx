@@ -14,6 +14,7 @@ const PiaChart = ({ pieCharData }) => {
                 type: 'pie',
             },
             labels: [],
+            colors: ['#008080b5', '#8e24aa', '#008080', '#008080b5', '#008080b5'], // Different shades of purple
             responsive: [{
                 breakpoint: 480,
                 options: {
@@ -45,13 +46,13 @@ const PiaChart = ({ pieCharData }) => {
 
     return (
         <>
-            <Grid container alignItems="center" justifyContent="space-between">
+            <Grid container alignItems="center" justifyContent="space-between" >
                 <Grid item>
                     <Typography variant="h5">Users</Typography>
                 </Grid>
             </Grid>
-            <MainCard content={false} sx={{ mt: 2.5 }}>
-                <Box sx={{ pt: 1, pr: 2 }}>
+            <MainCard content={false} sx={{ mt: 2.5 }} className='box_pie'>
+                <Box sx={{ pt: 1, pr: 2 }} >
                     <ReactApexChart options={chartData.options} series={chartData.series} type="pie" width={380} />
                 </Box>
             </MainCard>

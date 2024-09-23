@@ -153,7 +153,14 @@ const Artists = () => {
                         {listLoading?.artist ? (
                             <TableCell colSpan={5} align="center">
 <div className="text-center">
-Please Wait
+<Spinner
+                                                  animation="border"
+                                                  role="status"
+                                                >
+                                                  <span className="visually-hidden">
+                                                    Loading...
+                                                  </span>
+                                                </Spinner>
 </div>
                           </TableCell>
                         ) : topArtist?.length > 0 ? (
@@ -190,7 +197,7 @@ Please Wait
                                   <TableCell colSpan={7} className="p-0">
                                     <Box bgcolor="white">
                                       <div className="product_list_box">
-                                        <div className="row row-cols-1 row-cols-sm-2 row-cols-xl-5 row-cols-lg-4 row-cols-md-3 g-3 pt-1 ">
+                                        <div className="row row-cols-5 row-cols-sm-5 row-cols-xl-5 row-cols-lg-5 row-cols-md-5 g-3 pt-1 ">
                                           {listLoading?.artwork ? (
                                             <div className="may_loader_box">
                                              
@@ -216,7 +223,7 @@ Please Wait
                                                         className="w-100"
                                                         src={
                                                           imgBaseURL() +
-                                                          item?.image
+                                                          item?.thumbnail
                                                         }
                                                         alt="product-img"
                                                       />

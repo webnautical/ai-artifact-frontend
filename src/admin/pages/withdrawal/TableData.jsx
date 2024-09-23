@@ -94,7 +94,7 @@ const TableData = (props) => {
                                                     logedRole === "admin" &&
                                                     (tabsData?.status === "pending" ?
                                                         <TableCell align="right">
-                                                            <Button className={`global_btn`} style={{ background: '008080' }} onClick={()=>handleShowModal(row)}> Trasnfer</Button>
+                                                            <Button className={`global_btn`} style={{ background: '008080' }} onClick={()=>handleShowModal(row)}> Transfer</Button>
                                                         </TableCell>
                                                         :
                                                         <TableCell align="right">

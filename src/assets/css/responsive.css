@@ -1,6 +1,8 @@
 
 @media only screen and (max-width: 1450.98px) {
 
+    .my_header header{ width: 100%!important;}
+
     .global_btn {
  
         padding: 12px 20px!important;}
@@ -10,6 +12,8 @@
 }
 
 @media only screen and (max-width: 991.98px) {
+
+    .browse_with_img{ display: none;}
 
     
     .filter_mobile_menu { display: flex; justify-content: space-between; align-items: center;}
@@ -27,7 +31,7 @@
     }
 
     .product-details {
-        padding: 40px 0 0px;
+        padding: 15px 0 0px;
     }
 
     .product-details .neweletter_main {
@@ -60,7 +64,7 @@
         margin: 0px 3px 0px;
     }
     .wishlist_box {
-        padding: 40px 0px 40px;
+        padding: 40px 0px 0px;
     }
 
     .product_list_page .neweletter_main {
@@ -126,6 +130,35 @@
 
   @media only screen and (max-width: 767.98px) {
 
+    .artist-login-container {
+
+        min-height: calc(100vh - 104px);}
+
+    .login-title { font-size: 24px;}
+
+    .witdraw_amount .nav-tabs{ flex-wrap: nowrap;  overflow: scroll;}
+
+    .witdraw_amount .nav-tabs button{ text-wrap: nowrap;}
+
+    .witdraw_amount .nav-tabs .nav-link{ padding: 10px 12px!important; font-size: 14px;}
+
+
+
+    
+    .top_ten_arts img {
+        width: 120px;
+        height: 120px;}
+
+
+    .cnt_slider h2 {
+        color: white;
+        font-size: 22px;}
+    .grid_box_artwork img{ height: unset;}
+
+    .slider_sec {
+        padding: 20px 0 0px;
+    }
+
     
 
     .right_btn{ position: unset; text-align: center;}
@@ -157,7 +190,7 @@
     }
 
     .profile-add {
-        padding: 40px 0px;
+        padding: 40px 0px 0;
     }
 
     .inner-menus ul{ margin: 0px;}
@@ -187,7 +220,7 @@
         font-size: 14px;
     }
 
-    .order_details_single h2{ flex-direction: column; align-items: start; gap: 10px;}
+    .order_details_single h2{ flex-direction: column; align-items: start; gap: 30px;}
 
 
     .join_drp .dropdown {
@@ -213,8 +246,10 @@
 
 .about_details_product .q_select button{ padding: 2px;}
 
-    .product_box img {
-        height: 220px;}
+.product_box img {
+    height: 100%;}
+    /* .product_box img {
+        height: 220px;} */
     .add-remove-btn{ margin-top: 15px; justify-content: end; margin-bottom: 20px;}
 
     .price_quantity  h3{ margin-bottom: 10px!important;}
@@ -270,6 +305,39 @@
 
 
   @media only screen and (max-width: 575.98px) {
+
+    
+
+    .tran_sec ul{ 
+
+        padding: 0px;
+        -moz-column-count: 1;
+        -moz-column-gap: 20px;
+        -webkit-column-count: 1;
+        -webkit-column-gap: 20px;
+        column-count: 1;
+        column-gap: 20px;
+    }
+
+    .tab_design button{ padding: 12px 30px;}
+
+    .btn_flex input{ width: 100%!important;}
+
+    .btn_flex{ flex-direction: column; align-items: start!important;}
+
+    .shode_box .col{ padding: 0px!important;}
+
+  
+
+    .acces_btn_artist{  flex-direction: column; gap: 20px;}
+    .acces_btn_artist button{ width: 100%;}
+
+    .main_wallet_box{ flex-direction: column;}
+    
+    .neweletter{ background-position: left;}
+
+    
+    .cat_box_inner img{  height: 164px;}
 
     .level_heading {
         font-size: 18px;}

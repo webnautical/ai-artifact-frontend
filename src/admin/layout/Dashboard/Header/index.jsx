@@ -33,7 +33,7 @@ export default function Header() {
   const iconBackColorOpen = 'grey.200';
 
   const mainHeader = (
-    <Toolbar>
+    <Toolbar > 
       <IconButton
         disableRipple
         aria-label="open drawer"

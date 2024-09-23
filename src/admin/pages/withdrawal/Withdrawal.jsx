@@ -11,10 +11,13 @@ import { TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
 import BTNLoader from "../../../components/BTNLoader";
 import { useDataContext } from "../../../helper/context/ContextProvider";
 import HistoryDetails from "./HistoryDetails";
-
+import payamount from '../../../assets/images/pay.png'
+import payamountsucces from '../../../assets/images/succes.gif'
+ 
+ 
 const Withdrawal = () => {
     const { userInfoByID, getUserByIDFun, userDetailsLoading } = useDataContext();
-
+ 
     const logedRole = auth('admin')?.user_role
     const [show, setShow] = useState(false);
     const [activeTab, setActiveTab] = useState(logedRole === "admin" ? "artist_request" : 'withdrawal');
@@ -23,17 +26,18 @@ const Withdrawal = () => {
         'afterSuccess': false,
         'detailsPage': false,
     })
-
+ 
     const [withdrawalAmount, setWithdrawalAmount] = useState('')
     const [error, setError] = useState('');
     const [rowData, setRowData] = useState(null)
     const handleClose = () => {
         setShow(false);
         setError("")
+        setModal({ ...modal, afterSuccess: false })
         setWithdrawalAmount("")
     }
     const handleShow = () => setShow(true);
-
+ 
     const [tabsData, setTabsData] = useState({ status: "pending", role: "artist" })
     const handleTabSelect = (key) => {
         let data;
@@ -70,19 +74,19 @@ const Withdrawal = () => {
             getUserByIDFun(auth('admin')?.id)
         }
     }, [])
-
+ 
     useEffect(() => {
         if (activeTab !== "withdrawal") {
             getListFun(pageNo, rowsPerPage);
         }
     }, [pageNo, rowsPerPage, activeTab]);
-
+ 
     useEffect(() => {
         if (userInfoByID?.stripeAccountId) {
             checkConnectStripeStatus()
         }
     }, [userInfoByID])
-
+ 
     const getListFun = async (pageNo, rowsPerPage) => {
         setListLoading(true);
         try {
@@ -100,7 +104,7 @@ const Withdrawal = () => {
             setListLoading(false);
         }
     };
-
+ 
     const acceptWithdrawFun = async () => {
         setLoading(true);
         try {
@@ -118,7 +122,7 @@ const Withdrawal = () => {
             setLoading(false);
         }
     };
-
+ 
     const handleChange = (e) => {
         const value = e.target.value;
         const minAmount = 100;
@@ -160,7 +164,7 @@ const Withdrawal = () => {
             setLoading(false);
         }
     };
-
+ 
     const checkConnectStripeStatus = async () => {
         try {
             const params = { accountId: userInfoByID?.stripeAccountId };
@@ -182,21 +186,18 @@ const Withdrawal = () => {
             setLoading(false);
         }
     };
-
-    console.log("userInfoByID", userInfoByID)
-    console.log("stripeVerifyStatus", stripeVerifyStatus)
-
+ 
     return (
         <>
             <Paper className="table_samepattern">
-
+ 
                 <div style={{ display: "flex", justifyContent: "space-between", padding: "16px", flexDirection: "column", }}>
                     <h1 className="title-admins-table">Earnings & Withdrawals</h1>
                     Manage your property earnings and withdrawals conveniently in one
                     place. Keep track of your income and easily initiate withdrawals to
                     your preferred payment method. 😊
                 </div>
-
+ 
                 <div className="witdraw_amount">
                     <Tabs activeKey={activeTab} onSelect={handleTabSelect} id="controlled-tab-example" className="mb-3">
                         {
@@ -239,7 +240,7 @@ const Withdrawal = () => {
                                 </div>
                             </Tab>
                         }
-
+ 
                         {
                             logedRole !== "admin" &&
                             <Tab eventKey="pending" title="Payout Management">
@@ -252,7 +253,7 @@ const Withdrawal = () => {
                                 <TableData {...{ totalPages, data, listLoading, setRowsPerPage, setPageNo, rowsPerPage, activeTab }} />
                             </Tab>
                         }
-
+ 
                         {
                             logedRole === "admin" &&
                             <Tab eventKey="artist_request" title="Artist Withdrawal">
@@ -280,19 +281,19 @@ const Withdrawal = () => {
                                     :
                                     <TableData {...{ totalPages, data, listLoading, setRowsPerPage, setPageNo, rowsPerPage, activeTab, tabsData, setModal, modal, setRowData }} />
                                 }
-
+ 
                             </Tab>
                         }
                     </Tabs>
                 </div>
-
+ 
                 <Modal className="modal-all" show={show} onHide={handleClose} centered>
-
+ 
                     <Modal.Header closeButton>
                         <Modal.Title>{modal?.afterSuccess ? "Withdrawal Request Sent ✅" : stripeVerifyStatus?.status !== "enabled" ? "Alert" : "Enter Amount"} </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-
+ 
                         {
                             modal?.afterSuccess ?
                                 <div className="cutoms-login-artist">
@@ -350,32 +351,40 @@ const Withdrawal = () => {
                                 </Modal.Footer>
                     }
                 </Modal>
-
-                <Modal className="modal-all" show={modal?.adminConfirm} onHide={() => setModal({ ...modal, adminConfirm: false })} centered>
-
+ 
+                <Modal className="modal-all" show={modal?.adminConfirm} onHide={() => setModal({ ...modal, adminConfirm: false,afterSuccess: false })} centered>
+ 
                     {
                         modal?.afterSuccess ?
-                            <div>
-                                <h5>Amount transfer succesfully !!</h5>
-                                <Button className="global_btn" variant="primary" onClick={() => { setModal({ ...modal, adminConfirm: false }) }}>Ok</Button>
+                            <div className="text-center">
+                                <img style={{ width: '150px' }} src={payamountsucces} alt="icon-img" />
+                                <h5 className="mt-2">Payment Successful</h5>
+                                <p>payment has been successfully sent to the recipient.</p>
+                                <Button className="global_btn" variant="primary" onClick={() => { setModal({ ...modal, adminConfirm: false, afterSuccess: false }) }}>Ok</Button>
                             </div>
                             :
                             <>
                                 <Modal.Header closeButton>
-                                    <h4>Confirm Withdrawal Transfer !!</h4>
+                                    <div class="modal-title h4">Award Winner</div>
                                 </Modal.Header>
                                 <Modal.Body>
                                     <div className="cutoms-login-artist">
-                                        <h5>Are you sure ? You want to withdrawal Amount.</h5>
-                                        <h6 className="text-capitalize"><strong>{rowData?.role} Name : {rowData?.user_id?.first_name + " " + rowData?.user_id?.last_name}</strong></h6>
-                                        <h6><strong><span className="text-capitalize">{rowData?.role}</span> Email : {rowData?.user_id?.email}</strong></h6>
-                                        <h6><strong>Stripe Account ID : {rowData?.user_id?.stripeAccountId}</strong></h6>
-                                        <h6><strong>Request Date : {timeAgo(rowData?.createdAt)}</strong></h6>
-                                        <h6><strong>Amount : ${rowData?.amount}</strong></h6>
+ 
+                                        <div className="text-center mb-3">
+                                            <img style={{ width: '100px', }} src={payamount} alt="icon-img" />
+                                        </div>
+ 
+                                        <div className="pay_form">
+                                            <h6 className="d-flex justify-content-between text-capitalize"><strong>{rowData?.role} Name :</strong> {rowData?.user_id?.first_name + " " + rowData?.user_id?.last_name}</h6>
+                                            <h6 className="d-flex justify-content-between text-capitalize"><strong><span className="text-capitalize">{rowData?.role}</span> Email : </strong>{rowData?.user_id?.email}</h6>
+                                            <h6 className="d-flex justify-content-between text-capitalize"><strong>Stripe Account ID : </strong> {rowData?.user_id?.stripeAccountId}</h6>
+                                            <h6 className="d-flex justify-content-between text-capitalize"><strong>Request Date : </strong>{timeAgo(rowData?.createdAt)}</h6>
+                                            <h6 className="d-flex justify-content-between text-capitalize"><strong>Amount : </strong>${rowData?.amount}</h6>
+                                        </div>
                                     </div>
                                 </Modal.Body>
                                 <div className="text-end">
-                                    <Button className="global_btn mx-2" variant="primary" onClick={() => setModal({ ...modal, adminConfirm: false })}>Cancel</Button>
+                                    <Button className="line-close-btn mx-2" variant="primary" onClick={() => setModal({ ...modal, adminConfirm: false })}>Cancel</Button>
                                     {
                                         rowData?.user_id?.stripeAccountId ?
                                             loading ?
@@ -388,10 +397,10 @@ const Withdrawal = () => {
                             </>
                     }
                 </Modal>
-
+ 
             </Paper>
         </>
     );
 };
-
+ 
 export default Withdrawal;

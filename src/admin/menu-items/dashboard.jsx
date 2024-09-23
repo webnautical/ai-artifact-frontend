@@ -3,6 +3,16 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import BookIcon from '@mui/icons-material/Book';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import SecurityIcon from '@mui/icons-material/Security';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import SettingsIcon from '@mui/icons-material/Settings';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import { auth } from '../../helper/Utility';
 const icons = {
   Dashboard,
@@ -24,22 +34,6 @@ const dashboard = {
       type: 'item',
       url: '/admin/dashboard',
       icon: icons.Dashboard,
-      breadcrumbs: false
-    },
-    {
-      id: 'withdrawal',
-      title: 'Withdrawal',
-      type: 'item',
-      url: '/admin/withdrawal',
-      icon: icons.Dashboard,
-      breadcrumbs: false
-    },
-    {
-      id: 'RolesPermission',
-      title: 'Roles & Permission',
-      type: 'item',
-      url: '/admin/roles-permission',
-      icon: icons.FolderSharedOutlined,
       breadcrumbs: false
     },
     {
@@ -76,7 +70,7 @@ const dashboard = {
       id: 'Products',
       title: 'Product Management',
       type: 'collapse',
-      icon: icons.PeopleAltOutlined,
+      icon: ProductionQuantityLimitsIcon,
       children: [
         {
           id: "Products",
@@ -101,11 +95,13 @@ const dashboard = {
         },
       ] 
     },
+
+    
     {
       id: 'orders',
-      title: 'Orders',
+      title: 'Orders Management ',
       type: 'collapse',
-      icon: icons.PeopleAltOutlined,
+      icon: AddShoppingCartIcon,
       children: [
         {
           id: 'all_orders',
@@ -124,20 +120,23 @@ const dashboard = {
         },  
       ] 
     },
-    {
-      id: 'SubAdmin',
-      title: 'Sub Admin',
-      type: 'item',
-      url: '/admin/sub-admin',
-      icon: icons.PeopleAltOutlined,
-      breadcrumbs: false
-    }, 
+
+
     {
       id: 'pages',
-      title: 'Pages',
+      title: 'Content Management',
       type: 'collapse',
-      icon: icons.AddModeratorOutlined,
+      icon: AutoStoriesIcon,
       children: [
+
+        {
+          id: 'blogs',
+          title: 'Blogs',
+          type: 'item',
+          url: '/admin/blogs',
+     
+          breadcrumbs: false
+        }, 
         {
           id: 'contact-us',
           title: 'Contact Us',
@@ -212,12 +211,102 @@ const dashboard = {
         },
       ] 
     },
+
+
+    {
+      id: 'notifications',
+      title: 'Notifications',
+      type: 'item',
+      url: '/admin/notifications',
+      icon: NotificationsNoneIcon,
+      breadcrumbs: false
+    },  
+
+
+
+
+
+    {
+      id: 'setting',
+      title: 'Setting ',
+      type: 'collapse',
+      icon: SettingsIcon,
+      children: [
+        {
+          id: "GeneralSettings",
+          title: "General Settings",
+          type: "item",
+          url: "/admin/general-settings",
+    
+          breadcrumbs: false,
+        },
+
+        {
+          id: 'transaction',
+          title: 'Transaction History',
+          type: 'item',
+          url: `/admin/orders/transaction`,
+          breadcrumbs: false
+        },  
+
+        {
+          id: "GelatoPrice",
+          title: "Gelato Price",
+          type: "item",
+          url: "/admin/gelato-price",
+       
+          breadcrumbs: false,
+        },
+
+        {
+          id: "bannerImages",
+          title: "Banner & Images",
+          type: "item",
+          url: `/${auth('admin')?.user_role}/banner-images`,
+          
+          breadcrumbs: false,
+        },
+      ] 
+    },
+
+
+
+    
+
+
+    {
+      id: 'withdrawal',
+      title: 'Withdrawal',
+      type: 'item',
+      url: '/admin/withdrawal',
+      icon: MonetizationOnIcon,
+      breadcrumbs: false
+    },
+    {
+      id: 'RolesPermission',
+      title: 'Roles & Permission',
+      type: 'item',
+      url: '/admin/roles-permission',
+      icon: icons.FolderSharedOutlined,
+      breadcrumbs: false
+    },
+   
+  
+    {
+      id: 'SubAdmin',
+      title: 'Sub Admin',
+      type: 'item',
+      url: '/admin/sub-admin',
+      icon: SecurityIcon,
+      breadcrumbs: false
+    }, 
+    
     {
       id: 'contactQuery',
       title: 'Contact Query',
       type: 'item',
       url: '/admin/contact-query',
-      icon: icons.AddModeratorOutlined,
+      icon: SupportAgentIcon,
       breadcrumbs: false
     },  
     {
@@ -225,49 +314,14 @@ const dashboard = {
       title: 'Subscribers',
       type: 'item',
       url: '/admin/subscribers',
-      icon: icons.AddModeratorOutlined,
+      icon: SubscriptionsIcon,
       breadcrumbs: false
     },  
-    {
-      id: 'blogs',
-      title: 'Blogs',
-      type: 'item',
-      url: '/admin/blogs',
-      icon: BookIcon,
-      breadcrumbs: false
-    },  
-    {
-      id: 'notifications',
-      title: 'Notifications',
-      type: 'item',
-      url: '/admin/notifications',
-      icon: icons.AddModeratorOutlined,
-      breadcrumbs: false
-    },  
-    {
-      id: "GeneralSettings",
-      title: "General Settings",
-      type: "item",
-      url: "/admin/general-settings",
-      icon: icons.AddModeratorOutlined,
-      breadcrumbs: false,
-    },
-    {
-      id: "GelatoPrice",
-      title: "Gelato Price",
-      type: "item",
-      url: "/admin/gelato-price",
-      icon: AttachMoneyIcon,
-      breadcrumbs: false,
-    },
-    {
-      id: "bannerImages",
-      title: "Banner & Images",
-      type: "item",
-      url: `/${auth('admin')?.user_role}/banner-images`,
-      icon: icons.PermMediaIcon,
-      breadcrumbs: false,
-    },
+   
+  
+
+
+
     {
       id: "coupon",
       title: "Coupon",
@@ -281,7 +335,16 @@ const dashboard = {
       title: "Lottery",
       type: "item",
       url: "/admin/lottery",
-      icon: LocalOfferIcon,
+      icon: MilitaryTechIcon,
+      breadcrumbs: false,
+    },
+
+    {
+      id: "tier",
+      title: "Tiers",
+      type: "item",
+      url: "/admin/tier",
+      icon: MilitaryTechIcon,
       breadcrumbs: false,
     },
   ]

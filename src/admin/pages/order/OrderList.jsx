@@ -19,7 +19,7 @@ import { Col, Dropdown, Form, Modal, Row } from "react-bootstrap";
 import AdminLoader from "../../components/AdminLoader";
 import BTNLoader from "../../../components/BTNLoader";
 import { APICALL } from "../../../helper/api/api";
-import { timeAgo, tableImg, imgBaseURL } from "../../../helper/Utility";
+import { timeAgo, tableImg, imgBaseURL, toastifySuccess } from "../../../helper/Utility";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import SwitchToggle from "../../../components/SwitchToggle";
 import Pagination from "react-bootstrap/Pagination";
@@ -29,7 +29,7 @@ import {
 } from "../../../helper/Constant";
 import "../../../App.css";
 import { useNavigate } from "react-router";
-
+ 
 const OrderList = () => {
     const [search, setSearch] = useState("");
     const navigate = useNavigate()
@@ -39,14 +39,18 @@ const OrderList = () => {
     const [listLoading, setListLoading] = useState(false);
     const [pageNo, setPageNo] = useState(1);
     const [selectedRow, setSelectedRow] = useState(null);
-
+ 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-
+ 
+    const [loading, setLoading] = useState({
+        'refund': false
+    })
+ 
     useEffect(() => {
         getListFun(pageNo, rowsPerPage);
     }, [pageNo, rowsPerPage]);
-
+ 
     const getListFun = async (pageNo, rowsPerPage) => {
         setListLoading(true);
         try {
@@ -62,55 +66,81 @@ const OrderList = () => {
             setListLoading(false);
         }
     };
-
+ 
     const handleSearchChange = (event) => {
         setSearch(event.target.value);
         setPage(0);
     };
-
+ 
     const handleViewChange = (row) => {
         setSelectedRow(row);
     };
-
+ 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
         setPageNo(newPage + 1);
     };
-
+ 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPageNo(0);
     };
-
+ 
     const itemTotal = selectedRow?.orderItems?.reduce((acc, item) => {
         return acc + (item?.price * item?.quantity || 0);
     }, 0);
+ 
+    const handleRefund = async () => {
+        setLoading({ ...loading, 'refund': true })
+        try {
+            const params = { orderId: selectedRow._id };
+            const res = await APICALL("admin/markOrderAsRefunded", "post", params);
+            if (res?.status) {
+                setSelectedRow(null)
+                getListFun(pageNo, rowsPerPage);
+                toastifySuccess(res?.message)
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading({ ...loading, 'refund': false })
+        }
+    }
+ 
     return (
         <>
             {selectedRow ? (
                 <Paper className=" p-3">
                     <div className="row-details">
-                        <div className="d-flex mb-4" style={{ gap: "10px" }}>
-                            <Button
-                                className="artist-btn"
-                                onClick={() => setSelectedRow(null)}
-                            >
-                                <i class="fa-solid fa-arrow-left"></i>
-                            </Button>
-                            <h2 className="title-admins-table m-0">Orders</h2>
+                        <div className="d-flex mb-4 justify-content-between align-items-center" style={{ gap: "10px" }}>
+                            <div className="d-flex align-items-center" style={{ gap: "10px" }}>
+                                <Button className="artist-btn" onClick={() => setSelectedRow(null)}  >
+                                    <i class="fa-solid fa-arrow-left"></i>
+                                </Button>
+                                <h2 className="title-admins-table m-0">Orders</h2>
+                            </div>
+                            {
+                                loading?.refund ?
+                                    <BTNLoader className="artist-btn" />
+                                    :
+                                    <>
+                                        {
+                                            selectedRow?.status === "refunded" ?
+                                                <><p className="text-uppercase text-danger"><b>{selectedRow?.status}</b></p></>
+                                                :
+                                                <button className="artist-btn" onClick={() => handleRefund()}>Mark as Refund</button>
+                                        }
+                                    </>
+ 
+                            }
                         </div>
                         <Row className=" justify-content-center">
                             <Col md={9}>
                                 <Row className="">
-                                    {/* <Col md={4}>
-                                        <div className="art_work_image">
-                                            {tableImg(selectedRow.image)}
-                                        </div>
-                                    </Col> */}
                                     <Col md={12} clas>
                                         <h5><strong>Items details</strong></h5>
                                         <div className="table_border mb-3">
-
+ 
                                             <TableContainer>
                                                 <Table>
                                                     <TableHead>
@@ -137,16 +167,13 @@ const OrderList = () => {
                                                     </TableBody>
                                                 </Table>
                                             </TableContainer>
-
-
+ 
                                         </div>
                                         <div>
-
-
                                             <div className="mt-3">
                                                 <h5><strong>Billing details</strong></h5>
                                                 <div className="table_border mb-3">
-
+ 
                                                     <p>
                                                         {" "}
                                                         <strong>Billing Name:</strong>{" "}
@@ -181,12 +208,12 @@ const OrderList = () => {
                                                     </p>
                                                 </div>
                                             </div>
-
+ 
                                             <Col md={12} className="mb-3 mt-2">
-
+ 
                                                 <h5><strong>Shipping details</strong></h5>
                                                 <div className="table_border">
-
+ 
                                                     <p>
                                                         {" "}
                                                         <strong>Shipping Name:</strong>{" "}
@@ -231,11 +258,11 @@ const OrderList = () => {
                                     </Col>
                                 </Row>
                             </Col>
-
+ 
                             <Col md={3}>
                                 <Row>
                                     <Col md={12} className="mb-3">
-
+ 
                                         <h5><strong>Order details</strong></h5>
                                         <div className="table_border">
                                             <div>
@@ -263,12 +290,12 @@ const OrderList = () => {
                                             </div>
                                         </div>
                                     </Col>
-
+ 
                                     <Col md={12}>
                                         <h5><strong>Order Amount details</strong></h5>
                                         <div className="table_border">
-
-
+ 
+ 
                                             <p>
                                                 {" "}
                                                 <strong>Item:</strong>{" "}
@@ -296,8 +323,8 @@ const OrderList = () => {
                                             </p>
                                         </div>
                                     </Col>
-
-
+ 
+ 
                                 </Row>
                             </Col>
                         </Row>
@@ -317,15 +344,8 @@ const OrderList = () => {
                                 }}
                             >
                                 <h1 className="title-admins-table">Orders</h1>
-                                {/* <TextField
-                                    variant="outlined"
-                                    placeholder="Search..."
-                                    value={search}
-                                    onChange={handleSearchChange}
-                                    style={{ width: "300px" }}
-                                /> */}
                             </div>
-
+ 
                             {data.length > 0 ? (
                                 <>
                                     <TableContainer>
@@ -353,10 +373,10 @@ const OrderList = () => {
                                                                 row?.shippingAddress?.lastName}
                                                         </TableCell>
                                                         <TableCell>{row.totalPrice}</TableCell>
-                                                        <TableCell>{row.status}</TableCell>
+                                                        <TableCell className="text-capitalize">{row.status}</TableCell>
                                                         <TableCell>
-                                                            <Button className={`btn btn-sm ${row?.gelatoStatus  ? 'btn-success' : 'btn-warning'}`} >
-                                                                { row?.gelatoStatus ? "Success" : "Pending"  }
+                                                            <Button className={`btn btn-sm ${row?.gelatoStatus ? 'btn-success' : 'btn-warning'}`} >
+                                                                {row?.gelatoStatus ? "Success" : "Pending"}
                                                             </Button>
                                                         </TableCell>
                                                         <TableCell>{timeAgo(row.createdAt)}</TableCell>
@@ -386,7 +406,7 @@ const OrderList = () => {
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
-
+ 
                                     <TablePagination
                                         rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
                                         component="div"
@@ -414,5 +434,5 @@ const OrderList = () => {
         </>
     );
 };
-
+ 
 export default OrderList;

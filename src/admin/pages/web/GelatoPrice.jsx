@@ -19,6 +19,8 @@ import AdminLoader from "../../components/AdminLoader";
 import swal from "sweetalert";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
 import BTNLoader from "../../../components/BTNLoader";
+import { useDataContext } from "../../../helper/context/ContextProvider";
+import { filterByKey } from "../../../helper/Utility";
 const GelatoPrice = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_PER_PAGE);
@@ -26,10 +28,15 @@ const GelatoPrice = () => {
     const [loading, setLoading] = useState(false);
     const [price, setPrice] = useState(0)
     const [submitLoading, setSubmitLoading] = useState(false)
+    const { permisionData, getPermision } = useDataContext();
+    const permisionCheck = filterByKey("gelatoPrice", permisionData?.permissions);
+    useEffect(() => {
+        getPermision()
+    }, [])
     useEffect(() => {
         getGelatoPriceFun();
     }, []);
-
+ 
     const getGelatoPriceFun = async () => {
         setLoading(true);
         try {
@@ -42,22 +49,22 @@ const GelatoPrice = () => {
             setLoading(false);
         }
     };
-
+ 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
-
+ 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
+ 
     const [editIndex, setEditIndex] = useState(-1);
     const handleEditClick = (item, index) => {
         setPrice(item?.price)
         setEditIndex(index);
     };
-
+ 
     const handleSaveClick = async (item, index) => {
         setEditIndex(-1);
         try {
@@ -86,7 +93,7 @@ const GelatoPrice = () => {
             });
         }
     };
-
+ 
     const refresh = async () => {
         setSubmitLoading(true)
         const res = await APICALL('admin/updateGelatoPrice', 'post', {})
@@ -113,7 +120,7 @@ const GelatoPrice = () => {
                             }
                         </div>
                     </CardHeader>
-
+ 
                     <CardBody>
                         <TableContainer>
                             <Table>
@@ -136,17 +143,20 @@ const GelatoPrice = () => {
                                                 <TableCell>
                                                     {editIndex === index ? (
                                                         <div className="price_set d-flex justify-content-between">
-                                                            <input type="text" className="" value={price} onChange={(e) => { setPrice(e.target.value) }} />
+                                                            <input type="text" className="me-2" value={price} onChange={(e) => { setPrice(e.target.value) }} />
                                                             <button type="button" className="global_light_btn" onClick={() => handleSaveClick(row, index)}>
                                                                 <i className="fa fa-save"></i>
                                                             </button>
                                                         </div>
                                                     ) : (
                                                         <p className="d-flex price_set justify-content-between m-0">
-                                                            <span >{row?.price}</span>
-                                                            <button className="global_light_btn" onClick={() => handleEditClick(row, index)} >
-                                                                <i className="fa fa-edit"></i>
-                                                            </button>
+                                                            <span className="me-2" >{row?.price}</span>
+                                                            {
+                                                                permisionCheck?.edit &&
+                                                                <button className="global_light_btn" onClick={() => handleEditClick(row, index)} >
+                                                                    <i className="fa fa-edit"></i>
+                                                                </button>
+                                                            }
                                                         </p>
                                                     )}
                                                 </TableCell>
@@ -170,5 +180,5 @@ const GelatoPrice = () => {
         </Paper>
     );
 };
-
+ 
 export default GelatoPrice;

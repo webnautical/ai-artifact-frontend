@@ -380,7 +380,8 @@ const AddUpdateCoupon = ({ setAddUpdPage, getListFun, editData, setEditData }) =
                         </Col>
 
                         <Col md={3}>
-                            <FormControl sx={{ width: '100%' }} className="normal_select pilot_map_select">
+                        <Form.Label className="mb-2">Choose Customer Restrictions</Form.Label>
+                            <FormControl sx={{ width: '100%' }} className="multi_choose pilot_map_select multi_select_drop ">
                                 <InputLabel id="demo-multiple-checkbox-label">Choose Customer Restrictions</InputLabel>
                                 <Select
                                     labelId="demo-multiple-checkbox-label"
@@ -407,7 +408,7 @@ const AddUpdateCoupon = ({ setAddUpdPage, getListFun, editData, setEditData }) =
                             </FormControl>
                         </Col>
                         <Col md={12} className="text-end">
-                            <Button className="artist-btn me-2" type="button" onClick={() => handleCancel()} >Cancel</Button>
+                            <Button className="line-close-btn me-2" type="button" onClick={() => handleCancel()} >Cancel</Button>
 
                             {submitLoading ? (
                                 <BTNLoader className={"artist-btn"} />

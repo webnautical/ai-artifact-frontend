@@ -6,7 +6,7 @@ import { useDataContext } from "../../../helper/context/ContextProvider";
 import { APICALL } from "../../../helper/api/api";
 import { imgBaseURL, timeAgo } from "../../../helper/Utility";
 import FrontLoader from "../../../components/FrontLoader";
-import orderplaced from "../../../assets/images/orderplace.gif";
+import orderplaced from "../../../assets/images/succes.gif";
 import { Link } from "react-router-dom";
 
 const OrderSuccess = () => {
@@ -50,17 +50,19 @@ const OrderSuccess = () => {
         <div className="main_order_succes_page">
           <Container>
             <Row className="justify-content-center">
-              <Col md={7}>
+              <Col md={8}>
                 <div className="order_details_single text-center">
                   <div className="top_space">
                     <img src={orderplaced} alt="" />
+                    <h4><b>Order Placed</b></h4>
                     <p className="order_dec mb-0">Thank you for your purchase! We have received your order and it is now being processed. You will receive another notification once your order has been shipped.</p>
                   </div>
                   <div className="main_order_deatils">
                     <div className="order_details_inner gloab_card">
                       <Row>
                         <Col md={6} className="text-start mb-3">
-                          <h3>Shipping Address</h3>
+                        <div className="table_border">
+                        <h3>Shipping Address</h3>
                           <ul className="p-0 m-0">
                             <li>
                               {" "}
@@ -80,9 +82,11 @@ const OrderSuccess = () => {
                               {orderDetails?.shippingAddress?.addressLine2}
                             </li>
                           </ul>
+                        </div>
                         </Col>
                         <Col md={6} className="text-start  mb-3">
-                          <h3>Order Summary</h3>
+                       <div className="table_border">
+                       <h3>Order Summary</h3>
                           <ul className="p-0 m-0">
                             <li>
                               <p> Item</p>
@@ -102,18 +106,23 @@ const OrderSuccess = () => {
                               <p> Discount:</p>
                               <p> {orderDetails?.couponAmount ? `- $${orderDetails?.couponAmount}` : "---"}</p>
                             </li>
+                            <hr/>
                             <li>
-                              <p> Total:</p>
-                              <p>${orderDetails?.totalPrice}</p>
+                              <p style={{ color:'black' }}> <strong>Total:</strong></p>
+                              <p style={{ color:'black' }}><strong>${orderDetails?.totalPrice}</strong></p>
                             </li>
+                            <hr/>
                           </ul>
+                       </div>
                         </Col>
 
                         <Col md={12} className="text-start  mb-3">
-                          <h3>Payment Method</h3>
+                       <div className="table_border">
+                       <h3>Payment Method</h3>
                           <ul className="p-0 m-0">
                             <li>{orderDetails?.paymentGateway}</li>
                           </ul>
+                       </div>
                         </Col>
 
                       </Row>
@@ -129,7 +138,7 @@ const OrderSuccess = () => {
                         {orderDetails?.orderItems?.map((row, index) => (
                           <Col md={12}>
                             <Link to={`/product-details/${row.productId?._id}`}>
-                              <div className="order_all_details mt-2  ">
+                              <div className="order_all_details p-0 mt-2  ">
                                 <div className="order_img">
                                   <img
                                     src={imgBaseURL() + row.productId?.thumbnail}

@@ -23,7 +23,7 @@ import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/C
 import { Edit, MoreVert } from "@mui/icons-material";
 import { useDataContext } from "../../../helper/context/ContextProvider";
 import TableMSG from "../../../components/TableMSG";
-
+ 
 const RolesPermission = () => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
@@ -37,11 +37,11 @@ const RolesPermission = () => {
   const [resMsg, setResMsg] = useState(null)
   const { permisionData, getPermision } = useDataContext();
   const permisionCheck = filterByKey("rolesPermission", permisionData?.permissions);
-
+ 
   useEffect(() => {
-      getPermision()
+    getPermision()
   }, [])
-
+ 
   useEffect(() => {
     if (permisionCheck?.read) {
       getListFun();
@@ -59,21 +59,21 @@ const RolesPermission = () => {
       setListLoading(false)
     }
   }
-
+ 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
     setPage(0);
   };
-
+ 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
+ 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, TABLE_ROW_PER_PAGE));
     setPage(0);
   };
-
+ 
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -83,7 +83,7 @@ const RolesPermission = () => {
     (item) =>
       item.roles.name?.toLowerCase().includes(search?.toLowerCase())
   );
-
+ 
   const sortedData = React.useMemo(() => {
     if (orderBy === "") return filteredData;
     return [...filteredData].sort((a, b) => {
@@ -94,23 +94,18 @@ const RolesPermission = () => {
       }
     });
   }, [orderBy, order, filteredData]);
-
+ 
   const handleShowModal = () => setShowModal(true);
-
-
+ 
   const initialFormData = {
     name: '',
     description: '',
     permissions: {
-      dashboard: {
-        edit: false,
-        read: false,
-      },
+      // dashboard: {
+      //   edit: false,
+      //   read: false,
+      // },
       withdrawal: {
-        edit: false,
-        read: false,
-      },
-      rolesPermission: {
         edit: false,
         read: false,
       },
@@ -134,14 +129,14 @@ const RolesPermission = () => {
         edit: false,
         read: false,
       },
-      transaction: {
-        edit: false,
-        read: false,
-      },
-      subAdmin: {
-        edit: false,
-        read: false,
-      },
+      // transaction: {
+      //   edit: false,
+      //   read: false,
+      // },
+      // subAdmin: {
+      //   edit: false,
+      //   read: false,
+      // },
       pages: {
         edit: false,
         read: false,
@@ -178,17 +173,13 @@ const RolesPermission = () => {
         edit: false,
         read: false,
       },
-      lottery: {
-        edit: false,
-        read: false,
-      },
     },
   };
-
+ 
   const [formData, setFormData] = useState(initialFormData);
-
+ 
   const [errors, setErrors] = useState({});
-
+ 
   const validate = (name, value) => {
     let error = '';
     if (name === 'name' && value.trim() === '') {
@@ -202,7 +193,7 @@ const RolesPermission = () => {
       [name]: error,
     }));
   };
-
+ 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === 'checkbox') {
@@ -225,11 +216,11 @@ const RolesPermission = () => {
       validate(name, value);
     }
   };
-
+ 
   const handleSubmit = async () => {
     let isValid = true;
     let newErrors = {};
-
+ 
     if (formData.name.trim() === '') {
       newErrors.name = 'Role Name is required';
       isValid = false;
@@ -257,35 +248,35 @@ const RolesPermission = () => {
       }
     }
   };
-
+ 
   const handleCloseModal = () => {
     setShowModal(false)
     setFormData(initialFormData);
     setResMsg(false)
   };
-
+ 
   const handleEditChange = (row) => {
     const updatedPermissions = {
       ...formData.permissions,
       ...row?.roles?.permissions,
     };
-
+ 
     setFormData((prevFormData) => ({
       ...prevFormData,
       name: row?.roles?.name || prevFormData.name,
       description: row?.roles?.description || prevFormData.description,
       permissions: {
         ...prevFormData.permissions,
-        dashboard: { ...prevFormData.permissions.dashboard, ...updatedPermissions.dashboard },
+        // dashboard: { ...prevFormData.permissions.dashboard, ...updatedPermissions.dashboard },
         withdrawal: { ...prevFormData.permissions.withdrawal, ...updatedPermissions.withdrawal },
-        rolesPermission: { ...prevFormData.permissions.rolesPermission, ...updatedPermissions.rolesPermission },
+        // rolesPermission: { ...prevFormData.permissions.rolesPermission, ...updatedPermissions.rolesPermission },
         userManagement: { ...prevFormData.permissions.userManagement, ...updatedPermissions.userManagement },
         products: { ...prevFormData.permissions.products, ...updatedPermissions.products },
         categories: { ...prevFormData.permissions.categories, ...updatedPermissions.categories },
         reviews: { ...prevFormData.permissions.reviews, ...updatedPermissions.reviews },
         orders: { ...prevFormData.permissions.orders, ...updatedPermissions.orders },
-        transaction: { ...prevFormData.permissions.transaction, ...updatedPermissions.transaction },
-        subAdmin: { ...prevFormData.permissions.subAdmin, ...updatedPermissions.subAdmin },
+        // transaction: { ...prevFormData.permissions.transaction, ...updatedPermissions.transaction },
+        // subAdmin: { ...prevFormData.permissions.subAdmin, ...updatedPermissions.subAdmin },
         pages: { ...prevFormData.permissions.pages, ...updatedPermissions.pages },
         contactQuery: { ...prevFormData.permissions.contactQuery, ...updatedPermissions.contactQuery },
         subscribers: { ...prevFormData.permissions.subscribers, ...updatedPermissions.subscribers },
@@ -295,13 +286,79 @@ const RolesPermission = () => {
         gelatoPrice: { ...prevFormData.permissions.gelatoPrice, ...updatedPermissions.gelatoPrice },
         bannerImages: { ...prevFormData.permissions.bannerImages, ...updatedPermissions.bannerImages },
         coupon: { ...prevFormData.permissions.coupon, ...updatedPermissions.coupon },
-        lottery: { ...prevFormData.permissions.lottery, ...updatedPermissions.lottery },
       },
     }));
-
+ 
     setShowModal(true);
   };
-
+ 
+  const checkBoxShow = {
+    name: '',
+    description: '',
+    permissions: {
+      withdrawal: {
+        read: true,
+      },
+      userManagement: {
+        read: true,
+      },
+      products: {
+        delete: true,
+        read: true,
+      },
+      categories: {
+        create: true,
+        edit: true,
+        read: true,
+        delete: true,
+      },
+      reviews: {
+        read: true,
+      },
+      orders: {
+        read: true,
+      },
+      pages: {
+        read: true,
+      },
+      contactQuery: {
+        read: true,
+      },
+      subscribers: {
+        read: true,
+      },
+      blogs: {
+        create: true,
+        edit: true,
+        read: true,
+        delete: true,
+      },
+      notifications: {
+        read: true,
+      },
+      generalSettings: {
+        edit: true,
+        read: true,
+      },
+      gelatoPrice: {
+        edit: true,
+        read: true,
+      },
+      bannerImages: {
+        create: true,
+        edit: true,
+        read: true,
+        delete: true,
+      },
+      coupon: {
+        create: true,
+        edit: true,
+        read: true,
+        delete: true,
+      },
+    },
+  };
+ 
   return (
     <Paper className="table_samepattern">
       {
@@ -343,7 +400,7 @@ const RolesPermission = () => {
                             </TableSortLabel>
                           </TableCell>
                           <TableCell>
-
+ 
                             <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
                               Role Name
                             </TableSortLabel>
@@ -358,7 +415,7 @@ const RolesPermission = () => {
                             </TableSortLabel>
                           </TableCell>
                           <TableCell>
-
+ 
                             <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
                               Users
                             </TableSortLabel>
@@ -415,12 +472,12 @@ const RolesPermission = () => {
                       onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                   </>
-
+ 
                   :
                   <TableMSG msg={"You don't have permision to view this data"} type={true} />
               }
             </TableContainer>
-
+ 
           </>
       }
       <Modal
@@ -447,7 +504,7 @@ const RolesPermission = () => {
               />
               <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
             </Form.Group>
-
+ 
             <Form.Group controlId="formPermissions" className="mb-3">
               <Form.Label className="mb-2">Permissions*</Form.Label>
               <Table bordered hover>
@@ -500,13 +557,13 @@ const RolesPermission = () => {
                           onChange={handleChange}
                         />
                       </td>
-
+ 
                     </tr>
                   ))}
                 </tbody>
               </Table>
             </Form.Group>
-
+ 
             <Form.Group controlId="formDescription" className="mb-3">
               <Form.Label>Description</Form.Label>
               <Form.Control
@@ -520,12 +577,12 @@ const RolesPermission = () => {
               />
               <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
             </Form.Group>
-
+ 
           </Form>
           <div className="col-12">
             {
               resMsg &&
-              <TextMessage type={true} msg={"Roles Updated Successfully"} />
+              <TextMessage type={true} msg={"Roles updated successfully"} />
             }
           </div>
           <Row className="mt-3">
@@ -544,5 +601,5 @@ const RolesPermission = () => {
     </Paper>
   );
 };
-
+ 
 export default RolesPermission;

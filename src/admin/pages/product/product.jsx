@@ -13,6 +13,8 @@ import {
   IconButton,
   Paper,
 } from "@mui/material";
+import chngestatus from '../../../assets/images/arrows.png'
+
 import { Delete, Edit, MoreVert } from "@mui/icons-material";
 import { Col, Dropdown, Form, Modal, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import AdminLoader from "../../components/AdminLoader";
@@ -287,7 +289,7 @@ const Product = () => {
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
                                       <Dropdown.Item href="#" >
-                                        <Link to={`/admin/product-details/${row?._id}`}>
+                                        <Link className="d-block" to={`/admin/product-details/${row?._id}`}>
                                           <RemoveRedEyeIcon style={{ marginRight: "8px" }} />View
                                         </Link>
                                       </Dropdown.Item>
@@ -335,8 +337,11 @@ const Product = () => {
           <Modal.Title>Change  Status </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="row g-3">
+          <div className="row g-3 cutoms-login-artist">
             <div className="col-12">
+          <div className="text-center mb-3">
+          <img style={{ width:'100px'}} src={chngestatus} alt='delete-icon'/>
+          </div>
               <label htmlFor=""><strong>{productDataOBJ?.title}</strong> Uploaded By Artist: <strong>{productDataOBJ?.artist_id?.first_name}</strong></label>
               <select name="approvalStatus" onChange={handleChange} className="form-control mt-2 text-capitalize">
                 <option value={true}>Approve</option>
@@ -358,10 +363,10 @@ const Product = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}> Cancel</Button>
+          <Button  className="line-close-btn" onClick={handleClose}> Cancel</Button>
           {
             loading ? <BTNLoader className="artist-btn" /> :
-              <Button variant="primary" className="artist-btn" onClick={() => handleStatusChange()}> Save</Button>
+              <Button  className="artist-btn" onClick={() => handleStatusChange()}> Save</Button>
           }
         </Modal.Footer>
       </Modal>

@@ -7,6 +7,7 @@ const LoaderWrapper = styled('div')(({ theme }) => ({
   position: 'fixed',
   top: 0,
   left: 0,
+  backgroundColor: 'blue', // Change the background color here
   zIndex: 2001,
   width: '100%',
   '& > * + *': {
@@ -18,7 +19,7 @@ const LoaderWrapper = styled('div')(({ theme }) => ({
 
 const Loader = () => (
   <LoaderWrapper>
-    <LinearProgress color="primary" />
+    <LinearProgress sx={{ backgroundColor: 'lightblue', '& .MuiLinearProgress-bar': { backgroundColor: 'purple' } }} />
   </LoaderWrapper>
 );
 

@@ -14,16 +14,8 @@ const ContactUs = () => {
       <section className="faq-page">
         <h2 className="static-title text-center">Contact Us</h2>
         <Container className="">
-          <Row>
-            <Col md={4} className="mt-5 ">
-              <div className="contact_box">
-                <div className="icon_boxee">
-                  <Map />
-                </div>
-                <h2>Office Location</h2>
-                <p>{generalSetting?.location}</p>
-              </div>
-            </Col>
+          {/* <Row>
+         
             <Col md={4} className="mt-5 ">
               <div className="contact_box">
                 <div className="icon_boxee">
@@ -33,16 +25,8 @@ const ContactUs = () => {
                 <p>{generalSetting?.adminEmail}</p>
               </div>
             </Col>
-            <Col md={4} className="mt-5 ">
-              <div className="contact_box">
-                <div className="icon_boxee">
-                  <Phone />
-                </div>
-                <h2>Phone</h2>
-                <p>{generalSetting?.phone}</p>
-              </div>
-            </Col>
-          </Row>
+           
+          </Row> */}
         </Container>
 
       </section>

@@ -13,7 +13,11 @@ import { width } from '@mui/system';
 export default function DrawerHeader({ open }) {
   const theme = useTheme();
   return (
-    <DrawerHeaderStyled theme={theme} open={!!open}>
+    <DrawerHeaderStyled  style={{ 
+      justifyContent: 'center', 
+      borderBottom: '1px solid #f0f0f0' ,
+      padding:'7px'
+    }}  theme={theme} open={!!open}>
       <Link to={'/'} className="sidebar_logo">
         <img src={logo} alt="logo" style={{ width: '180px' }} />
       </Link>

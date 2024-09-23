@@ -13,6 +13,8 @@ import { APICALL, axiosInstance } from "../../helper/api/api";
 import BTNLoader from "../../components/BTNLoader";
 import AdminLoader from "../components/AdminLoader";
 import swal from "sweetalert";
+import { useDataContext } from "../../helper/context/ContextProvider";
+import { filterByKey } from "../../helper/Utility";
 const StaticPages = () => {
   const [loading, setLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -22,11 +24,15 @@ const StaticPages = () => {
     phone: "",
     comission: "",
   });
-
+  const { permisionData, getPermision } = useDataContext();
+  const permisionCheck = filterByKey("generalSettings", permisionData?.permissions);
+  useEffect(() => {
+      getPermision()
+  }, [])
   useEffect(() => {
     getPageContentFun();
   }, []);
-
+ 
   const getPageContentFun = async () => {
     setLoading(true);
     try {
@@ -47,7 +53,7 @@ const StaticPages = () => {
       [name]: value,
     }));
   };
-
+ 
   const handleSubmit = async () => {
     setSubmitLoading(true);
     try {
@@ -77,9 +83,9 @@ const StaticPages = () => {
       });
     }
   };
-
+ 
   return (
-
+ 
     <>
       <div className="general-setting">
       <Card className="card-cusotom ">
@@ -126,7 +132,7 @@ const StaticPages = () => {
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label>Comission (%)</Form.Label>
+                      <Form.Label>Affiliate Comission (%)</Form.Label>
                       <Form.Control
                         type="number"
                         name="comission"
@@ -135,22 +141,22 @@ const StaticPages = () => {
                       />
                     </Form.Group>
                   </Col>
-
-
+ 
+ 
                 </Row>
               </div>
             </CardBody>
           </>
         )}
       </Card>
-
+ 
       <Card className="card-cusotom mt-3">
           <>
             <CardHeader>Social media</CardHeader>
             <CardBody>
               <div className="cutoms-login-artist">
                 <Row className="mb-md-3 mb-2">
-                  
+                 
                   <Col md={6}>
                     <Form.Group className="mb-3">
                       <Form.Label>facebook url</Form.Label>
@@ -231,6 +237,8 @@ const StaticPages = () => {
                 </Row>
               </div>
             </CardBody>
+            {
+              permisionCheck?.edit &&
             <CardFooter>
               {submitLoading ? (
                 <BTNLoader className={"artist-btn"} />
@@ -238,11 +246,12 @@ const StaticPages = () => {
                 <Button className="artist-btn" type="button" onClick={() => handleSubmit()}> Save </Button>
               )}
             </CardFooter>
+            }
           </>
       </Card>
       </div>
     </>
   );
 };
-
+ 
 export default StaticPages;
