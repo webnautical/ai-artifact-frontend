@@ -1425,7 +1425,7 @@ const ShippingAddress = () => {
                               <div className="payemt_screen gloab_card mb-3 ">
                                 <div className="order_summ shipping_details">
                                   <div className="d-lg-flex justify-content-between align-items-center">
-                                    <h2 className="mb-0">Order Summary</h2>
+                                    <h2 className="mb-3">Order Summary</h2>
                                     <div className="coupan_apply">
                                       <Form>
                                         <Form.Group
@@ -1466,7 +1466,7 @@ const ShippingAddress = () => {
                                         </Form.Group>
 
                                         <span
-                                          className={`d-block text-end mt-1 mb-3 fw-bold ${couponRes?.status
+                                          className={`d-block text-md-end mt-3 mb-3 fw-bold ${couponRes?.status
                                             ? "text-success"
                                             : "text-danger"
                                             }`}

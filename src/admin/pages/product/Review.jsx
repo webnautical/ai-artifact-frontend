@@ -23,6 +23,7 @@ import "../../../App.css";
 import { useDataContext } from "../../../helper/context/ContextProvider";
 import TableMSG from "../../../components/TableMSG";
 import { Link } from "react-router-dom";
+import { Row, Col } from "react-bootstrap";
  
 const Review = () => {
   const [search, setSearch] = useState("");
@@ -105,22 +106,27 @@ const Review = () => {
           <AdminLoader />
         ) : (
           <>
-            <div
+            <Row
               style={{
-                display: "flex",
+               
                 justifyContent: "space-between",
                 padding: "10px",
               }}
             >
+                 <Col md={6}>
               <h1 className="title-admins-table">Reviews</h1>
+              </Col>
+              <Col md={3}>
               <TextField
+              className="w-100"
                 variant="outlined"
                 placeholder="Search..."
                 value={search}
                 onChange={handleSearchChange}
                 style={{ width: "300px" }}
               />
-            </div>
+              </Col>
+            </Row>
             {
               permisionCheck?.read ?
                 <>

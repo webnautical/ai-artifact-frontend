@@ -442,10 +442,6 @@ const ProductDetail = () => {
     setCurrentImage("");
   };
  
-  const revphoto = "https://via.placeholder.com/70"; // Your image URL or path
- 
-  console.log("reviewList", reviewList)
- 
   return (
     <>
       <div className="product-details">
@@ -468,8 +464,9 @@ const ProductDetail = () => {
                         <Link to={`/collection/${productDetails?.artist_id?._id}`}> {productDetails?.artist_id?.userName} <i className="fa-solid fa-chevron-right"></i></Link>
                       </li>
                       <li>
-                        <Link to={`/product-list`}> {productDetails?.directoryId?.name} <i className="fa-solid fa-chevron-right"></i></Link>
+                        <Link to={`/collection/${productDetails?.artist_id?._id}/${productDetails?.directoryId?._id}`}> {productDetails?.directoryId?.name} <i className="fa-solid fa-chevron-right"></i></Link>
                       </li>
+                      
                       <li>
                         <Link> {productDetails?.title}</Link>
                       </li>
@@ -725,9 +722,9 @@ const ProductDetail = () => {
                                   maxLength={150}
                                 />
                               </Form.Group>
-                              <Form.Check style={{gap:'10px'}} className="d-flex mb-3"
+                              <Form.Check style={{gap:'10px'}} className="d-flex text-start mb-3"
                                 type="checkbox"
-                                label="Join the lottery for a chance to win an offer coupon."
+                                label=" Join the lottery for a chance to win an offer coupon."
                                 onChange={(e) => setReviewVal({ ...reviewVal, 'is_lottery': e.target.checked })}
                               />
                             </Form>

@@ -1,6 +1,13 @@
 
 @media only screen and (max-width: 1450.98px) {
 
+    .main_icons h5 {
+        font-size: 28px;}
+
+    .social_community li img {
+        width: 32px;
+    }
+
     .my_header header{ width: 100%!important;}
 
     .global_btn {
@@ -12,6 +19,24 @@
 }
 
 @media only screen and (max-width: 991.98px) {
+
+    .collection_inner{ padding: 30px 0 0;}
+
+    .join_drp .dropdown-menu {
+
+        display: block;
+        width: 210px;
+        top: 45px;
+        right: 0px;
+        border: none;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        padding: 10px;
+      }
+      
+      .join_drp .dropdown-menu a{ 
+            padding: 13px 0px!important;
+      }
+      
 
     .browse_with_img{ display: none;}
 
@@ -39,7 +64,7 @@
     }
 
     .product_add_details .artworks {
-        padding: 40px 0;
+        padding: 40px 15px;
         background: #F7F7F7;
     }
 
@@ -129,6 +154,24 @@
 
 
   @media only screen and (max-width: 767.98px) {
+
+    .artist_page {
+        padding: 30px 0;
+    }
+
+    .aplha_list button {
+        border: none;
+        border: 1px solid #036565;
+        width: 22px;
+        height: 22px;
+        font-size: 12px;
+        display: flex;
+        border-radius: 5px;
+        font-weight: 600;
+        color: #036565;
+        align-items: center;
+        justify-content: center;
+    }
 
     .artist-login-container {
 
@@ -237,7 +280,7 @@
         width: 30px;
         height: 30px;
    
-        right: 15px;
+        right: 25px;
         top: 15px;
     
         font-size: 14px;
@@ -288,7 +331,7 @@
 
 
     .social_community li img {
-        width: 36px;
+        width: 27px;
     }
 
     .main_icons h5 {
@@ -305,6 +348,54 @@
 
 
   @media only screen and (max-width: 575.98px) {
+
+    
+    .lottery_outer .main {
+            height: 360px;
+            margin: auto;
+            width: 360px;
+        }
+     
+              .pointer {
+         left: 53.55%;
+    }
+    .lottery_outer .span8 {
+        left: 190px;
+    }
+    .lottery_outer .span7 {
+        right: 172px;
+    }
+    .lottery_outer .span6 {
+        left: 170px;
+    }
+    .lottery_outer .span5 {
+        right: 175px;
+    }
+    .lottery_outer .span5 {
+        right: 175px;
+    }
+
+    .cat_gories_mobile ul li a{ font-size: 14px;} 
+
+    .top_ten .collection_grid{ margin: 15px;}
+
+    .all_categores .left_global_heading{ flex-direction: column;}
+
+    .faq-page .according-inner {
+      
+        padding: 15px;
+    }
+
+    .contact_us_page_static {
+        padding: 30px 0px 30px;
+    }contact_us_page_static
+
+    .blog_cnt h1 {
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .blog_box{padding: 10px; margin: 30px 0px 0;}
 
     
 

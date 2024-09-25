@@ -348,7 +348,7 @@ const MyAddress = () => {
                                             <TextMessage msg={"Profile Updated Successfully !!"} type={true} />
                                         }
                                     </div>
-                                    <Col md="12 text-end">
+                                    <Col md="12 text-md-end text-center">
                                         {
                                             submitLoading ?
                                                 <Button className="global_btn" type="button" block>

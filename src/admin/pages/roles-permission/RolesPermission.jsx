@@ -365,28 +365,35 @@ const RolesPermission = () => {
         listLoading ? <AdminLoader />
           :
           <>
-            <div
+            <Row
               style={{
-                display: "flex",
+             
                 justifyContent: "space-between",
                 padding: "10px",
               }}
             >
+              <Col md={6}>
               <h1 className="title-admins-table">Roles</h1>
-              <div className="d-flex align-items-center" style={{ gap: '10px' }}>
+              </Col>
+              <Col md={3}>
+              <div className=" align-items-center" style={{ gap: '10px' }}>
                 <TextField
+                className="w-100"
                   variant="outlined"
                   placeholder="Search..."
                   value={search}
                   onChange={handleSearchChange}
                   style={{ width: "300px" }}
                 />
-                {
+              <div className="mt-3 text-end">
+              {
                   permisionCheck?.create &&
                   <Button className="artist-btn " onClick={handleShowModal}> Add Roles </Button>
                 }
               </div>
-            </div>
+              </div>
+              </Col>
+            </Row>
             <TableContainer>
               {
                 permisionCheck?.read ?

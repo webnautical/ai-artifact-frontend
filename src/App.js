@@ -42,6 +42,7 @@ import OrderSuccess from "./front/pages/orders/OrderSuccess";
 import OrderFailure from "./front/pages/orders/OrderFailure";
 import CustomerRoot from "./front/pages/customer/CustomerRoot";
 import { auth, libraries } from "./helper/Utility";
+import ArtistCollections from "./front/pages/ArtistCollections";
 const stripePromise = loadStripe('pk_test_51PdpfWCeFWsCdKvD0zd3KZ2tQGXw0SwEOaHFWiQqhTTdjGMiPCg5sLJYVdrn8AOkAsrFHqktWs9ZyjLnrvcUy2Xl00YltTFAaq');
 function App() {
   useEffect(() => {
@@ -65,6 +66,7 @@ function App() {
               <Route path="/product-list" element={<FrontWeb cmp={ProductList} header={true} footer={true} />} />
               <Route path="/customer/:page" element={<FrontWeb cmp={CustomerRoot} header={true} footer={true} />} />
               <Route path="/faq" element={<FrontWeb cmp={Faq} />} />
+              <Route path="/collections" element={<FrontWeb cmp={ArtistCollections} />} />
               <Route path="/cart" element={<FrontWeb cmp={Cart} />} />
               <Route path="/artists" element={<FrontWeb cmp={Artists} />} />
               <Route path="/ranking" element={<FrontWeb cmp={RankingStatus} />} />

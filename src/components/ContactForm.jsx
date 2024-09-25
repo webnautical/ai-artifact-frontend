@@ -149,11 +149,11 @@ function ContactForm() {
     <Container className="mb-md-5 mb-4">
       <div className="contact-us-section">
         <Row className="justify-content-center align-items-center">
-          <Col md={6} className="text-left">
+          <Col md={6} className="text-left mb-md-0 mb-4">
             <h3>{pageData?.mainTitle}</h3>
             <HTMLContent data={pageData?.editorContent1} />
             <div>
-              <i class="fa-solid fa-envelope me-2"></i>For Other Querry{" "}
+              <i class="fa-solid fa-envelope me-2 me-3"></i>For Other Query<br/>
               <b>
                 <Link>{generalSetting?.adminEmail}</Link>
               </b>

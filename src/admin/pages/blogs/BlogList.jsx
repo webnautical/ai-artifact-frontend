@@ -17,7 +17,7 @@ import { APICALL } from "../../../helper/api/api";
 import { auth, filterByKey, tableImg, timeAgo } from "../../../helper/Utility";
 import AdminLoader from "../../components/AdminLoader";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
-import { Dropdown } from "react-bootstrap";
+import { Dropdown, Row, Col } from "react-bootstrap";
 import { Delete, Edit, MoreVert } from "@mui/icons-material";
 import swal from "sweetalert";
 import AddUpdBlog from "./AddUpdBlog";
@@ -130,25 +130,32 @@ const BlogList = () => {
                         listLoading ? <AdminLoader />
                             :
                             <>
-                                <div style={{ display: "flex", justifyContent: "space-between", padding: "10px", }} >
+                                <Row style={{  justifyContent: "space-between", padding: "10px", }} >
+                                <Col md={6}>
                                     <h1 className="title-admins-table">Blog</h1>
+                                    </Col>
+                                    <Col md={3}>
                                     {
                                         !addUpdPage &&
                                         <div>
                                             <TextField
+                                         className="w-100"
                                                 variant="outlined"
                                                 placeholder="Search..."
                                                 value={search}
                                                 onChange={handleSearchChange}
                                                 style={{ width: "300px" }}
                                             />
-                                            {
+                                      <div className="mt-3 text-end">
+                                      {
                                                 permisionCheck?.create &&
-                                                <button type="button" onClick={() => { setAddUpdPage(true); setEditData(null) }} className="artist-btn ms-2"> Add New</button>
+                                                <button type="button mt-3 d-inline-block" onClick={() => { setAddUpdPage(true); setEditData(null) }} className="artist-btn ms-2"> Add New</button>
                                             }
+                                      </div>
                                         </div>
                                     }
-                                </div>
+                                    </Col>
+                                </Row>
  
                                 {
                                     addUpdPage ? <> <AddUpdBlog addUpdPage={addUpdPage} setAddUpdPage={setAddUpdPage} getListFun={getListFun} editData={editData} setEditData={setEditData} /> </>

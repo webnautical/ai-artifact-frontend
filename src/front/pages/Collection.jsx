@@ -42,7 +42,7 @@ const Collection = () => {
   }
  
   return (
-    <div className="Home_page">
+    <div className="Home_page collection_inner">
       <section className="hero_section">
         <Container fluid>
           <Row>

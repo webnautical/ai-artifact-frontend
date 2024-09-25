@@ -38,12 +38,12 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
           type === 'related_art' ?
             productList?.length > 0 ?
               <Row>
-                <Col lg={6} className="mb-lg-0 mb-4">
+                <Col lg={6} className="mb-lg-0 mb-3">
                   <div className="artworks_box">
                     <Row>
                       {
                         productList[0] &&
-                        <Col md={8} sm={8} className="mb-sm-0 mb-4" >
+                        <Col md={8} sm={8} className="mb-sm-0 mb-3" >
                           <div className="grid_box_artwork_big">
                             <Link to={`/product-details/${productList[0]?._id}`}>
                               <img
@@ -73,7 +73,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                           </div>
                         </Col>
                       }
-                      <Col md={4} sm={4} className="mb-sm-0 mb-4">
+                      <Col md={4} sm={4} className="mb-sm-0 mb-3">
                         <div className="grid_box_artwork">
                           {productList[1] &&
                             <div className="img_box">
@@ -137,12 +137,12 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                   </div>
                 </Col>
  
-                <Col lg={6} className="mb-lg-0 mb-4">
+                <Col lg={6} className="mb-lg-0 mb-3">
                   <div className="artworks_box">
                     <Row>
                       {
                         productList[3] &&
-                        <Col md={8} sm={8} className="mb-sm-0 mb-4" >
+                        <Col md={8} sm={8} className="mb-sm-0 mb-3" >
                           <div className="grid_box_artwork_big">
                             <Link to={`/product-details/${productList[3]?._id}`}>
                               <img
@@ -241,12 +241,12 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
             :
             data?.length > 0 ?
               <Row >
-                <Col lg={6} className="mb-lg-0 mb-4">
+                <Col lg={6} className="mb-lg-0 mb-0">
                   <div className="artworks_box">
                     <Row>
                       {
                         data[0]?.product &&
-                        <Col md={8} sm={8} className="mb-sm-0 mb-4" >
+                        <Col md={8} sm={8} className="mb-sm-0 mb-3" >
                           <div className="grid_box_artwork_big">
                             <Link to={`/product-details/${data[0]?.product?._id}`}>
                               <img
@@ -339,12 +339,12 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                   </div>
                 </Col>
  
-                <Col lg={6} className="mb-lg-0 mb-4">
+                <Col lg={6} className="mb-lg-0 mb-3">
                   <div className="artworks_box">
                     <Row>
                       {
                         data[3]?.product &&
-                        <Col md={8} sm={8} className="mb-sm-0 mb-4" >
+                        <Col md={8} sm={8} className="mb-sm-0 mb-3" >
                           <div className="grid_box_artwork_big">
                             <Link to={`/product-details/${data[3]?.product?._id}`}>
                               <img

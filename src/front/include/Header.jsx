@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import { auth, getTokenType, imgBaseURL } from "../../helper/Utility";
 import { Row, Col } from "react-bootstrap";
@@ -7,15 +7,23 @@ import Spinner from "react-bootstrap/Spinner";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
 const Header = () => {
-  const { getHeaderContent, headerContent, customerInfo, getCustomerInfoFun, guestWishlist, guestCart } =
-    useFrontDataContext();
+  const pathname =useLocation().pathname
+  console.log(pathname)
+  const {
+    getHeaderContent,
+    headerContent,
+    customerInfo,
+    getCustomerInfoFun,
+    guestWishlist,
+    guestCart,
+  } = useFrontDataContext();
 
   const [show, setShow] = useState(false);
   const [showBrowse, setShowBrowse] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
-  const [setDropdownOpen] = useState(false);
+  // const [setDropdownOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -32,7 +40,6 @@ const Header = () => {
   useEffect(() => {
     const handleBodyClick = (event) => {
       if (!event.target.closest(".dropdown") && isOpen) {
-        setDropdownOpen(false);
       }
     };
 
@@ -52,7 +59,7 @@ const Header = () => {
 
   const closeSearch = () => {
     setIsSearchOpen(false);
-    setSearchText("")
+    setSearchText("");
   };
 
   useEffect(() => {
@@ -94,7 +101,7 @@ const Header = () => {
 
   const handleBrowseClose = () => setShowBrowse(false);
   const handleBrowseShow = () => setShowBrowse(true);
-  const [searchText, setSearchText] = useState("")
+  const [searchText, setSearchText] = useState("");
 
   const habdleRedirect = (page) => {
     const data = { category: page };
@@ -104,12 +111,17 @@ const Header = () => {
   };
 
   const handleSearch = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const data = { category: searchText };
     setShow(false);
     setShowBrowse(false);
     navigate(`/product-list`, { state: { data: data } });
   };
+
+  const getActive = (path) =>{
+    if(pathname===path) { return true }
+    else{ return false }
+  }
 
   return (
     <>
@@ -127,24 +139,21 @@ const Header = () => {
                 <li className="wish_li">
                   <Link to="/wishlist">
                     <i class="fa-regular fa-heart"></i>
-                    {
-                      auth('customer') ?
-                        customerInfo?.wishlistTotal > 0 && (
-                          <div className="count">{customerInfo?.wishlistTotal}</div>
-                        ) :
-                        <>
-                          {
-                            guestWishlist?.length > 0 &&
-                            <div className="count">{guestWishlist?.length}</div>
-                          }
-                        </>
-                    }
+                    {auth("customer") ? (
+                      customerInfo?.wishlistTotal > 0 && (
+                        <div className="count">
+                          {customerInfo?.wishlistTotal}
+                        </div>
+                      )
+                    ) : (
+                      <>
+                        {guestWishlist?.length > 0 && (
+                          <div className="count">{guestWishlist?.length}</div>
+                        )}
+                      </>
+                    )}
 
-                    {/* {customerInfo?.wishlistTotal > 0 && (
-                      <div className="count">{customerInfo?.wishlistTotal}</div>
-                    )} */}
                   </Link>
-
                 </li>
                 <li className="cart_li cart_li_phone ">
                   <Link to="/cart">
@@ -174,19 +183,17 @@ const Header = () => {
                         />
                       </g>
                     </svg>
-                    {
-                      auth('customer') ?
-                        customerInfo?.cartTotal > 0 && (
-                          <div className="count">{customerInfo?.cartTotal}</div>
-                        ) :
-                        <>
-                          {
-                            guestCart?.length > 0 &&
-                            <div className="count">{guestCart?.length}</div>
-                          }
-                        </>
-                    }
-
+                    {auth("customer") ? (
+                      customerInfo?.cartTotal > 0 && (
+                        <div className="count">{customerInfo?.cartTotal}</div>
+                      )
+                    ) : (
+                      <>
+                        {guestCart?.length > 0 && (
+                          <div className="count">{guestCart?.length}</div>
+                        )}
+                      </>
+                    )}
                   </Link>
                 </li>
 
@@ -232,9 +239,9 @@ const Header = () => {
                           <div className="dropdown-menu show">
                             {" "}
                             {/* Added 'show' class for Bootstrap */}
-                            <span className="d-block">
+                            {/* <span className="d-block">
                               {auth("customer")?.name}
-                            </span>
+                            </span> */}
                             <Link
                               className="dropdown-item"
                               to="/customer/profile"
@@ -252,7 +259,6 @@ const Header = () => {
                               <i className="fa-regular fa-rectangle-list  me-2"></i>
                               My Orders
                             </Link>
-
                             <hr className="m-0"></hr>
                             <Link
                               className="dropdown-item"
@@ -269,7 +275,7 @@ const Header = () => {
                         )}
                       </div>
                     </>
-                  ) : auth('admin') ? (
+                  ) : auth("admin") ? (
                     <Link className="text-center" to="/admin/dashboard">
                       <svg
                         width="24"
@@ -298,7 +304,7 @@ const Header = () => {
                       </svg>
                       {/* <span className="d-block">{"Join"}</span> */}
                     </Link>
-                  ) :
+                  ) : (
                     <Link className="text-center" to="/login/customer">
                       <svg
                         width="24"
@@ -327,7 +333,7 @@ const Header = () => {
                       </svg>
                       {/* <span className="d-block">{"Join"}</span> */}
                     </Link>
-                  }
+                  )}
                 </li>
                 <li>
                   <button onClick={handleShow} className="navbar-toggler">
@@ -359,7 +365,12 @@ const Header = () => {
             </div>
           </div>
           <div className="search-bar">
-            <input type="text" placeholder="Search..." value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
             <button onClick={handleSearch}>
               <i className="fa fa-magnifying-glass"></i>
             </button>
@@ -367,7 +378,11 @@ const Header = () => {
         </div>
       </div>
 
-      <section className={`header d-lg-block d-none ${scrolled ? "scrolled-class" : ""}`}>
+      <section
+        className={`header d-lg-block d-none ${
+          scrolled ? "scrolled-class" : ""
+        }`}
+      >
         <div className="container">
           <div className="main_inner_header">
             <div className="left_option_bar">
@@ -375,7 +390,7 @@ const Header = () => {
                 <nav>
                   <ul>
                     <li className="hover_menu">
-                      <Link to="">Browse</Link>
+                      <Link to="" className={getActive() && "active"}>Browse</Link>
 
                       <div className="hover_menu_show_box">
                         <div className="container">
@@ -386,13 +401,20 @@ const Header = () => {
                                   <div className="col-md-6 menu_header_box">
                                     <h5>{item?.name}</h5>
                                     <ul>
-                                      {item?.subcategories?.slice(0, 7)?.map((sub, i) => (
-                                        <li>
-                                          <button type="button" onClick={() => habdleRedirect(sub)}>
-                                            {sub?.name}
-                                          </button>
-                                        </li>
-                                      ))}
+                                      {item?.subcategories
+                                        ?.slice(0, 7)
+                                        ?.map((sub, i) => (
+                                          <li>
+                                            <button
+                                              type="button"
+                                              onClick={() =>
+                                                habdleRedirect(sub)
+                                              }
+                                            >
+                                              {sub?.name}
+                                            </button>
+                                          </li>
+                                        ))}
                                     </ul>
                                   </div>
                                   <div className="col-md-6">
@@ -401,19 +423,27 @@ const Header = () => {
                                         className="col-md-12 mb-0"
                                         style={{ cursor: "pointer" }}
                                       >
-                                        <Link to={`/product-details/${item?.randomProduct?._id}`}>
+                                        <Link
+                                          to={`/product-details/${item?.randomProduct?._id}`}
+                                        >
                                           <div className="browse_with_img">
                                             <img
                                               className="w-100"
-                                              src={imgBaseURL() + item?.randomProduct?.thumbnail}
+                                              src={
+                                                imgBaseURL() +
+                                                item?.randomProduct?.thumbnail
+                                              }
                                               alt=""
                                             />
                                             <Link>
-                                              <p className="m-0">
-                                                {
-                                                  item?.subcategories.find((category) => category._id === item?.randomProduct?.subcategory)?.name || 'Category not found'
-                                                }
-                                              </p>
+                                            
+                                                {item?.subcategories.find(
+                                                  (category) =>
+                                                    category._id ===
+                                                    item?.randomProduct
+                                                      ?.subcategory
+                                                )?.name || "Category not found"}
+                                            
                                             </Link>
                                           </div>
                                         </Link>
@@ -429,13 +459,16 @@ const Header = () => {
                     </li>
 
                     <li>
-                      <Link to="/product-list">Collections</Link>
+                      <Link to="/collections" className={getActive("/collections") && "active"}>Collections</Link>
                     </li>
                     <li>
-                      <Link to="/artists">Artists</Link>
+                      <Link to="/product-list" className={getActive("/product-list") && "active"}>Artworks</Link>
                     </li>
                     <li>
-                      <Link to="/ranking">Ranking</Link>
+                      <Link to="/artists" className={getActive("/artists") && "active"}>Artists</Link>
+                    </li>
+                    <li>
+                      <Link to="/ranking" className={getActive("/ranking") && "active"}>Ranking</Link>
                     </li>
                   </ul>
                 </nav>
@@ -488,7 +521,12 @@ const Header = () => {
                       <>
                         <div className="search-bar" ref={searchRef}>
                           <form onSubmit={handleSearch}>
-                            <input type="text" placeholder="Search..." value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+                            <input
+                              type="text"
+                              placeholder="Search..."
+                              value={searchText}
+                              onChange={(e) => setSearchText(e.target.value)}
+                            />
                           </form>
                           <button type="button" onClick={closeSearch}>
                             <i className="fa-solid fa-xmark"></i>
@@ -527,18 +565,19 @@ const Header = () => {
                       </g>
                     </svg>
                     <span className="d-block">Wishlist</span>
-                    {
-                      auth('customer') ?
-                        customerInfo?.wishlistTotal > 0 && (
-                          <div className="count">{customerInfo?.wishlistTotal}</div>
-                        ) :
-                        <>
-                          {
-                            guestWishlist?.length > 0 &&
-                            <div className="count">{guestWishlist?.length}</div>
-                          }
-                        </>
-                    }
+                    {auth("customer") ? (
+                      customerInfo?.wishlistTotal > 0 && (
+                        <div className="count">
+                          {customerInfo?.wishlistTotal}
+                        </div>
+                      )
+                    ) : (
+                      <>
+                        {guestWishlist?.length > 0 && (
+                          <div className="count">{guestWishlist?.length}</div>
+                        )}
+                      </>
+                    )}
                   </Link>
                 </li>
 
@@ -571,18 +610,17 @@ const Header = () => {
                     </svg>
 
                     <span className="d-block">Cart</span>
-                    {
-                      auth('customer') ?
-                        customerInfo?.cartTotal > 0 && (
-                          <div className="count">{customerInfo?.cartTotal}</div>
-                        ) :
-                        <>
-                          {
-                            guestCart?.length > 0 &&
-                            <div className="count">{guestCart?.length}</div>
-                          }
-                        </>
-                    }
+                    {auth("customer") ? (
+                      customerInfo?.cartTotal > 0 && (
+                        <div className="count">{customerInfo?.cartTotal}</div>
+                      )
+                    ) : (
+                      <>
+                        {guestCart?.length > 0 && (
+                          <div className="count">{guestCart?.length}</div>
+                        )}
+                      </>
+                    )}
                   </Link>
                 </li>
 
@@ -621,9 +659,9 @@ const Header = () => {
                           </svg>
                         </button>
                         <div className="dropdown-menu">
-                          <span className="d-block">
+                          {/* <span className="d-block">
                             {auth("customer")?.name}
-                          </span>
+                          </span> */}
                           <Link
                             className="dropdown-item"
                             to="/customer/profile"
@@ -652,8 +690,11 @@ const Header = () => {
                         </div>
                       </div>
                     </>
-                  ) : auth('admin') ? (
-                    <Link className="text-center" to={`/${auth('admin')?.user_role}/dashboard`}>
+                  ) : auth("admin") ? (
+                    <Link
+                      className="text-center"
+                      to={`/${auth("admin")?.user_role}/dashboard`}
+                    >
                       <svg
                         width="24"
                         height="24"
@@ -681,7 +722,7 @@ const Header = () => {
                       </svg>
                       <span className="d-block">{"Me"}</span>
                     </Link>
-                  ) :
+                  ) : (
                     <>
                       <Link className="text-center" to="/login/customer">
                         <svg
@@ -712,7 +753,7 @@ const Header = () => {
                         <span className="d-block">{"Join"}</span>
                       </Link>
                     </>
-                  }
+                  )}
                 </li>
               </ul>
             </div>
@@ -721,40 +762,63 @@ const Header = () => {
       </section>
 
       {/* offcanvas */}
-      <Offcanvas show={show} onHide={handleClose}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>
-            <div className="logo_side_mrenu">
-              <img src={logo} alt="logo" />
+      <div className="mobile_menu_bar">
+        <Offcanvas className="mobile_menu_bar" show={show} onHide={handleClose}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>
+              <div className="logo_side_mrenu">
+                <img src={logo} alt="logo" />
+              </div>
+            </Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            <div className="mobile_side_menu">
+              <ul className="p-0">
+                <li>
+                  <Link to="/" className={getActive("/") && "active"} onClick={handleClose}>
+                    Home
+                  </Link>
+                </li>
+                <li className="inner_multi_menu">
+                  <Link
+                    to="#"
+                    onClick={(e) => {
+                      handleBrowseShow();
+                      handleClose();
+                    }}
+                  >
+                    Browse
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/collections"  className={getActive("/collections") && "active"} onClick={handleClose}>
+                    Collection
+                  </Link>
+                </li>
+                <li>
+                      <Link to="/product-list" className={getActive("/product-list") && "active"}>Artworks</Link>
+                    </li>
+                <li>
+                  <Link to="/artists" className={getActive("/artists") && "active"} onClick={handleClose}>
+                    Artists
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/ranking" className={getActive("/ranking") && "active"} onClick={handleClose}>
+                    Ranking
+                  </Link>
+                </li>
+              </ul>
             </div>
-          </Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <div className="mobile_side_menu">
-            <ul className="p-0">
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="#" onClick={handleBrowseShow}>
-                  Browse
-                </Link>
-              </li>
-              <li>
-                <Link to="/product-list">Collection</Link>
-              </li>
-              <li>
-                <Link to="/artists">Artists</Link>
-              </li>
-              <li>
-                <Link to="/ranking">Ranking</Link>
-              </li>
-            </ul>
-          </div>
-        </Offcanvas.Body>
-      </Offcanvas>
+          </Offcanvas.Body>
+        </Offcanvas>
+      </div>
 
-      <Offcanvas show={showBrowse} onHide={handleBrowseClose}>
+      <Offcanvas
+        className="mobile_menu_bar_cat"
+        show={showBrowse}
+        onHide={handleBrowseClose}
+      >
         <Offcanvas.Header className="back_btn" closeButton></Offcanvas.Header>
         <Offcanvas.Body>
           <div className="cat_gories_mobile">
@@ -767,7 +831,10 @@ const Header = () => {
                 <ul>
                   {item?.subcategories?.slice(0, 7)?.map((sub, i) => (
                     <li>
-                      <button type="button" onClick={() => habdleRedirect(item)}>
+                      <button
+                        type="button"
+                        onClick={() => habdleRedirect(item)}
+                      >
                         {sub?.name}
                       </button>
                     </li>
@@ -792,9 +859,10 @@ const Header = () => {
                       alt=""
                     />
                     <p className="m-0">
-                      {
-                        item?.subcategories.find((category) => category._id === item?.randomProduct?.subcategory)?.name || 'Category not found'
-                      }
+                      {item?.subcategories.find(
+                        (category) =>
+                          category._id === item?.randomProduct?.subcategory
+                      )?.name || "Category not found"}
                     </p>
                   </div>
                 </div>

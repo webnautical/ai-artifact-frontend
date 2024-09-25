@@ -53,22 +53,21 @@ const Product = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const permisionCheck = filterByKey("products", permisionData?.permissions);
-  console.log("permisionCheck", permisionCheck)
 
   useEffect(() => {
-      getPermision()
+    getPermision()
   }, [])
   useEffect(() => {
     if (permisionCheck?.read) {
-      getListFun(pageNo, rowsPerPage);
+      getListFun(pageNo, rowsPerPage, search);
     }
-  }, [pageNo, rowsPerPage]);
+  }, [pageNo, rowsPerPage, search]);
 
 
-  const getListFun = async (pageNo, rowsPerPage) => {
+  const getListFun = async (pageNo, rowsPerPage, search) => {
     setListLoading(true);
     try {
-      const parem = { page: pageNo, limit: rowsPerPage };
+      const parem = { page: pageNo, limit: rowsPerPage, status: search };
       const res = await APICALL("admin/allProducts", "post", parem);
       if (res?.status) {
         setTotalPages(res.totalCount);
@@ -82,7 +81,9 @@ const Product = () => {
   };
 
   const handleSearchChange = (event) => {
-    setSearch(event.target.value);
+    const value = event.target.value;
+    const booleanValue = value === "true" ? true : (value === "false" ? false : value);
+    setSearch(booleanValue);
     setPage(0);
   };
 
@@ -193,22 +194,27 @@ const Product = () => {
           <AdminLoader />
         ) : (
           <>
-            <div
+            <Row
               style={{
-                display: "flex",
                 justifyContent: "space-between",
                 padding: "10px",
               }}
             >
-              <h1 className="title-admins-table">Artworks</h1>
-              <TextField
-                variant="outlined"
-                placeholder="Search..."
-                value={search}
-                onChange={handleSearchChange}
-                style={{ width: "300px" }}
-              />
-            </div>
+
+              <Col md={6}><h1 className="title-admins-table">Artworks</h1>
+              </Col>
+
+              <Col md={3}>
+                <div className="cutoms-login-artist">
+                  <select name="search" value={search} className="form-control" onChange={handleSearchChange}>
+                    <option value={""}>Select Status</option>
+                    <option value={true}>Approved</option>
+                    <option value={false}>Pending</option>
+                    <option value={"rejected"}>Rejected</option>
+                  </select>
+                </div>
+              </Col>
+            </Row>
             {
               permisionCheck?.read ?
                 <>
@@ -339,9 +345,9 @@ const Product = () => {
         <Modal.Body>
           <div className="row g-3 cutoms-login-artist">
             <div className="col-12">
-          <div className="text-center mb-3">
-          <img style={{ width:'100px'}} src={chngestatus} alt='delete-icon'/>
-          </div>
+              <div className="text-center mb-3">
+                <img style={{ width: '100px' }} src={chngestatus} alt='delete-icon' />
+              </div>
               <label htmlFor=""><strong>{productDataOBJ?.title}</strong> Uploaded By Artist: <strong>{productDataOBJ?.artist_id?.first_name}</strong></label>
               <select name="approvalStatus" onChange={handleChange} className="form-control mt-2 text-capitalize">
                 <option value={true}>Approve</option>
@@ -363,10 +369,10 @@ const Product = () => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button  className="line-close-btn" onClick={handleClose}> Cancel</Button>
+          <Button className="line-close-btn" onClick={handleClose}> Cancel</Button>
           {
             loading ? <BTNLoader className="artist-btn" /> :
-              <Button  className="artist-btn" onClick={() => handleStatusChange()}> Save</Button>
+              <Button className="artist-btn" onClick={() => handleStatusChange()}> Save</Button>
           }
         </Modal.Footer>
       </Modal>

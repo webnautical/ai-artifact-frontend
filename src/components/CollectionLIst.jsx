@@ -3,7 +3,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { defaultIMG, imgBaseURL } from "../helper/Utility";
 import { Link } from "react-router-dom";
 
-const CollectionLIst = ({ title, data }) => {
+const CollectionLIst = ({ title, data, btnHide }) => {
   return (
     <section className="popular_collection">
       <Container>
@@ -14,10 +14,9 @@ const CollectionLIst = ({ title, data }) => {
         </Row>
 
         <Row className="gx-md-5">
-
           {
             data?.map((item, i) => (
-              <Col md={6} lg={3} className="mb-md-0 mb-4">
+              <Col md={6} lg={3} className="mb-md-3 mb-4">
                 <Link to={`/collection/${item?.artist?._id}/${item?._id}`} className="popular_box">
                   <Row>
                     {
@@ -38,10 +37,9 @@ const CollectionLIst = ({ title, data }) => {
                       ))
                     }
                   </Row>
-
                   <div className="collection_by">
                     <div className="review_person_img">
-                      <h5 className="first_letter" style={{background : '#849393 !important'}}>{item?.artist?.userName.charAt(0)}</h5>
+                      <h5 className="first_letter" style={{ background: '#849393 !important' }}>{item?.artist?.userName.charAt(0)}</h5>
                     </div>
                     <div className="collection_by_details">
                       <h4>{item?.directoryName}</h4>
@@ -54,10 +52,12 @@ const CollectionLIst = ({ title, data }) => {
           }
 
         </Row>
-
-        <div className="text-center mt-5">
-          <button class="global_btn">Sell All Collections</button>
-        </div>
+        {
+          !btnHide &&
+          <div className="text-center mt-5">
+            <Link to={`/collections`} class="global_btn">Sell All Collections</Link>
+          </div>
+        }
       </Container>
     </section>
   );

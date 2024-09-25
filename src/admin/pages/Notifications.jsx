@@ -18,6 +18,7 @@ import { auth, timeAgo } from "../../helper/Utility";
 import AdminLoader from "../components/AdminLoader";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../helper/Constant";
 import { useNotificationHandler } from "../../helper/api/RepeaterAPI";
+import { Col, Row } from "react-bootstrap";
 const Notifications = () => {
     const handleNotificationClick = useNotificationHandler();
 
@@ -88,16 +89,24 @@ const Notifications = () => {
                         listLoading ? <AdminLoader />
                             :
                             <>
-                                <div style={{ display: "flex", justifyContent: "space-between", padding: "10px", }} >
-                                    <h1 className="title-admins-table">Notification</h1>
+                                <Row style={{ display: "flex", justifyContent: "space-between", padding: "10px", }} >
+                             <Col md={6}>
+                             <h1 className="title-admins-table">Notification</h1>
+                             </Col>
+
+                             <Col md={3}>
                                     <TextField
+
+                                    className="w-100"
                                         variant="outlined"
                                         placeholder="Search..."
                                         value={search}
                                         onChange={handleSearchChange}
                                         style={{ width: "300px" }}
                                     />
-                                </div>
+
+</Col>
+                                </Row>
 
                                 {
                                     data?.length > 0 ?

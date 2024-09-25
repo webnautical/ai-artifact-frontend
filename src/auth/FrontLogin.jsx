@@ -79,6 +79,7 @@ const FrontLogin = () => {
     setLoading(true);
     try {
       const res = await APICALL("/user/loginUser", "post", formData);
+      console.log("loginRes",res)
       if (res?.status) {
         const dataParam = {
           token: res?.token,

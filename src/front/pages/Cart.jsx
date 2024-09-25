@@ -380,7 +380,7 @@ const Cart = () => {
                               Your cart is currently empty. Start adding items to
                               your cart!
                             </p>
-                            <Link className="global_btn " to="/product-list">Shop</Link>
+                            <Link className="global_btn d-inline-block " to="/product-list">Shop</Link>
  
                           </div>
                         </>

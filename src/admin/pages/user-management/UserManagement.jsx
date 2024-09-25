@@ -25,13 +25,14 @@ import "../../../assets/css/admin.css";
 import AdminLoader from "../../components/AdminLoader";
 import { useDataContext } from './../../../helper/context/ContextProvider';
 import TableMSG from "../../../components/TableMSG";
-import { auth, filterByKey, getTierImg } from "../../../helper/Utility";
+import { auth, filterByKey, getTierImg, timeAgo, toastifySuccess } from "../../../helper/Utility";
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from './../../../helper/Constant';
 import { useParams } from "react-router";
-import { Dropdown } from "react-bootstrap";
+import { Col, Dropdown, Row } from "react-bootstrap";
 import { Edit, MoreVert } from "@mui/icons-material";
 import { EyeFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import SwitchToggle from "../../../components/SwitchToggle";
 
 function TablePaginationActions(props) {
 
@@ -121,7 +122,7 @@ export default function UserManagement() {
     if (permisionCheck?.read) {
       getListFun();
     }
-  }, [type,permisionData]);
+  }, [type, permisionData]);
 
   const getListFun = async () => {
     setLoading(true);
@@ -158,24 +159,44 @@ export default function UserManagement() {
   );
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredList.length) : 0;
 
+  const handleStatusChange = async (event, row) => {
+    const newStatus = event.target.checked
+    setList(prevData =>
+        prevData.map(item =>
+            item._id === row._id ? { ...item, status: newStatus } : item
+        )
+    );
+    try {
+      const res = await APICALL('admin/toggleUserStatus', 'post', { id: row._id })
+      if (res?.status) {
+        toastifySuccess(res?.message)
+      }
+    } catch (error) {
+      console.error('API call error:', error);
+    }
+  };
   return (
     <Paper className="table_samepattern table_image_container">
-      <div
+      <Row className=" justify-content-between"
         style={{
-          display: "flex",
-          justifyContent: "space-between",
+
           padding: "16px",
         }}
       >
-        <h1 className="title-admins-table">User Management</h1>
-        <TextField
-          variant="outlined"
-          placeholder="Search..."
-          value={search}
-          onChange={handleSearchChange}
-          style={{ width: "300px" }}
-        />
-      </div>
+        <Col md={6}>
+          <h1 className="title-admins-table">User Management</h1>
+        </Col>
+        <Col md={3}>
+          <TextField className="w-100"
+            variant="outlined"
+            placeholder="Search..."
+            value={search}
+            onChange={handleSearchChange}
+            style={{ width: "300px" }}
+          />
+
+        </Col>
+      </Row>
       {loading ? (
         <AdminLoader />
       ) : (
@@ -191,10 +212,14 @@ export default function UserManagement() {
                         type === "artist" &&
                         <TableCell>Tier</TableCell>
                       }
-                      <TableCell>User Name</TableCell>
+                      <TableCell>Fullname</TableCell>
+                      {
+                        type === "artist" &&
+                        <TableCell>Username</TableCell>
+                      }
                       <TableCell>Email Address</TableCell>
-                      <TableCell>Assigned Roles</TableCell>
-                      {/* <TableCell>Date</TableCell> */}
+                      <TableCell>Status</TableCell>
+                      <TableCell>Date</TableCell>
                       <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
@@ -213,20 +238,23 @@ export default function UserManagement() {
                           </TableCell>
                           {
                             type === "artist" &&
-                          <TableCell>{getTierImg(row?.currentRank)?.icon}</TableCell>
+                            <TableCell>{getTierImg(row?.currentRank)?.icon}</TableCell>
+                          }
+                          {
+                            type === "artist" &&
+                            <TableCell>{row?.userName}</TableCell>
                           }
                           <TableCell component="th" scope="row">
                             {row.first_name + " " + row.last_name}
                           </TableCell>
                           <TableCell>{row.email}</TableCell>
                           <TableCell>
-                            <div sx={{ textTransform: "capitalize" }}>
-                              {row.user_role}
-                            </div>
+                            <SwitchToggle
+                              checked={row?.status}
+                              onChange={(event) => handleStatusChange(event, row)} />
                           </TableCell>
-                          {/* <TableCell>{row.status}</TableCell> */}
 
-                          {/* <TableCell>{timeAgo(row.created_at)}</TableCell> */}
+                          <TableCell>{timeAgo(row.created_at)}</TableCell>
                           <TableCell>
                             <Dropdown className="dorpdown-curtom">
                               <Dropdown.Toggle as={IconButton} variant="link">

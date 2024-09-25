@@ -195,7 +195,7 @@ const Footer = () => {
           </Row>
           <hr></hr>
 
-          <div className="copy_right text-center m-0">Copyright © 2024 <b>AIARTIFACT</b>. All rights reserved. design and developed by <Link to="https://www.webnautical.com/"> <b>webnautical</b></Link>. </div>
+          <div className="copy_right text-center m-0">Copyright © 2024 <b>AIARTIFACT</b>. All rights reserved. design and developed by <Link className="web_nautical" to="https://www.webnautical.com/"> <b>Web Nautical</b></Link>. </div>
         </Container>
       </footer>
     </div>

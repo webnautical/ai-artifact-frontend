@@ -9,38 +9,48 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from "@mui/material";
+import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Rating, Stack } from "@mui/material";
 import ReactApexChart from 'react-apexcharts';
 import { useDataContext } from "../../../helper/context/ContextProvider";
 import { useFrontDataContext } from "../../../helper/context/FrontContextProvider";
 import { imgBaseURL } from "../../../helper/Utility";
 import { APICALL } from "../../../helper/api/api";
 import Spinner from "react-bootstrap/Spinner";
+import { Link } from "react-router-dom";
 const RankingStatus = () => {
   const { getTierImgFun, getRankTier, loading } = useDataContext()
   const { getProductListFun, addRemoveWishList } = useFrontDataContext();
-
+ 
   const [listLoading, setListLoading] = useState({
     'artist': false,
     'artwork': false
   })
-
+ 
   const [topArtist, setTopArtist] = useState([])
   const [salesHistroy, setSalesHistory] = useState([])
   const [activeArtist, setActiveArtist] = useState()
-
+ 
   const [selected, setSelected] = useState();
   const [openRows, setOpenRows] = useState({});
-
+ 
   const [period, setPeriod] = useState('week');
-
+  const [topArtwork, setTopArtwork] = useState([]);
+ 
   const categories = period === "week" ? salesHistroy?.map(item => item.dayName || '') : salesHistroy?.map(item => item.monthName || '');
   const salesAmounts = salesHistroy?.map(item => (item.totalSalesAmount ? item.totalSalesAmount.toFixed(2) : 0));
-
+ 
   const options = {
     chart: {
       type: 'bar',
       height: 350,
+      toolbar: {
+        show: true, // set to true to show the toolbar
+        tools: {
+          download: false // disables the download options (CSV, PNG, SVG)
+        }
+      }
+    
+
     },
     plotOptions: {
       bar: {
@@ -72,7 +82,7 @@ const RankingStatus = () => {
       },
     },
   };
-
+ 
   const series = [
     {
       name: 'Revenue',
@@ -87,33 +97,36 @@ const RankingStatus = () => {
     setPeriod(event.target.value);
     getSalesHistroyByArtist(activeArtist, event.target.value)
   };
-
+ 
   const handleToggle = (artistId) => {
     setOpenRows({ [artistId]: true })
     setActiveArtist(artistId)
     getSalesHistroyByArtist(artistId, period)
+    getArtworkByArtist(artistId)
   };
-
+ 
   useEffect(() => {
     if (getRankTier) {
       setSelected(getRankTier[0])
       getTopArtist(getRankTier[0]?._id)
     }
   }, [getRankTier])
-
+ 
   useEffect(() => {
     if (topArtist?.length > 0) {
       setOpenRows({ [topArtist[0]?.artistId]: true })
       setActiveArtist(topArtist[0]?.artistId)
       getSalesHistroyByArtist(topArtist[0]?.artistId, period)
+      getArtworkByArtist(topArtist[0]?.artistId)
+ 
     }
   }, [topArtist])
-
-
+ 
+ 
   useEffect(() => {
     getTierImgFun()
   }, [])
-
+ 
   const getTopArtist = async (tierId) => {
     setListLoading({ ...listLoading, 'artist': true })
     try {
@@ -127,7 +140,7 @@ const RankingStatus = () => {
       setListLoading({ ...listLoading, 'artist': false })
     }
   }
-
+ 
   const getSalesHistroyByArtist = async (artistId, period) => {
     try {
       setListLoading({ ...listLoading, 'artwork': true })
@@ -142,10 +155,24 @@ const RankingStatus = () => {
       setListLoading({ ...listLoading, 'artwork': false })
     }
   }
-
-
-
-
+ 
+  const getArtworkByArtist = async (artistId) => {
+    try {
+      setListLoading({ ...listLoading, artwork: true });
+      const res = await APICALL(`user/topTenArtworks`, "post", {
+        artistId: artistId,
+      });
+      if (res?.status) {
+        setTopArtwork(res?.data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setListLoading({ ...listLoading, artwork: false });
+    }
+  };
+ 
+ 
   return (
     <>
       <section className="ranking top_ten mt-5">
@@ -169,7 +196,7 @@ const RankingStatus = () => {
                 </Col>
               </Row>
             </div>
-
+ 
             <Tabs defaultActiveKey={selected?._id} id="uncontrolled-tab-example" className="mb-3 d-none" activeKey={selected?._id} >
               <Tab eventKey={selected?._id} title={selected?._id}>
                 <Paper className="table_samepattern">
@@ -185,7 +212,7 @@ const RankingStatus = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-
+ 
                         {
                           listLoading?.artist ? <>
                             <TableCell colSpan={5} align="center">
@@ -197,7 +224,7 @@ const RankingStatus = () => {
                                   Loading...
                                 </span>
                               </Spinner>
-
+ 
                             </TableCell>
                           </> :
                             topArtist?.length > 0 ?
@@ -216,6 +243,53 @@ const RankingStatus = () => {
                                     <TableRow>
                                       <TableCell colSpan={7}>
                                         <Box p={2} bgcolor="white">
+                                        <Box bgcolor="white">
+                                            <div className="product_list_box mb-3">
+                                              <h3 className="left_global_heading mb-4">Top Artworks</h3>
+                                              <div className="row row-cols-5 row-cols-sm-5 row-cols-xl-5 row-cols-lg-5 row-cols-md-5 g-3 pt-1 ">
+                                                {topArtwork?.length > 0 ? (
+                                                  topArtwork?.slice(0, 5)?.map((item, i) => (
+                                                    <div className="col p-0">
+                                                      <Link
+                                                        to={`/product-details/${item?._id}`}
+                                                      >
+                                                        <div className="product_box">
+                                                          <div className="main_show_image">
+                                                            <img
+                                                              className="w-100"
+                                                              src={
+                                                                imgBaseURL() +
+                                                                item?.thumbnail
+                                                              }
+                                                              alt="product-img"
+                                                            />
+                                                          </div>
+ 
+                                                          <div className="product_name">
+                                                            {item?.title}
+                                                          </div>
+                                                          <div className="product_rating">
+                                                            <Stack spacing={1}>
+                                                              <Rating
+                                                                name="half-rating-read"
+                                                                defaultValue={
+                                                                  item?.averageRating
+                                                                }
+                                                                precision={0.5}
+                                                                readOnly
+                                                              />
+                                                            </Stack>
+                                                          </div>
+                                                        </div>
+                                                      </Link>
+                                                    </div>
+                                                  ))
+                                                ) : (
+                                                  <></>
+                                                )}
+                                              </div>
+                                            </div>
+                                          </Box>
                                           <ReactApexChart options={options} series={series} type="bar" height={350} />
                                           <div className="d-flex justify-content-center">
                                             <div className="d-flex align-items-center">
@@ -230,6 +304,7 @@ const RankingStatus = () => {
                                               </div>
                                             </div>
                                           </div>
+                                         
                                         </Box>
                                       </TableCell>
                                     </TableRow>
@@ -257,5 +332,5 @@ const RankingStatus = () => {
     </>
   )
 }
-
+ 
 export default RankingStatus

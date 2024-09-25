@@ -24,7 +24,7 @@ import AddAdmin from "./AddAdmin";
 import ViewAdmin from "./ViewAdmin";
 import SwitchToggle from "../../../components/SwitchToggle";
 import Form from 'react-bootstrap/Form';
-import { Dropdown } from "react-bootstrap";
+import { Col, Dropdown, Row } from "react-bootstrap";
 import { Edit, MoreVert } from "@mui/icons-material";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
@@ -128,20 +128,29 @@ const SubAdmin = () => {
                                 listLoading ? <AdminLoader />
                                     :
                                     <>
-                                        <div style={{ display: "flex", justifyContent: "space-between", padding: "10px", }} >
-                                            <h1 className="title-admins-table">Sub Admins</h1>
-                                            <TextField
-                                                variant="outlined"
-                                                placeholder="Search..."
-                                                value={search}
-                                                onChange={handleSearchChange}
-                                                style={{ width: "300px" }}
-                                            />
+                                        <Row style={{ display: "flex", justifyContent: "space-between", padding: "10px", }} >
+                                            <Col md={6}>
+                                                <h1 className="title-admins-table">Sub Admins</h1>
+                                            </Col>
 
-                                            <Button className="artist-btn " onClick={() => setPageType("edit")}>
-                                                Create Sub Admin
-                                            </Button>
-                                        </div>
+                                            <Col md={3}>
+                                                <TextField
+                                                    className="w-100"
+                                                    variant="outlined"
+                                                    placeholder="Search..."
+                                                    value={search}
+                                                    onChange={handleSearchChange}
+                                                    style={{ width: "300px" }}
+                                                />
+                                                <div className="mt-3 text-end">
+                                                    <Button className="artist-btn " onClick={() => setPageType("edit")}>
+                                                        Create Sub Admin
+                                                    </Button>
+                                                </div>
+                                            </Col>
+
+
+                                        </Row>
 
                                         {
                                             data?.length > 0 ?
