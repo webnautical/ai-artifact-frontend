@@ -8,7 +8,6 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
 const Header = () => {
   const pathname =useLocation().pathname
-  console.log(pathname)
   const {
     getHeaderContent,
     headerContent,
@@ -23,7 +22,6 @@ const Header = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const navigate = useNavigate();
-  // const [setDropdownOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -390,7 +388,7 @@ const Header = () => {
                 <nav>
                   <ul>
                     <li className="hover_menu">
-                      <Link to="" className={getActive() && "active"}>Browse</Link>
+                      <Link to="/product-list" className={getActive("/product-list") && "active"}>Browse</Link>
 
                       <div className="hover_menu_show_box">
                         <div className="container">
@@ -461,9 +459,9 @@ const Header = () => {
                     <li>
                       <Link to="/collections" className={getActive("/collections") && "active"}>Collections</Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link to="/product-list" className={getActive("/product-list") && "active"}>Artworks</Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Link to="/artists" className={getActive("/artists") && "active"}>Artists</Link>
                     </li>
@@ -779,15 +777,12 @@ const Header = () => {
                     Home
                   </Link>
                 </li>
-                <li className="inner_multi_menu">
-                  <Link
-                    to="#"
-                    onClick={(e) => {
-                      handleBrowseShow();
-                      handleClose();
-                    }}
-                  >
+                <li className="d-flex justify-content-between">
+                  <Link  to="#"   onClick={(e) => {   handleBrowseShow(); handleClose(); }}>
                     Browse
+                  </Link>
+                  <Link  to="/product-list" className={getActive("/product-list") && "active"} onClick={(e) => { handleClose(); }}>
+                    <i class="fa-solid fa-chevron-right"></i>
                   </Link>
                 </li>
                 <li>
@@ -795,9 +790,9 @@ const Header = () => {
                     Collection
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                       <Link to="/product-list" className={getActive("/product-list") && "active"}>Artworks</Link>
-                    </li>
+                    </li> */}
                 <li>
                   <Link to="/artists" className={getActive("/artists") && "active"} onClick={handleClose}>
                     Artists

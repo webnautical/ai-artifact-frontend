@@ -93,7 +93,6 @@ export default function DashboardDefault() {
       const res = await APICALL(api, "post", {});
       if (res?.status) {
         setDashboardInfo(res?.data);
-        console.log("DashboardInfo", res?.data);
       }
     } catch (error) {
       console.log(error);
@@ -122,6 +121,8 @@ export default function DashboardDefault() {
     },
   ];
 
+  console.log("dashboardInfo",dashboardInfo)
+
   return (
     <>
       {listLoading?.artist_info ? (
@@ -137,7 +138,7 @@ export default function DashboardDefault() {
                 <Grid item xs={6} sm={4} md={3} lg={2}>
                   <AnalyticEcommerce
                     title="Total Artwork"
-                    count={dashboardInfo?.totalArtwork || 0}
+                    count={<><>{dashboardInfo?.totalArtwork || 0}</>  {role === "artist" && <>/ {dashboardInfo?.rank?.maxUploads}</>} </>}
                     percentage={59.3}
                     extra="35,000"
                   />
@@ -184,6 +185,16 @@ export default function DashboardDefault() {
                 isLoss
                 color="warning"
                 extra="$20,395"
+              />
+            </Grid>
+            <Grid item xs={6} sm={4} md={3} lg={2}>
+              <AnalyticEcommerce
+                title="Total Commission"
+                count={`$${
+                  dashboardInfo?.totalCommission
+                    ? dashboardInfo?.totalCommission?.toFixed(2)
+                    : 0
+                }`}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={3} lg={2}>
@@ -267,6 +278,17 @@ export default function DashboardDefault() {
                     extra="1,943"
                   />
                 </Grid>
+              <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
+              <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
+              <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
+              <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
+              </>
+            )}
+            {role === "artist" && (
+             <>
+              <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
+              <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
+              <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
               </>
             )}
 
@@ -318,7 +340,7 @@ export default function DashboardDefault() {
                         <ApexCharts
                           options={options}
                           series={[
-                            dashboardInfo?.rank?.progressPercentage || 100,
+                            dashboardInfo?.rank?.progressPercentage || 0,
                           ]}
                           type="radialBar"
                           height={350}

@@ -315,7 +315,7 @@ const ArtWorkUpload = () => {
           _id: res?.data?.directoryId?._id
         }
         getUserByIDFun(auth('admin')?.id)
-        navigate(`/${auth('admin')?.user_role}/artworks`, { state: { params } });
+        navigate(`/${auth('admin')?.user_role}/artworks/pending`);
       } else {
         swal({
           title: SOMETHING_ERR,
@@ -377,9 +377,7 @@ const ArtWorkUpload = () => {
             </div>
             <div class="file-uploader">
               <label for="logoID" class="global_file_upload_deisgn">
-
                 <i class="fa-solid fa-arrow-up-from-bracket"></i>  Upload Artwork Here
-
                 <input
                   type="file"
                   id="logoID"
@@ -492,7 +490,7 @@ const ArtWorkUpload = () => {
 
           <Col md={4}>
             <Form.Group className="mb-3" controlId="formmainTitle">
-              <Form.Label>Directory</Form.Label>
+              <Form.Label>Collection</Form.Label>
               <div className="togg_btn">
                 {directoryToggle ? (
                   <Form.Control

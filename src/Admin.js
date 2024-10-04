@@ -18,7 +18,8 @@ const Admin = () => {
                     localStorage.removeItem("admin-secret")
                 }
             }
-        }else{
+        }
+        else if(pathname !== "/admin/login"){
             navigate('/')
         }
     }, [userInfoByID]);
@@ -27,7 +28,8 @@ const Admin = () => {
             if (authData?.user_role !== "admin") {
                 getUserByIDFun(authData?.id);
             }
-        } else {
+        } 
+        else if(pathname !== "/admin/login"){
             navigate('/')
         }
     }, [pathname])

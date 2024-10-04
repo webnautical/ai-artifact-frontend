@@ -15,20 +15,24 @@ import {
 import NoData from "../../../components/NoData";
 import noDataImg from '../../../assets/images/animasi-emptystate.gif'
 import { Col, Row } from "react-bootstrap";
-import { Edit, MoreVert } from "@mui/icons-material";
+import { Delete, Edit, MoreVert } from "@mui/icons-material";
 import { Dropdown } from "react-bootstrap";
 import AdminLoader from "../../components/AdminLoader";
 import { APICALL } from "../../../helper/api/api";
-import { auth, defaultIMG, imgBaseURL, tableImg, timeAgo } from "../../../helper/Utility";
+import { auth, defaultIMG, imgBaseURL, tableImg, timeAgo, toastifyError, toastifySuccess } from "../../../helper/Utility";
 import {
+    SOMETHING_ERR,
     TABLE_PAGINATION_DROPDOWN,
     TABLE_ROW_PER_PAGE,
 } from "../../../helper/Constant";
 import "../../../App.css";
 import { StatusBtn } from "../../../components/StatusBtn";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
+import ConfirmModal from "../../../helper/ConfirmModal";
 const ArtList = () => {
+    const {status} = useParams()
     const locationData = useLocation()
+    const [loading, setLoading] = useState(false);
     const locationDataOBJ = locationData?.state ? locationData?.state?.params : null
     const navigate = useNavigate()
     const [search, setSearch] = useState("");
@@ -37,6 +41,9 @@ const ArtList = () => {
     const [data, setData] = useState([]);
     const [listLoading, setListLoading] = useState(false);
     const [table, setTable] = useState(null)
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedRow, setSelectedRow] = useState(null);
+
     useEffect(() => {
         getDirectoryWiseArtworkFun()
     }, []);
@@ -46,13 +53,32 @@ const ArtList = () => {
             setTable(locationDataOBJ)
             getListFun(locationDataOBJ?._id)
         }
-    }, [locationDataOBJ])
+        if(status){
+            setTable(null)
+            getPendingArt()
+        }
+    }, [locationDataOBJ,status])
 
     const getListFun = async (directory_id) => {
         setListLoading(true);
         try {
             const params = { directoryId: directory_id };
             const res = await APICALL("artist/artistProducts", "post", params);
+            if (res?.status) {
+                setData(res.data);
+            } else { setData([]) }
+        } catch (error) {
+            console.error(error);
+            setData([])
+        } finally {
+            setListLoading(false);
+        }
+    };
+
+    const getPendingArt = async () => {
+        setListLoading(true);
+        try {
+            const res = await APICALL("artist/pendingProducts", "post", {});
             if (res?.status) {
                 setData(res.data);
             } else { setData([]) }
@@ -107,6 +133,25 @@ const ArtList = () => {
         getListFun(item?._id)
     }
 
+    const deleteArtWork = async () => {
+        setLoading(true)
+        try {
+          const res = await APICALL("/admin/deleteArtwork", "post", { productId: selectedRow?._id, role : auth("admin")?.user_role });
+          if (res?.status) {
+            toastifySuccess(res?.message)
+            setModalOpen(false)
+            getListFun(locationDataOBJ?._id)
+          } else {
+            toastifyError(SOMETHING_ERR)
+          }
+        } catch (error) {
+          toastifyError(SOMETHING_ERR)
+          console.error("API call error:", error);
+        } finally {
+          setLoading(false)
+        }
+    };
+
     return (
         <>
             <Paper className="artis_inner_dashboard table_samepattern px-3">
@@ -128,7 +173,7 @@ const ArtList = () => {
                     }
                 </div>
                 {
-                    table ?
+                    (table || status) ?
                         <>
                             {listLoading ? (
                                 <AdminLoader />
@@ -176,6 +221,9 @@ const ArtList = () => {
                                                                                 <Dropdown.Item to="#" onClick={() => handleEdit(row)}>
                                                                                     <Edit /> Edit
                                                                                 </Dropdown.Item>
+                                                                                    <Dropdown.Item href="#" onClick={() => {setModalOpen(true); setSelectedRow(row)}}>
+                                                                                        <Delete style={{ marginRight: "8px" }} />Delete
+                                                                                    </Dropdown.Item>
                                                                             </Dropdown.Menu>
                                                                         </Dropdown>
                                                                     </TableCell>
@@ -262,7 +310,7 @@ const ArtList = () => {
                 }
             </Paper>
 
-
+            <ConfirmModal modalOpen={modalOpen} setModalOpen={setModalOpen} funCall={deleteArtWork} submitLoading={loading} msg="Are you sure? you want to delete it" btn1={"No"} btn2={"Yes"} />
         </>
     )
 }

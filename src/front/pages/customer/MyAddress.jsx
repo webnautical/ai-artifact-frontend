@@ -8,24 +8,25 @@ import FrontLoader from './../../../components/FrontLoader';
 import { Autocomplete, Box, TextField } from "@mui/material";
 import ReactCountryFlag from "react-country-flag";
 import { Country, State, City } from "country-state-city";
-import PlacesAutocomplete from "react-places-autocomplete";
- 
+import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+
 const MyAddress = () => {
- 
+
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const [submitLoading, setSubmitLoading] = useState(false)
     const [userDetails, setUserDetails] = useState({})
     const [resMsg, setResMsg] = useState(false)
     const [stateList, setStateList] = useState([]);
- 
+    const [cityList, setCityList] = useState([]);
+
     useEffect(() => {
         if (!auth('customer')) {
             navigate('/login/customer')
         }
         getCustomerDetailsFunt()
     }, [])
- 
+
     const countryOptions = Country?.getAllCountries()?.map((country) => ({
         value: country.isoCode,
         label: (
@@ -39,7 +40,7 @@ const MyAddress = () => {
             </div>
         ),
     }));
- 
+
     const [value, setValue] = useState({
         "address1": "",
         "address2": "",
@@ -49,8 +50,8 @@ const MyAddress = () => {
         "postalCode": "",
         "phone": ""
     })
- 
- 
+
+
     useEffect(() => {
         if (userDetails?._id) {
             setValue({
@@ -64,9 +65,10 @@ const MyAddress = () => {
                 "phone": userDetails?.phone,
             })
             getStateFun(userDetails?.country)
+            getCityFun(userDetails?.country, userDetails?.state);
         }
     }, [userDetails])
- 
+
     const getCustomerDetailsFunt = async () => {
         setLoading(true)
         try {
@@ -102,16 +104,27 @@ const MyAddress = () => {
         });
     };
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name } = e.target;
         if (name === "country") {
             setValue({ ...value, country: e.target.value });
             getStateFun(e.target.value);
         }
+        if (name === "state") {
+            setValue((prevValue) => ({ ...prevValue, state: e.target.value }));
+            const countryCode = value.country;
+            getCityFun(countryCode, e.target.value);
+        }
         setValue((prevValue) => ({
             ...prevValue,
-            [name]: value,
+            [name]: e.target.value,
         }));
-        validate(name, value);
+        validate(name, e.target.value);
+    };
+
+    const handleCityChange = (event, newValue) => {
+        if (newValue) {
+            setValue((prevValue) => ({ ...prevValue, city: newValue.value }));
+        }
     };
     const getStateFun = (country) => {
         const stateData = State?.getStatesOfCountry(country).map((state) => ({
@@ -120,7 +133,15 @@ const MyAddress = () => {
         }));
         setStateList(stateData);
     };
- 
+
+    const getCityFun = (countryCode, stateCode) => {
+        const cityData = City?.getCitiesOfState(countryCode, stateCode).map((city) => ({
+            value: city.name,
+            displayValue: city.name,
+        }));
+        setCityList(cityData);
+    };
+
     const updateUserDetails = async (e) => {
         e.preventDefault()
         setSubmitLoading(true)
@@ -138,22 +159,70 @@ const MyAddress = () => {
             setSubmitLoading(false)
         }
     }
-    const handleLocationSelect = async (value) => {
-        try {
-            setValue((prevValue) => ({
-                ...prevValue,
-                address1: value
-            }));
-        } catch (error) {
-            console.error('Error selecting address', error);
-        }
-    };
-    const handleLocationChange = (value) => {
+    const handleLocationChange = async (value) => {
         setValue((prevValue) => ({
             ...prevValue,
             address1: value
         }));
     };
+    const handleLocationSelect = async (value) => {
+        try {
+            setValue((prevValue) => ({
+                ...prevValue,
+                address1: value,
+                address2: value,
+            }));
+
+            try {
+                const results = await geocodeByAddress(value);
+                const latLng = await getLatLng(results[0]);
+                setCoordinates(latLng);
+                extractLocationDetails(results[0]);
+            } catch (error) {
+                console.error("Error fetching location details", error);
+            }
+        } catch (error) {
+            console.error('Error selecting address', error);
+        }
+    };
+
+    const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
+
+    const extractLocationDetails = (place) => {
+        // short_name 
+        // long_name
+        const addressComponents = place.address_components;
+        const country = addressComponents.find((comp) =>
+            comp.types.includes("country")
+        )?.short_name || "";
+        const state = addressComponents.find((comp) =>
+            comp.types.includes("administrative_area_level_1")
+        )?.short_name || "";
+
+        const city = addressComponents.find((comp) =>
+            comp.types.includes("locality")
+        )?.long_name || addressComponents.find((comp) =>
+            comp.types.includes("administrative_area_level_2")
+        )?.long_name || "";
+
+        const postalCode = addressComponents.find((comp) =>
+            comp.types.includes("postal_code")
+        )?.long_name || "";
+
+        // setLocationDetails({ country, state, city, postalCode });
+        setValue((prevValue) => ({
+            ...prevValue,
+            "country": country,
+            "state":  state,
+            "city": city,
+            "postalCode": postalCode,
+        }));
+        getStateFun(country)
+        getCityFun(country, state);
+    };
+
+
+
     const handleLocationSelect2 = async (value) => {
         try {
             setValue((prevValue) => ({
@@ -170,12 +239,12 @@ const MyAddress = () => {
             address2: value
         }));
     };
- 
+
     const searchOptions = {
         // componentRestrictions: { country: 'IND' }
         componentRestrictions: { country: value.country }
     };
- 
+
     return (
         <>
             {
@@ -186,7 +255,7 @@ const MyAddress = () => {
                         </div>
                         <div className="account-content-box cutoms-login-artist ship_address ">
                             <Form onSubmit={updateUserDetails}>
- 
+
                                 <Row>
                                     <Col md={12}>
                                         <div className="group error">
@@ -195,7 +264,6 @@ const MyAddress = () => {
                                                 name="street"
                                                 onChange={handleLocationChange}
                                                 onSelect={handleLocationSelect}
-                                            // searchOptions={searchOptions}
                                             >
                                                 {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                                                     <div className="location_input mb-0">
@@ -222,7 +290,7 @@ const MyAddress = () => {
                                             <span className="errmsg">{errors.address1}</span>
                                         </div>
                                     </Col>
- 
+
                                     <Col md={12}>
                                         <div className="group error">
                                             <PlacesAutocomplete
@@ -256,7 +324,7 @@ const MyAddress = () => {
                                             </PlacesAutocomplete>
                                         </div>
                                     </Col>
- 
+
                                     <Col md={6} className="mb-3">
                                         <Form.Label>Choose Country</Form.Label>
                                         <Autocomplete
@@ -272,15 +340,13 @@ const MyAddress = () => {
                                                 <TextField
                                                     {...params}
                                                     variant="outlined"
-                                                //   error={Boolean(error.country)}
-                                                //   helperText={error.country}
                                                 />
                                             )}
                                             value={countryOptions.find((option) => option.value === value.country) || null}
                                             onChange={handleCountryChange}
                                         />
                                     </Col>
- 
+
                                     <Col md={6} className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Choose State</Form.Label>
@@ -297,23 +363,32 @@ const MyAddress = () => {
                                                     </option>
                                                 ))}
                                             </Form.Control>
- 
+
                                         </Form.Group>
                                     </Col>
-                                    <Col md={6}>
-                                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                                            <Form.Label>City</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="City"
-                                                name='city'
-                                                value={value?.city}
-                                                onChange={handleChange}
-                                                maxLength={30}
- 
-                                            />
-                                        </Form.Group>
+
+                                    <Col md={6} className="mb-3">
+                                        <Form.Label>Choose City</Form.Label>
+                                        <Autocomplete
+                                            options={cityList}
+                                            autoComplete={"off"}
+                                            getOptionLabel={(option) => option.displayValue}
+                                            renderOption={(props, option) => (
+                                                <Box component="li" {...props}>
+                                                    {option.displayValue}
+                                                </Box>
+                                            )}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    variant="outlined"
+                                                />
+                                            )}
+                                            value={cityList.find((option) => option.value === value.city) || null}
+                                            onChange={handleCityChange}
+                                        />
                                     </Col>
+
                                     <Col md={6}>
                                         <Form.Group className="mb-3" controlId="formBasicEmail">
                                             <Form.Label>Postal Code</Form.Label>
@@ -324,7 +399,7 @@ const MyAddress = () => {
                                                 value={value?.postalCode}
                                                 onChange={handleChange}
                                                 maxLength={8}
- 
+
                                             />
                                         </Form.Group>
                                     </Col>
@@ -338,7 +413,7 @@ const MyAddress = () => {
                                                 value={value?.phone}
                                                 onChange={handleChange}
                                                 maxLength={12}
- 
+
                                             />
                                         </Form.Group>
                                     </Col>
@@ -372,9 +447,9 @@ const MyAddress = () => {
                         </div>
                     </>
             }
- 
+
         </>
     )
 }
- 
+
 export default MyAddress

@@ -69,6 +69,8 @@ const SoldArt = () => {
         setSelectedRow(row);
     };
 
+    console.log("filteredData",filteredData)
+
     return (
         <>
             {
@@ -109,11 +111,11 @@ const SoldArt = () => {
                                                                 <TableCell>Title</TableCell>
                                                                 <TableCell>Quantity</TableCell>
                                                                 <TableCell>Price</TableCell>
+                                                                <TableCell>Total Price</TableCell>
+                                                                <TableCell>Discount</TableCell>
                                                                 <TableCell>Commission</TableCell>
-                                                                <TableCell>Customer Name</TableCell>
                                                                 <TableCell>Date</TableCell>
                                                                 <TableCell align="right">Actions</TableCell>
-
                                                             </TableRow>
                                                         </TableHead>
                                                         <TableBody>
@@ -126,8 +128,9 @@ const SoldArt = () => {
                                                                         <TableCell>{row?.productId?.title}</TableCell>
                                                                         <TableCell>{row?.quantity}</TableCell>
                                                                         <TableCell>${row?.price?.toFixed()}</TableCell>
+                                                                        <TableCell>${row?.price?.toFixed() * row?.quantity}</TableCell>
+                                                                        <TableCell>{row?.discount ? `$${row?.discount?.toFixed(2)}` : "---"}</TableCell>
                                                                         <TableCell>${row?.commissionAmount}</TableCell>
-                                                                        <TableCell className="text-capitalize">{row?.userId?.first_name + ' ' + row?.userId?.last_name}</TableCell>
                                                                         <TableCell>{timeAgo(row?.created_at || row?.createdAt)}</TableCell>
                                                                         <TableCell align="right">
                                                                             <Dropdown className="dorpdown-curtom">

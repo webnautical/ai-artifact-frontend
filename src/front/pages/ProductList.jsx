@@ -101,7 +101,6 @@ const ProductList = () => {
     getArtWorkListFun(currentPage, sortBy, categoryObj, true, debouncedKeyword);
   }, [currentPage, sortBy, categoryObj, category, debouncedKeyword]);
  
-  console.log("categoryObj",categoryObj)
  
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);

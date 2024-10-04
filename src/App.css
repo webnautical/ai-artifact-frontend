@@ -6090,3 +6090,9 @@ nav.sidebr-admin .simplebar-scrollable-x {
   .wrapin .box ul li a{ font-size: 16px; font-weight: 500; display: flex; align-items: center; gap: 5px;}
 
   .artist_page h1{ font-size: 26px; font-weight: 600;}
+
+  .hero_section img{
+    height: 477px !important;
+    object-fit: cover;
+    width: 100%;
+  }

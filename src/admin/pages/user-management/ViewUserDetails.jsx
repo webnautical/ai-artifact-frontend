@@ -95,20 +95,19 @@ const ViewUserDetails = () => {
         userInfoByID?.user_role === "artist"
           ? "artist/ArtistDashboard"
           : userInfoByID?.user_role === "affiliate"
-          ? "affiliate/AffiliateDashboard"
-          : "admin/AdminDashboard";
+            ? "affiliate/AffiliateDashboard"
+            : "admin/AdminDashboard";
 
       const params =
         userInfoByID?.user_role === "artist"
           ? { artistId: id }
           : userInfoByID?.user_role === "affiliate"
-          ? { affiliateId: id }
-          : {};
+            ? { affiliateId: id }
+            : {};
 
       const res = await APICALL(api, "post", params);
       if (res?.status) {
         setDashboardInfo(res?.data);
-        console.log("DashboardInfo", res?.data);
       } else {
         setDashboardInfo(null);
       }
@@ -128,6 +127,7 @@ const ViewUserDetails = () => {
     role: userInfoByID?.user_role,
     id: userInfoByID?._id,
   };
+
   return (
     <>
       {userDetailsLoading ? (
@@ -162,7 +162,7 @@ const ViewUserDetails = () => {
 
                   <div>
                     <p className="m-0">
-                      {" "}<i class="fa-solid fa-envelope" style={{color:'purple'}}></i>
+                      {" "}<i class="fa-solid fa-envelope" style={{ color: 'purple' }}></i>
                       <strong> {userInfoByID?.email}</strong>
                     </p>
                   </div>
@@ -179,7 +179,7 @@ const ViewUserDetails = () => {
                       <Grid item xs={12} sm={6} md={4} lg={2}>
                         <AnalyticEcommerce
                           title="Total Artwork"
-                          count={dashboardInfo?.totalArtwork || 0}
+                          count={<><>{dashboardInfo?.totalArtwork || 0}</>  {<>/ {dashboardInfo?.rank?.maxUploads}</>} </>}
                           percentage={59.3}
                           extra="35,000"
                         />
@@ -206,47 +206,55 @@ const ViewUserDetails = () => {
                   )}
                   {(userInfoByID?.user_role === "artist" ||
                     userInfoByID?.user_role === "affiliate") && (
-                    <>
-                      <Grid item xs={12} sm={6} md={4} lg={2}>
-                        <AnalyticEcommerce
-                          title="Total Sold Items"
-                          count={dashboardInfo?.totalSoldItems || 0}
-                          percentage={27.4}
-                          isLoss
-                          color="warning"
-                          extra="$20,395"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={4} lg={2}>
-                        <AnalyticEcommerce
-                          title="Total Revenue"
-                          count={`$${
-                            dashboardInfo?.totalRevenue
-                              ? dashboardInfo?.totalRevenue?.toFixed(2)
-                              : 0
-                          }`}
-                          percentage={27.4}
-                          isLoss
-                          color="warning"
-                          extra="$20,395"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={4} lg={2}>
-                        <AnalyticEcommerce
-                          title="Total Paid"
-                          count={`$${
-                            typeof dashboardInfo?.totalPaid === "number"
-                              ? dashboardInfo.totalPaid
-                              : 0
-                          }`}
-                          percentage={27.4}
-                          isLoss
-                          color="warning"
-                          extra="$20,395"
-                        />
-                      </Grid>
-                    </>
-                  )}
+                      <>
+                        <Grid item xs={12} sm={6} md={4} lg={2}>
+                          <AnalyticEcommerce
+                            title="Total Sold Items"
+                            count={dashboardInfo?.totalSoldItems || 0}
+                            percentage={27.4}
+                            isLoss
+                            color="warning"
+                            extra="$20,395"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4} lg={2}>
+                          <AnalyticEcommerce
+                            title="Total Revenue"
+                            count={`$${dashboardInfo?.totalRevenue
+                                ? dashboardInfo?.totalRevenue?.toFixed(2)
+                                : 0
+                              }`}
+                            percentage={27.4}
+                            isLoss
+                            color="warning"
+                            extra="$20,395"
+                          />
+                        </Grid>
+                        <Grid item xs={6} sm={4} md={3} lg={2}>
+                          <AnalyticEcommerce
+                            title="Total Commission"
+                            count={`$${
+                              dashboardInfo?.totalCommission
+                                ? dashboardInfo?.totalCommission?.toFixed(2)
+                                : 0
+                            }`}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={4} lg={2}>
+                          <AnalyticEcommerce
+                            title="Total Paid"
+                            count={`$${typeof dashboardInfo?.totalPaid === "number"
+                                ? dashboardInfo.totalPaid
+                                : 0
+                              }`}
+                            percentage={27.4}
+                            isLoss
+                            color="warning"
+                            extra="$20,395"
+                          />
+                        </Grid>
+                      </>
+                    )}
                 </Grid>
 
                 <Row className="">
@@ -309,19 +317,19 @@ const ViewUserDetails = () => {
                       <Col md={8}>
                         {(userInfoByID?.user_role === "artist" ||
                           userInfoByID?.user_role === "affiliate") && (
-                          <>
-                            <IncomeAreaChart forCharData={forCharData} />
-                          </>
-                        )}
+                            <>
+                              <IncomeAreaChart forCharData={forCharData} />
+                            </>
+                          )}
                       </Col>
 
                       <Col md={4}>
                         {userInfoByID?.user_role === "artist" && (
                           <Col md={12}>
                             <Row>
-                            <Typography variant="h5" className="mb-3 mt-1">
-                                    Top 10 Artworks
-                                  </Typography>
+                              <Typography variant="h5" className="mb-3 mt-1">
+                                Top 10 Artworks
+                              </Typography>
                               <Col md={12} className="mb-3">
                                 <MainCard content={false} >
                                   <Box className="text " sx={{ p: 3, pb: 0 }}>
@@ -379,94 +387,94 @@ const ViewUserDetails = () => {
 
                       {(userInfoByID?.user_role === "artist" ||
                         userInfoByID?.user_role === "affiliate") && (
-                        <>
-                          {dashboardInfo?.topArtworks?.length > 0 && (
-                            <Grid item xs={12} className="mt-md-5 mt-3">
-                              <Grid
-                                container
-                                alignItems="center"
-                                justifyContent="space-between"
-                              >
-                                <Grid item>
-                                  <Typography variant="h5">
-                                    Top 10 Artworks
-                                  </Typography>
+                          <>
+                            {dashboardInfo?.topArtworks?.length > 0 && (
+                              <Grid item xs={12} className="mt-md-5 mt-3">
+                                <Grid
+                                  container
+                                  alignItems="center"
+                                  justifyContent="space-between"
+                                >
+                                  <Grid item>
+                                    <Typography variant="h5">
+                                      Top 10 Artworks
+                                    </Typography>
+                                  </Grid>
+                                  <Grid item />
                                 </Grid>
-                                <Grid item />
-                              </Grid>
-                              <MainCard sx={{ mt: 2 }} content={false}>
-                                <TableContainer>
-                                  <Table>
-                                    <TableHead>
-                                      <TableRow>
-                                        <TableCell>S.No</TableCell>
-                                        <TableCell>Img</TableCell>
-                                        <TableCell>Title</TableCell>
-                                        <TableCell>Price</TableCell>
-                                        <TableCell>
-                                          Total Commission Amount
-                                        </TableCell>
-                                        <TableCell>Total Sales Count</TableCell>
-                                        <TableCell align="right">
-                                          Actions
-                                        </TableCell>
-                                      </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                      {dashboardInfo?.topArtworks.map(
-                                        (row, index) => (
-                                          <TableRow key={index}>
-                                            <TableCell>{index + 1}</TableCell>
-                                            <TableCell>
-                                              {tableImg(row.thumbnail)}
-                                            </TableCell>
-                                            <TableCell>{row?.title}</TableCell>
-                                            <TableCell>
-                                              ${row?.price?.toFixed()}
-                                            </TableCell>
-                                            <TableCell>
-                                              ${row?.totalCommissionAmount}
-                                            </TableCell>
-                                            <TableCell className="text-capitalize">
-                                              {row?.totalSalesCount}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                              <Dropdown className="dorpdown-curtom">
-                                                <Dropdown.Toggle
-                                                  as={IconButton}
-                                                  variant="link"
-                                                >
-                                                  {" "}
-                                                  <MoreVert />
-                                                </Dropdown.Toggle>
-                                                <Dropdown.Menu>
-                                                  <Dropdown.Item
-                                                    href="#"
-                                                    onClick={() =>
-                                                      handleClick(row)
-                                                    }
+                                <MainCard sx={{ mt: 2 }} content={false}>
+                                  <TableContainer>
+                                    <Table>
+                                      <TableHead>
+                                        <TableRow>
+                                          <TableCell>S.No</TableCell>
+                                          <TableCell>Img</TableCell>
+                                          <TableCell>Title</TableCell>
+                                          <TableCell>Price</TableCell>
+                                          <TableCell>
+                                            Total Commission Amount
+                                          </TableCell>
+                                          <TableCell>Total Sales Count</TableCell>
+                                          <TableCell align="right">
+                                            Actions
+                                          </TableCell>
+                                        </TableRow>
+                                      </TableHead>
+                                      <TableBody>
+                                        {dashboardInfo?.topArtworks.map(
+                                          (row, index) => (
+                                            <TableRow key={index}>
+                                              <TableCell>{index + 1}</TableCell>
+                                              <TableCell>
+                                                {tableImg(row.thumbnail)}
+                                              </TableCell>
+                                              <TableCell>{row?.title}</TableCell>
+                                              <TableCell>
+                                                ${row?.price?.toFixed()}
+                                              </TableCell>
+                                              <TableCell>
+                                                ${row?.totalCommissionAmount}
+                                              </TableCell>
+                                              <TableCell className="text-capitalize">
+                                                {row?.totalSalesCount}
+                                              </TableCell>
+                                              <TableCell align="right">
+                                                <Dropdown className="dorpdown-curtom">
+                                                  <Dropdown.Toggle
+                                                    as={IconButton}
+                                                    variant="link"
                                                   >
-                                                    <RemoveRedEyeIcon
-                                                      style={{
-                                                        marginRight: "8px",
-                                                      }}
-                                                    />{" "}
-                                                    View
-                                                  </Dropdown.Item>
-                                                </Dropdown.Menu>
-                                              </Dropdown>
-                                            </TableCell>
-                                          </TableRow>
-                                        )
-                                      )}
-                                    </TableBody>
-                                  </Table>
-                                </TableContainer>
-                              </MainCard>
-                            </Grid>
-                          )}
-                        </>
-                      )}
+                                                    {" "}
+                                                    <MoreVert />
+                                                  </Dropdown.Toggle>
+                                                  <Dropdown.Menu>
+                                                    <Dropdown.Item
+                                                      href="#"
+                                                      onClick={() =>
+                                                        handleClick(row)
+                                                      }
+                                                    >
+                                                      <RemoveRedEyeIcon
+                                                        style={{
+                                                          marginRight: "8px",
+                                                        }}
+                                                      />{" "}
+                                                      View
+                                                    </Dropdown.Item>
+                                                  </Dropdown.Menu>
+                                                </Dropdown>
+                                              </TableCell>
+                                            </TableRow>
+                                          )
+                                        )}
+                                      </TableBody>
+                                    </Table>
+                                  </TableContainer>
+                                </MainCard>
+                              </Grid>
+                            )}
+                          </>
+                        )}
                     </Row>
                   </Col>
                 </Row>

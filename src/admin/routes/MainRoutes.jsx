@@ -162,7 +162,7 @@ const MainRoutes = {
       element: <ArtWorkUpload />
     },
     {
-      path: '/artworks',
+      path: '/artworks/:status?',
       element: <ArtList />
     },
     {

@@ -109,7 +109,7 @@ const OrderSuccess = () => {
                             <hr/>
                             <li>
                               <p style={{ color:'black' }}> <strong>Total:</strong></p>
-                              <p style={{ color:'black' }}><strong>${orderDetails?.totalPrice}</strong></p>
+                              <p style={{ color:'black' }}><strong>${orderDetails?.totalPrice.toFixed(2)}</strong></p>
                             </li>
                             <hr/>
                           </ul>

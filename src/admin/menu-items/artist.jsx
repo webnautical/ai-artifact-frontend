@@ -40,6 +40,13 @@ const artist = {
           url: `artworks`,
           breadcrumbs: false
         },
+        {
+          id: 'Pending Artworks',
+          title: 'Pending Artworks',
+          type: 'item',
+          url: `artworks/pending`,
+          breadcrumbs: false
+        },
        
       ]
     },

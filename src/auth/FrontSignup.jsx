@@ -23,6 +23,7 @@ const FrontSignup = () => {
     user_role: role,
     first_name: "",
     last_name: "",
+    userName: "",
     email: "",
     password: "",
     iaccept: true,
@@ -31,6 +32,7 @@ const FrontSignup = () => {
     first_name: "",
     last_name: "",
     email: "",
+    userName: "",
     password: "",
     iaccept: "",
   });
@@ -211,8 +213,6 @@ const FrontSignup = () => {
     }
   };
 
-  console.log(errors);
-
   return (
     <>
       {role === "artist" || role === "affiliate" ? (
@@ -306,6 +306,31 @@ const FrontSignup = () => {
                               <span className="errmsg">{errors.last_name}</span>
                             </Col>
                           </Row>
+
+                          <Col md={12} className="mb-2">
+                              <Form.Group
+                                className={`form-group ${
+                                  formData.last_name.length ? "not-empty" : ""
+                                } mb-3`}
+                              >
+                                <Form.Label
+                                  htmlFor="last_name"
+                                  className="animated-label"
+                                >
+                                  Username
+                                </Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  className="form-control"
+                                  name="userName"
+                                  id="userName"
+                                  value={formData.userName}
+                                  onChange={handleChange}
+                                  maxLength={26}
+                                />
+                              </Form.Group>
+                              <span className="errmsg">{errors.userName}</span>
+                            </Col>
 
                           <Col md={12} className="mb-2">
                             <Form.Group

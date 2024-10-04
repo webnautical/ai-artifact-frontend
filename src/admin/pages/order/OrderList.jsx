@@ -29,7 +29,8 @@ import {
 } from "../../../helper/Constant";
 import "../../../App.css";
 import { useNavigate } from "react-router";
- 
+import { Link } from "react-router-dom";
+
 const OrderList = () => {
     const [search, setSearch] = useState("");
     const navigate = useNavigate()
@@ -39,18 +40,18 @@ const OrderList = () => {
     const [listLoading, setListLoading] = useState(false);
     const [pageNo, setPageNo] = useState(1);
     const [selectedRow, setSelectedRow] = useState(null);
- 
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
- 
+
     const [loading, setLoading] = useState({
         'refund': false
     })
- 
+
     useEffect(() => {
         getListFun(pageNo, rowsPerPage);
     }, [pageNo, rowsPerPage]);
- 
+
     const getListFun = async (pageNo, rowsPerPage) => {
         setListLoading(true);
         try {
@@ -66,30 +67,30 @@ const OrderList = () => {
             setListLoading(false);
         }
     };
- 
+
     const handleSearchChange = (event) => {
         setSearch(event.target.value);
         setPage(0);
     };
- 
+
     const handleViewChange = (row) => {
         setSelectedRow(row);
     };
- 
+
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
         setPageNo(newPage + 1);
     };
- 
+
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPageNo(0);
     };
- 
+
     const itemTotal = selectedRow?.orderItems?.reduce((acc, item) => {
         return acc + (item?.price * item?.quantity || 0);
     }, 0);
- 
+
     const handleRefund = async () => {
         setLoading({ ...loading, 'refund': true })
         try {
@@ -106,7 +107,14 @@ const OrderList = () => {
             setLoading({ ...loading, 'refund': false })
         }
     }
- 
+
+    console.log("selectedRow", selectedRow)
+
+    const calculateProfit = (TotalPrice, geletoPrice, artistCommision,affiliateCommission, qnt) =>{
+        const profit = (TotalPrice * qnt) - (geletoPrice * qnt) - affiliateCommission - artistCommision
+        return profit.toFixed(2)
+    }
+
     return (
         <>
             {selectedRow ? (
@@ -131,7 +139,7 @@ const OrderList = () => {
                                                 <button className="artist-btn" onClick={() => handleRefund()}>Mark as Refund</button>
                                         }
                                     </>
- 
+
                             }
                         </div>
                         <Row className=" justify-content-center">
@@ -140,40 +148,63 @@ const OrderList = () => {
                                     <Col md={12} clas>
                                         <h5><strong>Items details</strong></h5>
                                         <div className="table_border mb-3">
- 
                                             <TableContainer>
                                                 <Table>
                                                     <TableHead>
                                                         <TableRow>
                                                             <TableCell>S.No</TableCell>
                                                             <TableCell>Image</TableCell>
-                                                            <TableCell>Product Name</TableCell>
+                                                            <TableCell>Product</TableCell>
                                                             <TableCell>Price</TableCell>
-                                                            <TableCell align="right">QNT</TableCell>
+                                                            <TableCell>QNT</TableCell>
+                                                            <TableCell>Total Price</TableCell>
+                                                            <TableCell>Total Geleto Cost</TableCell>
+                                                            <TableCell>Artist</TableCell>
+                                                            <TableCell>Artist Commission</TableCell>
+                                                            <TableCell>Affiliate</TableCell>
+                                                            <TableCell>Affilieate Commission</TableCell>
+                                                            <TableCell align="right">profit</TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
                                                         {selectedRow?.orderItems?.map((row, index) => (
-                                                            <TableRow key={index} onClick={() => navigate(`/admin/product-details/${row.productId?._id}`)} style={{ cursor: 'pointer' }}>
+                                                            <TableRow key={index} >
                                                                 <TableCell>{index + 1}</TableCell>
-                                                                <TableCell>
+                                                                <TableCell onClick={() => navigate(`/admin/product-details/${row.productId?._id}`)} style={{ cursor: 'pointer' }}>
                                                                     {tableImg(row.productId?.thumbnail)}
                                                                 </TableCell>
-                                                                <TableCell>{row.productId?.title}</TableCell>
-                                                                <TableCell>{row.price}</TableCell>
+                                                                <TableCell onClick={() => navigate(`/admin/product-details/${row.productId?._id}`)} style={{ cursor: 'pointer' }}>
+                                                                    <strong>{row.productId?.title}</strong>
+                                                                    <p className="my-0">{row?.quality}</p>
+                                                                    <p className="my-0">{row?.frame}</p>
+                                                                    <p className="my-0">{row?.size}</p>
+                                                                    <p className="my-0">{row?.frameType}</p>
+                                                                </TableCell>
+                                                                <TableCell>${row.price}</TableCell>
                                                                 <TableCell>{row.quantity}</TableCell>
+                                                                <TableCell>${row.price * row?.quantity}</TableCell>
+                                                                <TableCell>${row.gelatoPrice.toFixed(2)}</TableCell>
+
+                                                                <TableCell><Link to={`/admin/user-management-details/${row?.artistId?._id}`}>{ row?.artistId?.first_name + " " + row?.artistId?.last_name || "---"}</Link></TableCell>
+
+                                                                <TableCell>${row.artistCommission?.toFixed(2)}</TableCell>
+
+                                                                <TableCell> {row?.affiliateId?.first_name ?<Link to={`/admin/user-management-details/${row?.affiliateId?._id}`}>{ row?.affiliateId?.first_name +" " +row?.affiliateId?.last_name}</Link> : "---"}</TableCell>
+
+                                                                <TableCell>{row?.price ? `$${row?.affiliateCommission?.toFixed(2)}` : "---"}</TableCell>
+                                                                <TableCell align="right">${calculateProfit(row.price, row.gelatoPrice, row.artistCommission, row?.affiliateCommission, row.quantity)}</TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>
                                                 </Table>
                                             </TableContainer>
- 
+
                                         </div>
                                         <div>
                                             <div className="mt-3">
                                                 <h5><strong>Billing details</strong></h5>
                                                 <div className="table_border mb-3">
- 
+
                                                     <p>
                                                         {" "}
                                                         <strong>Billing Name:</strong>{" "}
@@ -208,12 +239,12 @@ const OrderList = () => {
                                                     </p>
                                                 </div>
                                             </div>
- 
+
                                             <Col md={12} className="mb-3 mt-2">
- 
+
                                                 <h5><strong>Shipping details</strong></h5>
                                                 <div className="table_border">
- 
+
                                                     <p>
                                                         {" "}
                                                         <strong>Shipping Name:</strong>{" "}
@@ -258,11 +289,11 @@ const OrderList = () => {
                                     </Col>
                                 </Row>
                             </Col>
- 
+
                             <Col md={3}>
                                 <Row>
                                     <Col md={12} className="mb-3">
- 
+
                                         <h5><strong>Order details</strong></h5>
                                         <div className="table_border">
                                             <div>
@@ -271,11 +302,12 @@ const OrderList = () => {
                                                     <strong>Order ID:</strong> #{selectedRow._id}{" "}
                                                 </p>
                                                 <p>
-                                                    {" "}
                                                     <strong>Customer Name:</strong>{" "}
-                                                    {selectedRow?.shippingAddress?.firstName +
-                                                        " " +
-                                                        selectedRow?.shippingAddress?.lastName}
+                                                    <Link to={`/admin/user-management-details/${selectedRow.userId?._id}`} className="text-bold">
+                                                        {selectedRow?.shippingAddress?.firstName +
+                                                            " " +
+                                                            selectedRow?.shippingAddress?.lastName}
+                                                    </Link>
                                                 </p>
                                                 <p>
                                                     {" "}
@@ -290,12 +322,12 @@ const OrderList = () => {
                                             </div>
                                         </div>
                                     </Col>
- 
+
                                     <Col md={12}>
                                         <h5><strong>Order Amount details</strong></h5>
                                         <div className="table_border">
- 
- 
+
+
                                             <p>
                                                 {" "}
                                                 <strong>Item:</strong>{" "}
@@ -323,8 +355,8 @@ const OrderList = () => {
                                             </p>
                                         </div>
                                     </Col>
- 
- 
+
+
                                 </Row>
                             </Col>
                         </Row>
@@ -345,7 +377,7 @@ const OrderList = () => {
                             >
                                 <h1 className="title-admins-table">Orders</h1>
                             </div>
- 
+
                             {data.length > 0 ? (
                                 <>
                                     <TableContainer>
@@ -406,7 +438,7 @@ const OrderList = () => {
                                             </TableBody>
                                         </Table>
                                     </TableContainer>
- 
+
                                     <TablePagination
                                         rowsPerPageOptions={TABLE_PAGINATION_DROPDOWN}
                                         component="div"
@@ -434,5 +466,5 @@ const OrderList = () => {
         </>
     );
 };
- 
+
 export default OrderList;

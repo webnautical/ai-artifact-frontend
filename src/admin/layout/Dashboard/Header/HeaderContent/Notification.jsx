@@ -74,7 +74,11 @@ export default function Notification() {
     try {
       const api = auth('admin')?.user_role === 'admin' ? 'admin/adminNotifications' : 'artist/notifications'
       const res = await APICALL(api, 'post', {})
-      if (res?.status) { setData(res?.data); setRead(res?.data?.length) }
+      console.log("res",res)
+      if (res?.status) { setData(res?.data); 
+        const unreadCount = res?.data?.filter(item => item.status === "unread").length;
+        setRead(unreadCount)
+       }
     } catch (error) { }
   }
 

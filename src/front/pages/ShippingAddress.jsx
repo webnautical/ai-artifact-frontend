@@ -697,7 +697,7 @@ const ShippingAddress = () => {
                                         value={formData?.email}
                                         onChange={handleChange}
                                         onBlur={checkGuestEmailExists}
-                                        maxLength={25}
+                                        maxLength={50}
                                       />
                                       <span className="errmsg">
                                         {error.email}
