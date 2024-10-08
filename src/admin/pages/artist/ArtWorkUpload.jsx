@@ -29,11 +29,14 @@ const ArtWorkUpload = () => {
   const [directoryToggle, setDirectoryToggle] = useState(false);
   const locationData = useLocation();
   const artData = locationData?.state ? locationData?.state?.data : null;
+  console.log("artData",artData)
   const navigate = useNavigate();
   useEffect(() => {
     getCategoryFun();
     // getCollectionFun();
-    getDirectoryFun()
+    if(artData?.update_by !== "admin"){
+      getDirectoryFun()
+    }
   }, []);
   const initialFormData = {
     productId: "",
@@ -62,6 +65,7 @@ const ArtWorkUpload = () => {
     if (artData?.title) {
       setFormData({
         ...formData,
+        id: artData?.artist_id?._id,
         productId: artData?._id,
         image: artData?.image,
         title: artData?.title,
@@ -73,6 +77,9 @@ const ArtWorkUpload = () => {
       });
       setImgPreview({ ...imgPreview, image: imgBaseURL() + artData?.thumbnail });
       getSubCategoryFun(artData?.category?._id);
+      if(artData?.update_by === "admin"){
+        getDirectoryFun(artData?.artist_id?._id)
+      }
     } else {
       setFormData({
         ...formData,
@@ -289,6 +296,8 @@ const ArtWorkUpload = () => {
       const params = new FormData();
       formData?.productId && params.append("productId", formData.productId);
       params.append("image", formData.image);
+      params.append("id", formData.id);
+      params.append("update_by", artData?.update_by ?? "");
       params.append("title", formData.title);
       params.append("description", formData.description);
       params.append("category", formData.category);
@@ -315,7 +324,11 @@ const ArtWorkUpload = () => {
           _id: res?.data?.directoryId?._id
         }
         getUserByIDFun(auth('admin')?.id)
-        navigate(`/${auth('admin')?.user_role}/artworks/pending`);
+        if(artData?.update_by === "admin"){
+          navigate(`/${auth('admin')?.user_role}/products`);
+        }else{
+          navigate(`/${auth('admin')?.user_role}/artworks/pending`);
+        }
       } else {
         swal({
           title: SOMETHING_ERR,
@@ -337,6 +350,7 @@ const ArtWorkUpload = () => {
   useEffect(() => {
     getUserByIDFun(auth('admin')?.id)
   }, [])
+
 
   return (
     <>

@@ -8,6 +8,5 @@ export const FB_APP_ID = "1143179496737523"
 export const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const strongPasswordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&!@#$%^&*()_+[\]{}|;:,.<>/?])[A-Za-z\d@$!%*?&!@#$%^&*()_+[\]{}|;:,.<>/?]{8,}$/;
 
-export const P_UID = "flat_130x180-mm-5r_250-gsm-100lb-uncoated-offwhite-archival_4-0_ver"
-
-export const UID_OBJ = {"quality": "Museum-Quality Matte","frame": "No Frame","size": "13x18 cm / 5x7\""}
+export const P_UID = "flat_130x180-mm-5r_200-gsm-80lb-uncoated_4-0_ver"
+export const UID_OBJ = {"quality": "Matte","frame": "No Frame","size": "13x18 cm / 5x7\""}

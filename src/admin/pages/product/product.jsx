@@ -20,7 +20,7 @@ import { Col, Dropdown, Form, Modal, OverlayTrigger, Row, Tooltip } from "react-
 import AdminLoader from "../../components/AdminLoader";
 import BTNLoader from "../../../components/BTNLoader";
 import { APICALL } from "../../../helper/api/api";
-import { timeAgo, tableImg, toastifyError, toastifySuccess, filterByKey } from "../../../helper/Utility";
+import { timeAgo, tableImg, toastifyError, toastifySuccess, filterByKey, auth } from "../../../helper/Utility";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import {
   SOMETHING_ERR,
@@ -29,7 +29,7 @@ import {
 } from "../../../helper/Constant";
 import "../../../App.css";
 import ConfirmModal from "../../../helper/ConfirmModal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDataContext } from "../../../helper/context/ContextProvider";
 import TableMSG from "../../../components/TableMSG";
 
@@ -53,7 +53,7 @@ const Product = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const permisionCheck = filterByKey("products", permisionData?.permissions);
-
+  const navigate = useNavigate()
   useEffect(() => {
     getPermision()
   }, [])
@@ -187,6 +187,11 @@ const Product = () => {
   };
 
 
+  const handleEdit = (row) => {
+    navigate(`/${auth('admin')?.user_role}/art-work-upload`, { state: { data: {...row, update_by: "admin"} } })
+  }
+
+
   return (
     <>
       <Paper className="table_samepattern">
@@ -298,6 +303,9 @@ const Product = () => {
                                         <Link className="d-block" to={`/admin/product-details/${row?._id}`}>
                                           <RemoveRedEyeIcon style={{ marginRight: "8px" }} />View
                                         </Link>
+                                      </Dropdown.Item>
+                                      <Dropdown.Item to="#" onClick={() => handleEdit(row)}>
+                                        <Edit /> Edit
                                       </Dropdown.Item>
                                       {
                                         permisionCheck?.delete &&

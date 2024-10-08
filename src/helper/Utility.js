@@ -499,15 +499,385 @@ export const sizeBtnArr = [
 
 export const getTierImg = (tier) => {
     const tierType = tier
-    if(tierType === "66b5c8e97402d256e68f856b"){
-        return {icon: <img src={gold} alt="badge" />, text : "Gold"}
-    }else if(tierType === "66b5c8d07402d256e68f8568"){
-        return {icon: <img src={silver} alt="badge" />, text : "Silver"}
-    }else if(tierType === "66b5c8bc7402d256e68f8565"){
-        return {icon: <img src={bronze} alt="badge" />, text : "Bronze"}
-    }else if(tierType === "66b5c90c7402d256e68f856e"){
-        return {icon: <img src={diamond} alt="badge" />, text : "Diamond"}
-    }else {
+    if (tierType === "66b5c8e97402d256e68f856b") {
+        return { icon: <img src={gold} alt="badge" />, text: "Gold" }
+    } else if (tierType === "66b5c8d07402d256e68f8568") {
+        return { icon: <img src={silver} alt="badge" />, text: "Silver" }
+    } else if (tierType === "66b5c8bc7402d256e68f8565") {
+        return { icon: <img src={bronze} alt="badge" />, text: "Bronze" }
+    } else if (tierType === "66b5c90c7402d256e68f856e") {
+        return { icon: <img src={diamond} alt="badge" />, text: "Diamond" }
+    } else {
         return null
     }
 }
+
+
+export const UID_INFO = [
+    {
+        "uid": "flat_130x180-mm-5r_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "No Frame",
+        "price": 10.00
+    },
+    {
+        "uid": "flat_300x400-mm-12x16-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "No Frame",
+        "price": 15.00
+    },
+    {
+        "uid": "flat_500x700-mm-20x28-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "No Frame",
+        "price": 20.00
+    },
+    {
+        "uid": "flat_130x180-mm-5r_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "No Frame",
+        "price": 10.00
+    },
+    {
+        "uid": "flat_300x400-mm-12x16-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "No Frame",
+        "price": 15.00
+    },
+    {
+        "uid": "flat_500x700-mm-20x28-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "No Frame",
+        "price": 20.00
+    },
+    {
+        "uid": "framed_poster_mounted_130x180-mm-5x7-inch_black_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Ready-to-hang",
+        "price": 30.00
+    },
+    {
+        "uid": "framed_poster_130x180-mm-5x7-inch_black_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Not assembled",
+        "price": 28.00
+    },
+    {
+        "uid": "framed_poster_mounted_130x180-mm-5x7-inch_white_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Ready-to-hang",
+        "price": 30.00
+    },
+    {
+        "uid": "framed_poster_130x180-mm-5x7-inch_white_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Not assembled",
+        "price": 28.00
+    },
+    {
+        "uid": "framed_poster_mounted_130x180-mm-5x7-inch_natural-wood_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Ready-to-hang",
+        "price": 32.00
+    },
+    {
+        "uid": "framed_poster_130x180-mm-5x7-inch_natural-wood_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Not assembled",
+        "price": 30.00
+    },
+    {
+        "uid": "framed_poster_mounted_300x400-mm-12x16-inch_black_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Ready-to-hang",
+        "price": 35.00
+    },
+    {
+        "uid": "framed_poster_300x400-mm-12x16-inch_black_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Not assembled",
+        "price": 33.00
+    },
+    {
+        "uid": "framed_poster_mounted_300x400-mm-12x16-inch_white_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Ready-to-hang",
+        "price": 35.00
+    },
+    {
+        "uid": "framed_poster_300x400-mm-12x16-inch_white_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Not assembled",
+        "price": 33.00
+    },
+    {
+        "uid": "framed_poster_mounted_300x400-mm-12x16-inch_natural-wood_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Ready-to-hang",
+        "price": 37.00
+    },
+    {
+        "uid": "framed_poster_300x400-mm-12x16-inch_natural-wood_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Not assembled",
+        "price": 35.00
+    },
+    {
+        "uid": "framed_poster_mounted_500x700-mm-20x28-inch_black_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Ready-to-hang",
+        "price": 40.00
+    },
+    {
+        "uid": "framed_poster_500x700-mm-20x28-inch_black_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Not assembled",
+        "price": 38.00
+    },
+    {
+        "uid": "framed_poster_mounted_500x700-mm-20x28-inch_white_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Ready-to-hang",
+        "price": 40.00
+    },
+    {
+        "uid": "framed_poster_500x700-mm-20x28-inch_white_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Not assembled",
+        "price": 38.00
+    },
+    {
+        "uid": "framed_poster_mounted_500x700-mm-20x28-inch_natural-wood_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Ready-to-hang",
+        "price": 42.00
+    },
+    {
+        "uid": "framed_poster_500x700-mm-20x28-inch_natural-wood_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-uncoated_4-0_ver",
+        "quality": "Matte",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Not assembled",
+        "price": 40.00
+    },
+    {
+        "uid": "framed_poster_mounted_130x180-mm-5x7-inch_black_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Ready-to-hang",
+        "price": 30.00
+    },
+    {
+        "uid": "framed_poster_130x180-mm-5x7-inch_black_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Not assembled",
+        "price": 28.00
+    },
+    {
+        "uid": "framed_poster_mounted_130x180-mm-5x7-inch_white_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Ready-to-hang",
+        "price": 30.00
+    },
+    {
+        "uid": "framed_poster_130x180-mm-5x7-inch_white_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Not assembled",
+        "price": 28.00
+    },
+    {
+        "uid": "framed_poster_mounted_130x180-mm-5x7-inch_natural-wood_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Ready-to-hang",
+        "price": 32.00
+    },
+    {
+        "uid": "framed_poster_130x180-mm-5x7-inch_natural-wood_wood_w12xt22-mm_plexiglass_130x180-mm-5r_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "13x18 cm / 5x7\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Not assembled",
+        "price": 30.00
+    },
+    {
+        "uid": "framed_poster_mounted_300x400-mm-12x16-inch_black_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Ready-to-hang",
+        "price": 35.00
+    },
+    {
+        "uid": "framed_poster_300x400-mm-12x16-inch_black_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Not assembled",
+        "price": 33.00
+    },
+    {
+        "uid": "framed_poster_mounted_300x400-mm-12x16-inch_white_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Ready-to-hang",
+        "price": 35.00
+    },
+    {
+        "uid": "framed_poster_300x400-mm-12x16-inch_white_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Not assembled",
+        "price": 33.00
+    },
+    {
+        "uid": "framed_poster_mounted_300x400-mm-12x16-inch_natural-wood_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Ready-to-hang",
+        "price": 37.00
+    },
+    {
+        "uid": "framed_poster_300x400-mm-12x16-inch_natural-wood_wood_w12xt22-mm_plexiglass_300x400-mm-12x16-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "30x40 cm / 12x16\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Not assembled",
+        "price": 35.00
+    },
+    {
+        "uid": "framed_poster_mounted_500x700-mm-20x28-inch_black_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Ready-to-hang",
+        "price": 40.00
+    },
+    {
+        "uid": "framed_poster_500x700-mm-20x28-inch_black_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "Black",
+        "assembly": "Not assembled",
+        "price": 38.00
+    },
+    {
+        "uid": "framed_poster_mounted_500x700-mm-20x28-inch_white_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Ready-to-hang",
+        "price": 40.00
+    },
+    {
+        "uid": "framed_poster_500x700-mm-20x28-inch_white_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "White",
+        "assembly": "Not assembled",
+        "price": 38.00
+    },
+    {
+        "uid": "framed_poster_mounted_500x700-mm-20x28-inch_natural-wood_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Ready-to-hang",
+        "price": 42.00
+    },
+    {
+        "uid": "framed_poster_500x700-mm-20x28-inch_natural-wood_wood_w12xt22-mm_plexiglass_500x700-mm-20x28-inch_200-gsm-80lb-coated-silk_4-0_ver",
+        "quality": "Glossy",
+        "size": "50x70 cm / 20x28\"",
+        "frame": "With Frame",
+        "frameType": "Wood",
+        "assembly": "Not assembled",
+        "price": 40.00
+    }
+];

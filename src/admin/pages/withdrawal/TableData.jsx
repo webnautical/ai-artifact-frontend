@@ -19,11 +19,15 @@ import {
     TABLE_PAGINATION_DROPDOWN,
 } from "../../../helper/Constant";
 import "../../../App.css";
+import ConfirmModal from "../../../helper/ConfirmModal";
+import { APICALL } from "../../../helper/api/api";
 
 const TableData = (props) => {
     const logedRole = auth('admin')?.user_role
-    const { totalPages, data, listLoading, setRowsPerPage, setPageNo, rowsPerPage, activeTab, tabsData , modal, setModal,setRowData} = props
+    const { totalPages, data, listLoading, setRowsPerPage, setPageNo, rowsPerPage, activeTab, tabsData, modal, setModal, setRowData, getListFun } = props
     const [page, setPage] = useState(0);
+    const [selectedData, setSelectedData] = useState(null)
+    const [modalOpen, setModalOpen] = useState(false)
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
         setPageNo(newPage + 1);
@@ -33,17 +37,44 @@ const TableData = (props) => {
         setPageNo(0);
     };
 
-    const handleShowModal = (item) => {
-        setRowData(item)
-        setModal({...modal, adminConfirm: true})
+    const handleShowModal = (item, type) => {
+        if (type === "Decline") {
+            setSelectedData(item)
+            setModalOpen(true)
+        } else {
+            setRowData(item)
+            setModal({ ...modal, adminConfirm: true })
+        }
     }
 
     const handleViewChange = (item) => {
-        setModal({...modal, detailsPage: true})
-        const action = {type: "view"}
-        setRowData({...item, ...action})
+        setModal({ ...modal, detailsPage: true })
+        const action = { type: "view" }
+        setRowData({ ...item, ...action })
     }
 
+    const [loading, setLoading] = useState(false)
+    const declinePaymnet = async () => {
+        setLoading(true);
+        try {
+            const params = {
+                "userId": selectedData?.user_id?._id,
+                "amount": selectedData?.amount,
+                "withdrawalId": selectedData?._id
+            }
+            const res = await APICALL(`admin/declineWithdraw`, "post", params);
+            if (res?.status) {
+                setLoading(false)
+                setSelectedData(null)
+                setModalOpen(false)
+                getListFun()
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <>
 
@@ -59,15 +90,22 @@ const TableData = (props) => {
                                         <TableRow>
                                             <TableCell>S.No</TableCell>
                                             {
-                                                logedRole === "admin" ?
+                                                activeTab === "decline" ? <></>:
+                                                    logedRole === "admin" ?
                                                     <TableCell> {tabsData?.status === "pending" ? "Withdrawal" : "Transaction"}  ID</TableCell>
                                                     :
                                                     <TableCell> {activeTab === "pending" ? "Withdrawal" : "Transaction"}  ID</TableCell>
                                             }
                                             <TableCell>Amount</TableCell>
                                             <TableCell>Status</TableCell>
-                                            <TableCell align="right"> Date </TableCell>
                                             {
+                                                activeTab === "decline" ?
+                                                    <TableCell align="right"> Decline Date </TableCell>
+                                                    :
+                                                    <TableCell align="right"> Date </TableCell>
+                                            }
+                                            {
+                                                activeTab !== "decline" &&
                                                 auth('admin')?.user_role === "admin" &&
                                                 <TableCell align="right">Actions</TableCell>
                                             }
@@ -78,6 +116,7 @@ const TableData = (props) => {
                                             <TableRow key={index}>
                                                 <TableCell>{index + 1}</TableCell>
                                                 {
+                                                   activeTab === "decline" ? <></>:
                                                     logedRole === "admin" ?
                                                         <TableCell>{tabsData?.status === "pending" ? row._id : row?.stripeTransactionId}</TableCell>
                                                         :
@@ -85,16 +124,23 @@ const TableData = (props) => {
                                                 }
                                                 <TableCell>${row.amount}</TableCell>
                                                 <TableCell>
-                                                    <Button className={`btn btn-sm ${row?.status === "pending" ? 'btn-warning' : 'btn-success'}`} >
-                                                        {row?.status === "pending" ? "Pending" : "Success"}
+                                                    <Button className={`btn btn-sm ${row?.status === "pending" ? 'btn-warning' : row?.status === "decline" ? "btn-danger" : 'btn-success'}`} >
+                                                        {row?.status === "pending" ? "Pending" : row?.status === "decline" ? "Decline" : "Success"}
                                                     </Button>
                                                 </TableCell>
-                                                <TableCell align="right">{timeAgo(row.createdAt)}</TableCell>
                                                 {
+                                                    activeTab === "decline" ?
+                                                        <TableCell align="right">{timeAgo(row.declineTimestamp)}</TableCell> :
+                                                        <TableCell align="right">{timeAgo(row.createdAt)}</TableCell>
+                                                }
+                                                {
+                                                    activeTab !== "decline" &&
                                                     logedRole === "admin" &&
                                                     (tabsData?.status === "pending" ?
                                                         <TableCell align="right">
-                                                            <Button className={`global_btn`} style={{ background: '008080' }} onClick={()=>handleShowModal(row)}> Transfer</Button>
+                                                            <Button className={`global_btn me-2`} style={{ background: '008080' }} onClick={() => handleShowModal(row, "Decline")}> Decline</Button>
+
+                                                            <Button className={`global_btn`} style={{ background: '008080' }} onClick={() => handleShowModal(row)}> Transfer</Button>
                                                         </TableCell>
                                                         :
                                                         <TableCell align="right">
@@ -134,7 +180,7 @@ const TableData = (props) => {
                     )}
                 </>
             )}
-            
+            <ConfirmModal {...{ modalOpen, setModalOpen, }} btn1="No" btn2="YES" submitLoading={loading} funCall={declinePaymnet} msg={<div><h5>Are you are sure? You want to decline this payment.</h5></div>} />
         </>
     );
 };

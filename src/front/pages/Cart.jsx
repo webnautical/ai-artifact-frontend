@@ -20,19 +20,15 @@ import SelectableButtons from "../../components/SelectableButtons";
 import { APICALL } from "../../helper/api/api";
 const Cart = () => {
   const navigate = useNavigate()
-  const { contextLoader, getCartListFun, cartList, addToCartFun, gelatoPriceArr, guestCart, getGestCartListFun, removeFromGuestCart } = useFrontDataContext();
+  const { contextLoader, getCartListFun, cartList, addToCartFun, guestCart, getGestCartListFun, removeFromGuestCart } = useFrontDataContext();
  
   useEffect(() => {
     if (auth('customer')) {
       getCartListFun()
     } else {
-      // if (guestCart?.length > 0) {
         getGestCartListFun(guestCart)
-      // }
     }
   }, [guestCart])
- 
-  console.log("cartList", cartList)
  
   const qntChange = (qnt, product_id, uid, initialQuantity) => {
     const qntt = initialQuantity === undefined ? 1 : -1
@@ -109,7 +105,7 @@ const Cart = () => {
       setArtDetails({
         ...artDetails, price: editItemObj?.row_uid?.price, qnt: editItemObj?.quantity, uid: editItemObj?.row_uid?.productUid
       })
-      getPriceFun(editItemObj?.row_uid?.productUid)
+      // getPriceFun(editItemObj?.row_uid?.productUid)
  
       const brightnessRes = brightnessOptions.find(option => option.type?.toLocaleLowerCase() == editItemObj?.quality?.toLocaleLowerCase());
       setBrightness(brightnessRes?.value)
@@ -122,8 +118,7 @@ const Cart = () => {
   const canvasQntChange = (qnt, product_id) => {
     setArtDetails({ ...artDetails, qnt: qnt })
   };
- 
- 
+
   const handleBrightnessChange = (option) => {
     const newSelectedOptions = { ...selectedOptions, ['quality']: option?.type };
     setSelectedOptions(newSelectedOptions)
@@ -146,99 +141,13 @@ const Cart = () => {
     setSelectedOptions(newSelectedOptions)
   };
  
-  const [uid, setUid] = useState('Please select all required options');
- 
-  const [sizeMap, setSizeMap] = useState({
-    '13x18 cm / 5x7"': '130x180-mm-5x7-inch',
-    '30x40 cm / 12x16"': '300x400-mm-12x16-inch',
-    '50x70 cm / 20x28"': '500x700-mm-20x28-inch'
-  })
- 
-  const plexiSizeMap = {
-    '13x18 cm / 5x7"': '130x180-mm-5r',
-    '30x40 cm / 12x16"': '300x400-mm-12x16-inch',
-    '50x70 cm / 20x28"': '500x700-mm-20x28-inch'
-  };
- 
-  const qualityMap = {
-    'Museum-Quality Matte': '250-gsm-100lb-uncoated-offwhite-archival',
-    'Premium Matte': '200-gsm-80lb-uncoated',
-    'Premium Semi-Glossy': '200-gsm-80lb-coated-silk'
-  };
- 
-  const frameMap = {
-    'Black': 'black',
-    'White': 'white',
-    'Wood': 'natural-wood'
-  };
- 
-  const assemblyMap = {
-    'Ready-to-hang': 'mounted',
-    'Not assembled': ''
-  };
- 
-  const baseUid = {
-    'No Frame': 'flat_{size}_{quality}_4-0_ver',
-    'With Frame': 'framed_poster_{assembly}_{size}_{frame}_wood_w12xt22-mm_plexiglass_{plexiSize}_{quality}_4-0_ver'
-  };
- 
-  const generateUid = (frame, quality, size, frameType, assembly) => {
-    const template = baseUid[frame];
-    return template
-      .replace('{size}', sizeMap[size])
-      .replace('{plexiSize}', plexiSizeMap[size])
-      .replace('{quality}', qualityMap[quality])
-      .replace('{frame}', frameMap[frameType] || '')
-      .replace('{assembly}', assemblyMap[assembly] || '')
-      .replace('__', '_')
-      .replace(/^_|_$/g, '');
-  };
- 
-  useEffect(() => {
-    if (selectedOptions.quality && selectedOptions.size && selectedOptions.frame) {
-      if (selectedOptions.frame === 'No Frame') {
-        const newUid = generateUid(
-          selectedOptions.frame,
-          selectedOptions.quality,
-          selectedOptions.size
-        );
-        setUid(newUid || 'No matching UID found');
-        getPriceFun(newUid)
- 
-      } else if (selectedOptions.frameType && selectedOptions.assembly) {
-        const newUid = generateUid(
-          selectedOptions.frame,
-          selectedOptions.quality,
-          selectedOptions.size,
-          selectedOptions.frameType,
-          selectedOptions.assembly
-        );
-        setUid(newUid || 'No matching UID found');
-        getPriceFun(newUid)
-      } else {
-        setUid(artDetails?.uid);
-      }
-    } else {
-      setUid('Please select all required options 2');
-    }
-  }, [selectedOptions, editItemObj, show]);
- 
-  const getPriceFun = (uid) => {
-    const res = gelatoPriceArr?.find((item) => item.productUid == uid);
-    if (res) {
-      const price = parseInt(res?.price)
-      setArtDetails({ ...artDetails, 'product_price': price, 'uid': res?.test_id || res?.productUid, price: parseInt(res?.price) })
-    }
-  };
- 
- 
   const editCartItem = async () => {
     setLoading(true)
     const params = {
       "product_id": editItemObj?.product_id?._id,
       "cartItemId": editItemObj?._id,
       "quantity": artDetails?.qnt,
-      "puid": uid,
+      "puid": artDetails?.uid,
       ...selectedOptions
     }
     try {
@@ -253,13 +162,9 @@ const Cart = () => {
       setLoading(false)
     }
   }
- 
- 
   const canvasRef = useRef(null);
- 
   useEffect(() => {
     if (selectedOptions) {
-      console.log("selectedOptions", selectedOptions)
       const canvas = canvasRef.current;
       if (!canvas) return;
  
@@ -293,6 +198,22 @@ const Cart = () => {
       };
     }
   }, [frameTexture, brightness, editItemObj, show, selectedOptions]);
+
+  useEffect(() => {
+    GET_UID_AND_GELETO_PRICE_BY_PRODUCT_TYPE()
+  }, [selectedOptions])
+
+  const GET_UID_AND_GELETO_PRICE_BY_PRODUCT_TYPE = async () => {
+    try {
+      const res = await APICALL('user/getGelatoUidByParams', 'post', selectedOptions)
+      if(res?.status){
+        const price = (parseInt(res?.data?.price)) * artDetails?.qnt
+        setArtDetails({ ...artDetails, 'product_price': price, 'uid': res?.data?.productUid , price: parseInt(res?.data?.price) })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
  
   return (
     <>

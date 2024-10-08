@@ -121,7 +121,6 @@ export default function DashboardDefault() {
     },
   ];
 
-  console.log("dashboardInfo",dashboardInfo)
 
   return (
     <>
@@ -138,7 +137,7 @@ export default function DashboardDefault() {
                 <Grid item xs={6} sm={4} md={3} lg={2}>
                   <AnalyticEcommerce
                     title="Total Artwork"
-                    count={<><>{dashboardInfo?.totalArtwork || 0}</>  {role === "artist" && <>/ {dashboardInfo?.rank?.maxUploads}</>} </>}
+                    count={<><>{dashboardInfo?.totalArtwork || 0}</>  {role === "artist" && <>/ {dashboardInfo?.artistData?.highestRank?.maxUploads}</>} </>}
                     percentage={59.3}
                     extra="35,000"
                   />

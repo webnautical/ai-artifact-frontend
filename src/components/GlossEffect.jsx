@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 
 
 const brightnessOptions = [
-  { label: 'Matte', value: 1, url: '', 'Museum-Quality Matte': '250-gsm-100lb-uncoated-offwhite-archival', type:  'Museum-Quality Matte'},
+  { label: 'Matte', value: 1, url: '', 'Museum-Quality Matte': '250-gsm-100lb-uncoated-offwhite-archival', type:  'Matte'},
 
-  { label: 'Glossy', value: 1.25, url: '', 'Premium Semi-Glossy': '200-gsm-80lb-coated-silk', type: 'Premium Semi-Glossy' }
+  { label: 'Glossy', value: 1.25, url: '', 'Premium Semi-Glossy': '200-gsm-80lb-coated-silk', type: 'Glossy' }
 ];
 
 const GlossEffect = ({ onBrightnessChange, light }) => {

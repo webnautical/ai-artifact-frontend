@@ -257,11 +257,6 @@ export const FrontContextProvider = ({ children }) => {
                     getCustomerInfoFun()
                     toastifySuccess(res?.message)
                     getCartListFun(true)
-                    // if(qnt !== 0){
-                    //     if(type === undefined){
-                    //         await addRemoveWishList(product_id)
-                    //     }
-                    // }
                     await getWishListFun()
                 }
             } catch (error) {

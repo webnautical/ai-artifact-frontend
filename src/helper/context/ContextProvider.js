@@ -107,9 +107,9 @@ export const ContextProvider = ({ children }) => {
         }
     }
 
-    const getDirectoryFun = async () => {
+    const getDirectoryFun = async (id) => {
         try {
-            const res = await APICALL('artist/getartistDirectories', 'post', {})
+            const res = await APICALL('artist/getartistDirectories', 'post', {id: id})
             if (res?.status) {
                 setDirectoryList(res?.data)
             } else {
