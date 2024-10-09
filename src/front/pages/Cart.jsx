@@ -278,7 +278,7 @@ const Cart = () => {
                                             auth("customer")?.id ?
                                               <button className='remove_btn' onClick={() => { addToCartFun(item?.product_id?._id, 0, item?.row_uid?.test_id || item?.row_uid?.productUid) }}>Remove</button>
                                               :
-                                              <button className='remove_btn' onClick={() => { removeFromGuestCart(item?.product_id?._id,) }}>Remove</button>
+                                              <button className='remove_btn' onClick={() => { removeFromGuestCart(item) }}>Remove</button>
                                           }
                                         </>
                                     }

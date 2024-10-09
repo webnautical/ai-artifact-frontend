@@ -7,11 +7,14 @@ import {
     TableHead,
     TableRow,
     TextField,
+    TableFooter,
     Button,
     TablePagination,
     TableSortLabel,
     IconButton,
     Paper,
+    Autocomplete,
+    Box,
 } from "@mui/material";
 import { Edit, MoreVert } from "@mui/icons-material";
 import swal from "sweetalert";
@@ -19,7 +22,12 @@ import { Col, Dropdown, Form, Modal, Row } from "react-bootstrap";
 import AdminLoader from "../../components/AdminLoader";
 import BTNLoader from "../../../components/BTNLoader";
 import { APICALL } from "../../../helper/api/api";
-import { timeAgo, tableImg, imgBaseURL, toastifySuccess } from "../../../helper/Utility";
+import {
+    timeAgo,
+    tableImg,
+    imgBaseURL,
+    toastifySuccess,
+} from "../../../helper/Utility";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import SwitchToggle from "../../../components/SwitchToggle";
 import Pagination from "react-bootstrap/Pagination";
@@ -32,8 +40,7 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 const OrderList = () => {
-    const [search, setSearch] = useState("");
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_PER_PAGE);
     const [data, setData] = useState([]);
@@ -41,21 +48,24 @@ const OrderList = () => {
     const [pageNo, setPageNo] = useState(1);
     const [selectedRow, setSelectedRow] = useState(null);
 
-    const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
     const [loading, setLoading] = useState({
-        'refund': false
+        refund: false,
+    });
+    const [searchParams, setSearchParams] = useState({
+        'order_id': "",
+        'customer_id': "",
+        'artist_id': "",
     })
-
     useEffect(() => {
-        getListFun(pageNo, rowsPerPage);
+        getListFun(pageNo, rowsPerPage, searchParams);
     }, [pageNo, rowsPerPage]);
 
-    const getListFun = async (pageNo, rowsPerPage) => {
+    const getListFun = async (pageNo, rowsPerPage,searchParams) => {
         setListLoading(true);
         try {
-            const params = { page: pageNo, limit: rowsPerPage };
+            const params = { page: pageNo, limit: rowsPerPage, ...searchParams };
             const res = await APICALL("admin/allOrders", "post", params);
             if (res?.status) {
                 setData(res.data);
@@ -68,10 +78,6 @@ const OrderList = () => {
         }
     };
 
-    const handleSearchChange = (event) => {
-        setSearch(event.target.value);
-        setPage(0);
-    };
 
     const handleViewChange = (row) => {
         setSelectedRow(row);
@@ -92,61 +98,116 @@ const OrderList = () => {
     }, 0);
 
     const handleRefund = async () => {
-        setLoading({ ...loading, 'refund': true })
+        setLoading({ ...loading, refund: true });
         try {
             const params = { orderId: selectedRow._id };
             const res = await APICALL("admin/markOrderAsRefunded", "post", params);
             if (res?.status) {
-                setSelectedRow(null)
+                setSelectedRow(null);
                 getListFun(pageNo, rowsPerPage);
-                toastifySuccess(res?.message)
+                toastifySuccess(res?.message);
             }
         } catch (error) {
             console.error(error);
         } finally {
-            setLoading({ ...loading, 'refund': false })
+            setLoading({ ...loading, refund: false });
         }
-    }
+    };
 
-    console.log("selectedRow", selectedRow)
 
-    const calculateProfit = (TotalPrice, geletoPrice, artistCommision,affiliateCommission, qnt) =>{
-        const profit = (TotalPrice * qnt) - (geletoPrice * qnt) - affiliateCommission - artistCommision
-        return profit.toFixed(2)
-    }
+    const calculateProfit = (
+        TotalPrice,
+        geletoPrice,
+        artistCommision,
+        affiliateCommission,
+        qnt
+    ) => {
+        const profit =
+            TotalPrice * qnt -
+            geletoPrice * qnt -
+            affiliateCommission -
+            artistCommision;
+        return parseFloat(profit);
+    };
+
+    useEffect(() => {
+        getCustomerList()
+        getArtistList()
+    }, [])
+
+    const [customerList, setCustomerList] = useState([])
+    const [artistList, setArtistList] = useState([])
+
+    const getCustomerList = async () => {
+        try {
+            const res = await APICALL("admin/allUsers", "post", { role: "customer" });
+            if (res?.status) { setCustomerList(res?.Users); }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const getArtistList = async () => {
+        try {
+            const res = await APICALL("admin/allUsers", "post", { role: "artist" });
+            if (res?.status) { setArtistList(res?.Users); }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleSearch = () => {
+        getListFun(pageNo, rowsPerPage, searchParams)
+    };
 
     return (
         <>
             {selectedRow ? (
                 <Paper className=" p-3">
                     <div className="row-details">
-                        <div className="d-flex mb-4 justify-content-between align-items-center" style={{ gap: "10px" }}>
-                            <div className="d-flex align-items-center" style={{ gap: "10px" }}>
-                                <Button className="artist-btn" onClick={() => setSelectedRow(null)}  >
+                        <div
+                            className="d-flex mb-4 justify-content-between align-items-center"
+                            style={{ gap: "10px" }}
+                        >
+                            <div
+                                className="d-flex align-items-center"
+                                style={{ gap: "10px" }}
+                            >
+                                <Button
+                                    className="artist-btn"
+                                    onClick={() => setSelectedRow(null)}
+                                >
                                     <i class="fa-solid fa-arrow-left"></i>
                                 </Button>
                                 <h2 className="title-admins-table m-0">Orders</h2>
                             </div>
-                            {
-                                loading?.refund ?
-                                    <BTNLoader className="artist-btn" />
-                                    :
-                                    <>
-                                        {
-                                            selectedRow?.status === "refunded" ?
-                                                <><p className="text-uppercase text-danger"><b>{selectedRow?.status}</b></p></>
-                                                :
-                                                <button className="artist-btn" onClick={() => handleRefund()}>Mark as Refund</button>
-                                        }
-                                    </>
-
-                            }
+                            {loading?.refund ? (
+                                <BTNLoader className="artist-btn" />
+                            ) : (
+                                <>
+                                    {selectedRow?.status === "refunded" ? (
+                                        <>
+                                            <p className="text-uppercase text-danger">
+                                                <b>{selectedRow?.status}</b>
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <button
+                                            className="artist-btn"
+                                            onClick={() => handleRefund()}
+                                        >
+                                            Mark as Refund
+                                        </button>
+                                    )}
+                                </>
+                            )}
                         </div>
                         <Row className=" justify-content-center">
                             <Col md={9}>
                                 <Row className="">
                                     <Col md={12} clas>
-                                        <h5><strong>Items details</strong></h5>
+                                        <h5>
+                                            <strong>Items details</strong>
+                                        </h5>
                                         <div className="table_border mb-3">
                                             <TableContainer>
                                                 <Table>
@@ -162,18 +223,32 @@ const OrderList = () => {
                                                             <TableCell>Artist</TableCell>
                                                             <TableCell>Artist Commission</TableCell>
                                                             <TableCell>Affiliate</TableCell>
-                                                            <TableCell>Affilieate Commission</TableCell>
-                                                            <TableCell align="right">profit</TableCell>
+                                                            <TableCell>Affiliate Commission</TableCell>
+                                                            <TableCell align="right">Profit</TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
                                                         {selectedRow?.orderItems?.map((row, index) => (
-                                                            <TableRow key={index} >
+                                                            <TableRow key={index}>
                                                                 <TableCell>{index + 1}</TableCell>
-                                                                <TableCell onClick={() => navigate(`/admin/product-details/${row.productId?._id}`)} style={{ cursor: 'pointer' }}>
+                                                                <TableCell
+                                                                    onClick={() =>
+                                                                        navigate(
+                                                                            `/admin/product-details/${row.productId?._id}`
+                                                                        )
+                                                                    }
+                                                                    style={{ cursor: "pointer" }}
+                                                                >
                                                                     {tableImg(row.productId?.thumbnail)}
                                                                 </TableCell>
-                                                                <TableCell onClick={() => navigate(`/admin/product-details/${row.productId?._id}`)} style={{ cursor: 'pointer' }}>
+                                                                <TableCell
+                                                                    onClick={() =>
+                                                                        navigate(
+                                                                            `/admin/product-details/${row.productId?._id}`
+                                                                        )
+                                                                    }
+                                                                    style={{ cursor: "pointer" }}
+                                                                >
                                                                     <strong>{row.productId?.title}</strong>
                                                                     <p className="my-0">{row?.quality}</p>
                                                                     <p className="my-0">{row?.frame}</p>
@@ -182,29 +257,150 @@ const OrderList = () => {
                                                                 </TableCell>
                                                                 <TableCell>${row.price}</TableCell>
                                                                 <TableCell>{row.quantity}</TableCell>
-                                                                <TableCell>${row.price * row?.quantity}</TableCell>
-                                                                <TableCell>${row.gelatoPrice.toFixed(2)}</TableCell>
-
-                                                                <TableCell><Link to={`/admin/user-management-details/${row?.artistId?._id}`}>{ row?.artistId?.first_name + " " + row?.artistId?.last_name || "---"}</Link></TableCell>
-
-                                                                <TableCell>${row.artistCommission?.toFixed(2)}</TableCell>
-
-                                                                <TableCell> {row?.affiliateId?.first_name ?<Link to={`/admin/user-management-details/${row?.affiliateId?._id}`}>{ row?.affiliateId?.first_name +" " +row?.affiliateId?.last_name}</Link> : "---"}</TableCell>
-
-                                                                <TableCell>{row?.price ? `$${row?.affiliateCommission?.toFixed(2)}` : "---"}</TableCell>
-                                                                <TableCell align="right">${calculateProfit(row.price, row.gelatoPrice, row.artistCommission, row?.affiliateCommission, row.quantity)}</TableCell>
+                                                                <TableCell>
+                                                                    ${row.price * row?.quantity}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    ${row?.gelatoPrice?.toFixed(2)}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    <Link
+                                                                        to={`/admin/user-management-details/${row?.artistId?._id}`}
+                                                                    >
+                                                                        {row?.artistId?.first_name +
+                                                                            " " +
+                                                                            row?.artistId?.last_name || "---"}
+                                                                    </Link>
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    ${row.artistCommission?.toFixed(2)}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {row?.affiliateId?.first_name ? (
+                                                                        <Link
+                                                                            to={`/admin/user-management-details/${row?.affiliateId?._id}`}
+                                                                        >
+                                                                            {row?.affiliateId?.first_name +
+                                                                                " " +
+                                                                                row?.affiliateId?.last_name}
+                                                                        </Link>
+                                                                    ) : (
+                                                                        "---"
+                                                                    )}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {row?.price
+                                                                        ? `$${row?.affiliateCommission?.toFixed(2)}`
+                                                                        : "---"}
+                                                                </TableCell>
+                                                                <TableCell align="right">
+                                                                    $
+                                                                    {calculateProfit(
+                                                                        row.price,
+                                                                        row.gelatoPrice,
+                                                                        row.artistCommission,
+                                                                        row?.affiliateCommission,
+                                                                        row.quantity
+                                                                    ).toFixed(2)}
+                                                                </TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>
+
+                                                    <TableFooter>
+                                                        <TableRow>
+                                                            <TableCell colSpan={2}>&nbsp;</TableCell>{" "}
+                                                            {/* Empty row */}
+                                                            <TableCell colSpan={2}>
+                                                                <span style={{ color: 'black', fontWeight: 'bold' }}> Total</span>
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {" "}
+                                                                {selectedRow?.orderItems?.length}
+                                                            </TableCell>
+                                                            <TableCell> ${parseInt(itemTotal)}</TableCell>
+                                                            <TableCell>
+                                                                {" "}
+                                                                $
+                                                                {selectedRow?.orderItems
+                                                                    ?.reduce((total, row) => {
+                                                                        return total + (row.gelatoPrice || 0);
+                                                                    }, 0)
+                                                                    .toFixed(2)}
+                                                            </TableCell>
+                                                            <TableCell></TableCell>
+                                                            <TableCell>
+                                                                $
+                                                                {selectedRow?.orderItems
+                                                                    ?.reduce((total, row) => {
+                                                                        return total + (row.artistCommission || 0);
+                                                                    }, 0)
+                                                                    .toFixed(2)}
+                                                            </TableCell>
+                                                            <TableCell>--</TableCell>
+                                                            <TableCell>
+                                                                {" "}
+                                                                $
+                                                                {selectedRow?.orderItems
+                                                                    ?.reduce((total, row) => {
+                                                                        return (
+                                                                            total + (row.affiliateCommission || 0)
+                                                                        );
+                                                                    }, 0)
+                                                                    .toFixed(2)}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {" "}
+                                                                $
+                                                                {selectedRow?.orderItems
+                                                                    ?.reduce((total, row) => {
+                                                                        return (
+                                                                            parseInt(total) +
+                                                                            calculateProfit(
+                                                                                row.price,
+                                                                                row.gelatoPrice,
+                                                                                row.artistCommission,
+                                                                                row.affiliateCommission,
+                                                                                row.quantity
+                                                                            )
+                                                                        );
+                                                                    }, 0).toFixed(2)}
+                                                            </TableCell>
+                                                        </TableRow>
+
+                                                        <TableRow>
+                                                            <TableCell colSpan={2}></TableCell>
+                                                            <TableCell colSpan={3}>    <span style={{ color: 'black', fontWeight: 'bold' }}>Shipping</span></TableCell>
+
+                                                            <TableCell colSpan={7}>$
+                                                                {selectedRow?.shippingCharge}</TableCell>
+                                                        </TableRow>
+
+                                                        <TableRow>
+                                                            <TableCell colSpan={2}></TableCell>
+                                                            <TableCell colSpan={3}>    <span style={{ color: 'black', fontWeight: 'bold' }}>Discount</span></TableCell>
+
+                                                            <TableCell colSpan={7}>   {selectedRow?.couponAmount
+                                                                ? `-$${selectedRow?.couponAmount}`
+                                                                : "---"}</TableCell>
+                                                        </TableRow>
+
+                                                        <TableRow>
+                                                            <TableCell colSpan={2}></TableCell>
+                                                            <TableCell colSpan={3}>  <span style={{ color: 'black', fontWeight: 'bold' }}>Order Total</span></TableCell>
+
+                                                            <TableCell colSpan={7}>  <span style={{ color: 'black', fontWeight: 'bold' }}> ${selectedRow?.totalPrice}</span></TableCell>
+                                                        </TableRow>
+                                                    </TableFooter>
                                                 </Table>
                                             </TableContainer>
-
                                         </div>
                                         <div>
                                             <div className="mt-3">
-                                                <h5><strong>Billing details</strong></h5>
+                                                <h5>
+                                                    <strong>Billing details</strong>
+                                                </h5>
                                                 <div className="table_border mb-3">
-
                                                     <p>
                                                         {" "}
                                                         <strong>Billing Name:</strong>{" "}
@@ -241,10 +437,10 @@ const OrderList = () => {
                                             </div>
 
                                             <Col md={12} className="mb-3 mt-2">
-
-                                                <h5><strong>Shipping details</strong></h5>
+                                                <h5>
+                                                    <strong>Shipping details</strong>
+                                                </h5>
                                                 <div className="table_border">
-
                                                     <p>
                                                         {" "}
                                                         <strong>Shipping Name:</strong>{" "}
@@ -293,8 +489,9 @@ const OrderList = () => {
                             <Col md={3}>
                                 <Row>
                                     <Col md={12} className="mb-3">
-
-                                        <h5><strong>Order details</strong></h5>
+                                        <h5>
+                                            <strong>Order details</strong>
+                                        </h5>
                                         <div className="table_border">
                                             <div>
                                                 <p>
@@ -303,7 +500,10 @@ const OrderList = () => {
                                                 </p>
                                                 <p>
                                                     <strong>Customer Name:</strong>{" "}
-                                                    <Link to={`/admin/user-management-details/${selectedRow.userId?._id}`} className="text-bold">
+                                                    <Link
+                                                        to={`/admin/user-management-details/${selectedRow.userId?._id}`}
+                                                        className="text-bold"
+                                                    >
                                                         {selectedRow?.shippingAddress?.firstName +
                                                             " " +
                                                             selectedRow?.shippingAddress?.lastName}
@@ -323,40 +523,6 @@ const OrderList = () => {
                                         </div>
                                     </Col>
 
-                                    <Col md={12}>
-                                        <h5><strong>Order Amount details</strong></h5>
-                                        <div className="table_border">
-
-
-                                            <p>
-                                                {" "}
-                                                <strong>Item:</strong>{" "}
-                                                {selectedRow?.orderItems?.length}
-                                            </p>
-                                            <p>
-                                                {" "}
-                                                <strong>Subtotal:</strong> ${parseInt(itemTotal)}
-                                            </p>
-                                            <p>
-                                                {" "}
-                                                <strong>Shipping:</strong> $
-                                                {selectedRow?.shippingCharge}
-                                            </p>
-                                            <p>
-                                                {" "}
-                                                <strong>Discount:</strong>{" "}
-                                                {selectedRow?.couponAmount
-                                                    ? `-$${selectedRow?.couponAmount}`
-                                                    : "---"}
-                                            </p>
-                                            <p>
-                                                {" "}
-                                                <strong>Total:</strong> ${selectedRow?.totalPrice}
-                                            </p>
-                                        </div>
-                                    </Col>
-
-
                                 </Row>
                             </Col>
                         </Row>
@@ -368,14 +534,71 @@ const OrderList = () => {
                         <AdminLoader />
                     ) : (
                         <>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    padding: "10px",
-                                }}
-                            >
+                            <div style={{ display: "flex", justifyContent: "space-between", padding: "10px", }}>
                                 <h1 className="title-admins-table">Orders</h1>
+                            </div>
+                            <div className="row px-3 cutoms-login-artist  ship_address  ">
+                                <div className="col-md-4">
+                                    <Form.Label>Select Customer</Form.Label>
+                                    <input type="text" className="form-control" name="order_id" value={searchParams?.order_id} onChange={(e)=> setSearchParams((prevValue) => ({ ...prevValue, order_id: e.target.value }))}/>
+                                </div>
+
+                                <div className="col-md-4">
+                                    <Form.Label>Select Customer</Form.Label>
+                                    <Autocomplete
+                                        options={customerList}
+                                        autoComplete="off"
+                                        getOptionLabel={(option) => option.first_name + " " + option.last_name}
+                                        renderOption={(props, option) => (
+                                            <Box component="li" {...props}>
+                                                {option.first_name + " " + option.last_name}
+                                            </Box>
+                                        )}
+                                        renderInput={(params) => (
+                                            <TextField {...params} variant="outlined" />
+                                        )}
+                                        value={customerList.find((option) => option._id === searchParams.customer_id) || null}
+                                        onChange={(event, newValue) => {
+                                            if (newValue) {
+                                                const customerId = newValue._id;
+                                                setSearchParams((prevValue) => ({ ...prevValue, customer_id: customerId }));
+                                            }else {
+                                                setSearchParams((prevValue) => ({ ...prevValue, customer_id: '' }));
+                                            }
+                                        }}
+                                    />
+                                </div>
+
+                                <div className="col-md-4">
+                                    <Form.Label>Select Artist</Form.Label>
+                                    <Autocomplete
+                                        options={artistList}
+                                        autoComplete="off"
+                                        getOptionLabel={(option) => option.first_name + " " + option.last_name}
+                                        renderOption={(props, option) => (
+                                            <Box component="li" {...props}>
+                                                {option.first_name + " " + option.last_name}
+                                            </Box>
+                                        )}
+                                        renderInput={(params) => (
+                                            <TextField {...params} variant="outlined" />
+                                        )}
+                                        value={artistList.find((option) => option._id === searchParams.artist_id) || null}
+                                        onChange={(event, newValue) => {
+                                            if (newValue) {
+                                                const customerId = newValue._id;
+                                                setSearchParams((prevValue) => ({ ...prevValue, artist_id: customerId }));
+                                            }else {
+                                                setSearchParams((prevValue) => ({ ...prevValue, artist_id: '' }));
+                                            }
+                                        }}
+                                    />
+                                </div>
+
+                                <div className="col-md-12 text-end mt-2">
+                                    <button className="global_btn" onClick={()=>handleSearch()}>Search</button>
+                                </div>
+
                             </div>
 
                             {data.length > 0 ? (
@@ -405,9 +628,16 @@ const OrderList = () => {
                                                                 row?.shippingAddress?.lastName}
                                                         </TableCell>
                                                         <TableCell>{row.totalPrice}</TableCell>
-                                                        <TableCell className="text-capitalize">{row.status}</TableCell>
+                                                        <TableCell className="text-capitalize">
+                                                            {row.status}
+                                                        </TableCell>
                                                         <TableCell>
-                                                            <Button className={`btn btn-sm ${row?.gelatoStatus ? 'btn-success' : 'btn-warning'}`} >
+                                                            <Button
+                                                                className={`btn btn-sm ${row?.gelatoStatus
+                                                                    ? "btn-success"
+                                                                    : "btn-warning"
+                                                                    }`}
+                                                            >
                                                                 {row?.gelatoStatus ? "Success" : "Pending"}
                                                             </Button>
                                                         </TableCell>

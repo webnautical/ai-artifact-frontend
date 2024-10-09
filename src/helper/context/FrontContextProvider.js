@@ -215,32 +215,85 @@ export const FrontContextProvider = ({ children }) => {
         return savedCart ? JSON.parse(savedCart) : [];
     });
  
-    const removeFromGuestCart = (productId) => {
+    // const removeFromGuestCart = (productId) => {
+    //     setGuestCart((prev) => {
+    //         const updatedCart = prev.filter(item => item.id !== productId);
+    //         localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+    //         return updatedCart;
+    //     });
+    // };
+ 
+    // const addToGuestCart = (product, quantity) => {
+    //     toastifySuccess("Product added into cart !!")
+    //     console.log("product",product)
+    //     setGuestCart((prev) => {
+    //         const existingProduct = prev.find(item => item.id === product.id);
+    //         let updatedCart;
+    //         if (existingProduct) {
+    //             updatedCart = prev.map(item =>
+    //                 item.id === product.id
+    //                     ? { ...item, quantity: item.quantity + quantity }
+    //                     : item
+    //             );
+    //         } else {
+    //             updatedCart = [...prev, { ...product, quantity }];
+    //         }
+    //         localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+    //         return updatedCart;
+    //     });
+    // };
+
+    const removeFromGuestCart = (product) => {
         setGuestCart((prev) => {
-            const updatedCart = prev.filter(item => item.id !== productId);
+            const updatedCart = prev.filter(item =>
+                !(item.id === product?.product_id?._id &&
+                  item.frame === product.frame &&
+                  item.frameType === product.frameType &&
+                  item.size === product.size &&
+                  item.quality === product.quality &&
+                  item.assembly === product.assembly)
+            );
+            
             localStorage.setItem('guestCart', JSON.stringify(updatedCart));
             return updatedCart;
         });
     };
- 
+    
+
     const addToGuestCart = (product, quantity) => {
-        toastifySuccess("Product added into cart !!")
+        toastifySuccess("Product added into cart !!");
+    
         setGuestCart((prev) => {
-            const existingProduct = prev.find(item => item.id === product.id);
+            const existingProduct = prev.find(item =>
+                item.id === product.id &&
+                item.frame === product.frame &&
+                item.frameType === product.frameType &&
+                item.size === product.size &&
+                item.quality === product.quality &&
+                item.assembly === product.assembly
+            );
+    
             let updatedCart;
             if (existingProduct) {
                 updatedCart = prev.map(item =>
-                    item.id === product.id
+                    item.id === product.id &&
+                    item.frame === product.frame &&
+                    item.frameType === product.frameType &&
+                    item.size === product.size &&
+                    item.quality === product.quality &&
+                    item.assembly === product.assembly
                         ? { ...item, quantity: item.quantity + quantity }
                         : item
                 );
             } else {
                 updatedCart = [...prev, { ...product, quantity }];
             }
+    
             localStorage.setItem('guestCart', JSON.stringify(updatedCart));
             return updatedCart;
         });
     };
+    
  
     const addToCartFun = async (product_id, qnt, puid, p_obj, type) => {
         if (auth('customer')) {
