@@ -351,7 +351,6 @@ const ArtWorkUpload = () => {
     getUserByIDFun(auth('admin')?.id)
   }, [])
 
-
   return (
     <>
       <Paper className="table_samepattern">
@@ -365,6 +364,7 @@ const ArtWorkUpload = () => {
           <h1 className="title-admins-table">Upload Art Work</h1>
         </div>
         {
+          !formData?.productId &&
           userInfoByID?.totalArtworks >= userInfoByID?.highestRank?.maxUploads &&
           <div className="px-3">
             <Stack sx={{ width: '100%' }} spacing={2}>
@@ -520,7 +520,7 @@ const ArtWorkUpload = () => {
                     value={formData.directoryId}
                     onChange={handleChange}
                   >
-                    <option value="1">Select Directory</option>
+                    <option value="1">Select Collection</option>
                     {directoryList?.map((item, i) => (
                       <option value={item._id}>{item?.name}</option>
                     ))}
@@ -558,6 +558,7 @@ const ArtWorkUpload = () => {
             </div>
           </Col>
           {
+            !formData?.productId &&
             userInfoByID?.totalArtworks >= userInfoByID?.highestRank?.maxUploads ?
               <Col md={12} className="text-end">
                 <Button className="artist-btn" variant="primary" style={{cursor: "not-allowed"}}>

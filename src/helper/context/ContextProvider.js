@@ -6,6 +6,7 @@ export const ContextProvider = ({ children }) => {
     const [permisionData, setPermisionData] = useState(null)
     const [categoryList, setCategoryList] = useState([])
     const [subCategoryList, setSubCategoryList] = useState([])
+    const [notificationCount, setNotificationCount] = useState(0)
     const [loading, setLoading] = useState({
         'ranking': false,
         'tier' : false
@@ -129,7 +130,8 @@ export const ContextProvider = ({ children }) => {
             getDirectoryFun, directoryList,
             userInfoByID, getUserByIDFun, userDetailsLoading,
             getTierImgFun, getRankTier,
-            artistRanking, getArtistRankingFun,loading
+            artistRanking, getArtistRankingFun,loading,
+            notificationCount, setNotificationCount
         }}>
             {children}
         </ContextData.Provider>

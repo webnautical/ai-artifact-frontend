@@ -14,8 +14,8 @@ import {
 
 import { APICALL } from "../../../helper/api/api";
 import AdminLoader from "../../components/AdminLoader";
-import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
-import { formatdedDate, handleDownloadExcel, timeAgo } from "../../../helper/Utility";
+import { SERVER_ERR, SOMETHING_ERR, TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
+import { formatdedDate, handleDownloadExcel, timeAgo, toastifyError, toastifySuccess } from "../../../helper/Utility";
 import { Row, Col } from "react-bootstrap";
 
 const SubscribersList = () => {
@@ -35,7 +35,6 @@ const SubscribersList = () => {
             const api = `admin/getAllSubscribers`
             const res = await APICALL(api, 'post', {})
             setListLoading(false)
-            console.log("notification", res)
             if (res?.status) {
                 setData(res?.data)
             }
@@ -88,6 +87,19 @@ const SubscribersList = () => {
         handleDownloadExcel(changeArrFilterData(data), "Subscribers", "subscribers")
     };
 
+    const handleDelete = async (id) => {
+        try {
+            const api = `admin/deleteSubscriber`
+            const res = await APICALL(api, 'post', {id: id})
+            if (res?.status) {
+                getListFun()
+                toastifySuccess(res?.message)
+            }
+        } catch (error) {
+            toastifyError(SERVER_ERR)
+        }
+    }
+
     return (
         <>
             {
@@ -101,7 +113,6 @@ const SubscribersList = () => {
                                 <Col md={6}>
                                 <h1 className="title-admins-table">Subscribers</h1>
                                 </Col>
-
                                 <Col md={3}>
                                     <div>
                                     <TextField
@@ -130,6 +141,7 @@ const SubscribersList = () => {
                                                             <TableCell>S.No</TableCell>
                                                             <TableCell>Email</TableCell>
                                                             <TableCell>Date</TableCell>
+                                                            <TableCell align="right">Action</TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
@@ -140,6 +152,7 @@ const SubscribersList = () => {
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     <TableCell>{row?.email}</TableCell>
                                                                     <TableCell>{timeAgo(row?.created_at || row?.createdAt)}</TableCell>
+                                                                    <TableCell align="right"><button className="global_light_btn text-danger" onClick={() => handleDelete(row?._id)}><i className="fa fa-trash"></i></button></TableCell>
                                                                 </TableRow>
                                                             ))}
                                                     </TableBody>
@@ -162,8 +175,6 @@ const SubscribersList = () => {
                                             </div>
                                         </div>
                                 }
-
-
                             </>
                     }
                 </Paper>

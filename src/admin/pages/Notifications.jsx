@@ -38,7 +38,6 @@ const Notifications = () => {
             const api = auth('admin')?.user_role === 'admin' ? 'admin/adminNotifications' : 'artist/notifications'
             const res = await APICALL(api, 'post', {})
             setListLoading(false)
-            console.log("notification", res)
             if (res?.status) {
                 setData(res?.data)
             }
@@ -46,7 +45,6 @@ const Notifications = () => {
             setListLoading(false)
         }
     }
-
     const handleSearchChange = (event) => {
         setSearch(event.target.value);
         setPage(0);
@@ -60,13 +58,11 @@ const Notifications = () => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
-
     const filteredData = data.filter(
         (item) =>
             item.user_name?.toLowerCase().includes(search?.toLowerCase()) ||
             item.message?.toLowerCase().includes(search?.toLowerCase())
     );
-
     const sortedData = React.useMemo(() => {
         if (orderBy === "") return filteredData;
         return [...filteredData].sort((a, b) => {
@@ -90,22 +86,21 @@ const Notifications = () => {
                             :
                             <>
                                 <Row style={{ display: "flex", justifyContent: "space-between", padding: "10px", }} >
-                             <Col md={6}>
-                             <h1 className="title-admins-table">Notification</h1>
-                             </Col>
+                                    <Col md={6}>
+                                        <h1 className="title-admins-table">Notification</h1>
+                                    </Col>
 
-                             <Col md={3}>
-                                    <TextField
+                                    <Col md={3}>
+                                        <TextField
+                                            className="w-100"
+                                            variant="outlined"
+                                            placeholder="Search..."
+                                            value={search}
+                                            onChange={handleSearchChange}
+                                            style={{ width: "300px" }}
+                                        />
 
-                                    className="w-100"
-                                        variant="outlined"
-                                        placeholder="Search..."
-                                        value={search}
-                                        onChange={handleSearchChange}
-                                        style={{ width: "300px" }}
-                                    />
-
-</Col>
+                                    </Col>
                                 </Row>
 
                                 {
@@ -131,7 +126,7 @@ const Notifications = () => {
                                                                 <TableRow
                                                                     key={index}
                                                                     onClick={() => { handleNotificationClick(row) }}
-                                                                    style={{ cursor: 'pointer', background: row?.status === "unread" ? "#E8FFE7": "" }}
+                                                                    style={{ cursor: 'pointer', background: row?.status === "unread" ? "#E8FFE7" : "" }}
                                                                 >
                                                                     <TableCell>{index + 1}</TableCell>
                                                                     {

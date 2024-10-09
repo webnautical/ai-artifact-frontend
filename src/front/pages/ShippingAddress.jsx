@@ -19,12 +19,10 @@ import {
   auth,
   encryptLocalStorageData,
   imgBaseURL,
-  toastifyError,
-  toastifySuccess,
 } from "../../helper/Utility";
 import ReactCountryFlag from "react-country-flag";
 import { Autocomplete, Select, TextField } from "@mui/material";
-import PlacesAutocomplete from "react-places-autocomplete";
+import PlacesAutocomplete, { geocodeByAddress } from "react-places-autocomplete";
 const steps = ["Shipping details", "Payments"];
 const ShippingAddress = () => {
   const {
@@ -71,6 +69,8 @@ const ShippingAddress = () => {
   };
   const [stateList, setStateList] = useState([]);
   const [stateList1, setStateList1] = useState([]);
+  const [cityList, setCityList] = useState([]);
+
   const [shippingChargeRes, setShippingChargeRes] = useState(null);
   const [couponRes, setCouponRes] = useState(null);
   const [code, setCode] = useState("");
@@ -217,6 +217,8 @@ const ShippingAddress = () => {
         useDifferentBillingAddress: false,
       });
       getStateFun(customerInfo?.user?.country);
+      getCityFun(customerInfo?.user?.country, customerInfo?.user?.state);
+
     }
   }, [customerInfo]);
 
@@ -229,6 +231,8 @@ const ShippingAddress = () => {
       getStateFun1(e.target.value);
     } else if (e.target.name === "state") {
       setFormData({ ...formData, state: e.target.value });
+        const countryCode = formData.country;
+        getCityFun(countryCode, e.target.value);
     } else {
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
@@ -240,6 +244,14 @@ const ShippingAddress = () => {
       displayValue: state.name,
     }));
     setStateList(stateData);
+  };
+
+  const getCityFun = (countryCode, stateCode) => {
+    const cityData = City?.getCitiesOfState(countryCode, stateCode).map((city) => ({
+      value: city.name,
+      displayValue: city.name,
+    }));
+    setCityList(cityData);
   };
 
   const getStateFun1 = (country) => {
@@ -293,7 +305,6 @@ const ShippingAddress = () => {
     }
   };
 
-  // console.log("orderDetails?.cartItem",orderDetails)
 
   const totalPrice =
     orderDetails?.totalPrice +
@@ -559,9 +570,52 @@ const ShippingAddress = () => {
         ...prevValue,
         addressLine1: value,
       }));
+      try {
+        const results = await geocodeByAddress(value);
+        extractLocationDetails(results[0]);
+      } catch (error) {
+        console.error("Error fetching location details", error);
+      }
     } catch (error) {
       console.error("Error selecting address", error);
     }
+  };
+
+  const handleCityChange = (event, newValue) => {
+    if (newValue) {
+      setFormData((prevValue) => ({ ...prevValue, city: newValue.value }));
+    }
+};
+
+  const extractLocationDetails = (place) => {
+    // short_name 
+    // long_name
+    const addressComponents = place.address_components;
+    const country = addressComponents.find((comp) =>
+      comp.types.includes("country")
+    )?.short_name || "";
+    const state = addressComponents.find((comp) =>
+      comp.types.includes("administrative_area_level_1")
+    )?.short_name || "";
+
+    const city = addressComponents.find((comp) =>
+      comp.types.includes("locality")
+    )?.long_name || addressComponents.find((comp) =>
+      comp.types.includes("administrative_area_level_2")
+    )?.long_name || "";
+
+    const postalCode = addressComponents.find((comp) =>
+      comp.types.includes("postal_code")
+    )?.long_name || "";
+    setFormData((prevValue) => ({
+      ...prevValue,
+      "country": country,
+      "state": state,
+      "city": city,
+      "postalCode": postalCode,
+    }));
+    getStateFun(country)
+    getCityFun(country, state);
   };
 
   const handleLocationChange = (value) => {
@@ -658,11 +712,7 @@ const ShippingAddress = () => {
                           const stepProps = {};
                           const labelProps = {};
                           if (isStepOptional(index)) {
-                            labelProps.optional = (
-                              <Typography variant="caption">
-                                Optional
-                              </Typography>
-                            );
+                            labelProps.optional = (<Typography variant="caption">Optional</Typography>);
                           }
                           if (isStepSkipped(index)) {
                             stepProps.completed = false;
@@ -708,10 +758,7 @@ const ShippingAddress = () => {
                               )}
                               <Col md={6} className="mb-3">
                                 <Form>
-                                  <Form.Group
-                                    className="mb-3"
-                                    controlId="exampleForm.ControlInput1"
-                                  >
+                                  <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                     <Form.Label>First Name *</Form.Label>
                                     <Form.Control
                                       type="text"
@@ -950,22 +997,28 @@ const ShippingAddress = () => {
                                 </Form>
                               </Col>
 
+
                               <Col md={9} className="mb-3">
-                                <Form>
-                                  <Form.Group
-                                    className=""
-                                    controlId="exampleForm.ControlInput1"
-                                  >
-                                    <Form.Label>City*</Form.Label>
-                                    <Form.Control
-                                      type="text"
-                                      name="city"
-                                      value={formData?.city}
-                                      onChange={handleChange}
+                                <Form.Label>Choose City</Form.Label>
+                                <Autocomplete
+                                  options={cityList}
+                                  autoComplete={"off"}
+                                  getOptionLabel={(option) => option.displayValue}
+                                  renderOption={(props, option) => (
+                                    <Box component="li" {...props}>
+                                      {option.displayValue}
+                                    </Box>
+                                  )}
+                                  renderInput={(params) => (
+                                    <TextField
+                                    autoComplete="off"
+                                      {...params}
+                                      variant="outlined"
                                     />
-                                    <span className="errmsg">{error.city}</span>
-                                  </Form.Group>
-                                </Form>
+                                  )}
+                                  value={cityList.find((option) => option.value === formData.city) || null}
+                                  onChange={handleCityChange}
+                                />
                               </Col>
 
                               <Col md={12} className="mb-3">
@@ -1203,74 +1256,6 @@ const ShippingAddress = () => {
                                       be canceled.
                                     </p>
                                   </Col>
-
-
-                                  {/* <Col md={12} className="mb-3">
-                                    <Form>
-                                      <Form.Group
-                                        className=""
-                                        controlId="exampleForm.ControlInput1"
-                                      >
-                                        <Form.Label>
-                                          Billing Address Line 1 *
-                                        </Form.Label>
-                                        <Form.Control
-                                          type="text"
-                                          placeholder=""
-                                          name="billingAddressLine1"
-                                          value={formData?.billingAddressLine1}
-                                          onChange={handleChange}
-                                          maxLength={35}
-                                        />
-                                        <span className="errmsg">
-                                          {error.billingAddressLine1}
-                                        </span>
-                                      </Form.Group>
-                                      <p
-                                        style={{
-                                          color: "#909090",
-                                          fontSize: "14px",
-                                        }}
-                                      >
-                                        We do not deliver to P.O. Boxes. Please
-                                        enter your regular address otherwise
-                                        your order will be canceled.
-                                      </p>
-                                    </Form>
-                                  </Col> */}
-                                  {/* <Col md={12} className="mb-3">
-                                    <Form>
-                                      <Form.Group
-                                        className=""
-                                        controlId="exampleForm.ControlInput1"
-                                      >
-                                        <Form.Label>
-                                          Billing Address Line 2 *
-                                        </Form.Label>
-                                        <Form.Control
-                                          type="text"
-                                          name="billingAddressLine2"
-                                          value={formData?.billingAddressLine2}
-                                          onChange={handleChange}
-                                          maxLength={35}
-                                        />
-                                        <span className="errmsg">
-                                          {error.billingAddressLine2}
-                                        </span>
-                                      </Form.Group>
-                                      <p
-                                        style={{
-                                          color: "#909090",
-                                          fontSize: "14px",
-                                        }}
-                                      >
-                                        We do not deliver to P.O. Boxes. Please
-                                        enter your regular address otherwise
-                                        your order will be canceled.
-                                      </p>
-                                    </Form>
-                                  </Col> */}
-
 
                                   <Col md={12} className="mb-3">
                                     <div className="choose_country">

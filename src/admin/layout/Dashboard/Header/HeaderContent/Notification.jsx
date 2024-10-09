@@ -26,6 +26,8 @@ import { APICALL } from '../../../../../helper/api/api'
 import { auth, timeAgo } from "../../../../../helper/Utility";
 import { useNavigate } from "react-router";
 import { useNotificationHandler } from "../../../../../helper/api/RepeaterAPI";
+import { useDataContext } from "../../../../../helper/context/ContextProvider";
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 const avatarSX = {
   width: 36,
   height: 36,
@@ -45,12 +47,13 @@ const actionSX = {
 export default function Notification() {
   const [data, setData] = useState([])
   const navigate = useNavigate()
+  const { notificationCount, setNotificationCount } = useDataContext();
+
   const handleNotificationClick = useNotificationHandler();
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down("md"));
 
   const anchorRef = useRef(null);
-  const [read, setRead] = useState(2);
   const [open, setOpen] = useState(false);
   const handleToggle = () => {
     getListFun()
@@ -74,17 +77,24 @@ export default function Notification() {
     try {
       const api = auth('admin')?.user_role === 'admin' ? 'admin/adminNotifications' : 'artist/notifications'
       const res = await APICALL(api, 'post', {})
-      console.log("res",res)
-      if (res?.status) { setData(res?.data); 
+      if (res?.status) {
+        setData(res?.data);
         const unreadCount = res?.data?.filter(item => item.status === "unread").length;
-        setRead(unreadCount)
-       }
+        setNotificationCount(unreadCount)
+      }
     } catch (error) { }
   }
 
-  const viewAll = () =>{
-    navigate(`/${auth('admin')?.user_role}/notifications`)
-    setOpen(false)
+  const handleCall = async (action) => {
+    if(action === "read_all"){
+      setNotificationCount(0)
+      setOpen(false)
+      await APICALL("user/readAllNotifications", 'post', {type : auth('admin')?.user_role})
+      getListFun()
+    }else{
+      navigate(`/${auth('admin')?.user_role}/notifications`)
+      setOpen(false)
+    }
   }
 
   return (
@@ -102,7 +112,7 @@ export default function Notification() {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <Badge badgeContent={read} className="badge-color">
+        <Badge badgeContent={notificationCount} className="badge-color">
           <BellOutlined />
         </Badge>
       </IconButton>
@@ -135,70 +145,60 @@ export default function Notification() {
               }}
             >
               <ClickAwayListener onClickAway={handleClose}>
-                <MainCard
-                  title="Notification"
-                  elevation={0}
-                  border={false}
-                  content={false}
-                  // secondary={
-                  //   <>
-                  //     {read > 0 && (
-                  //       <Tooltip title="Mark as all read">
-                  //         <IconButton
-                  //           color="success"
-                  //           size="small"
-                  //           onClick={() => setRead(0)}
-                  //         >
-                  //           <CheckCircleOutlined
-                  //             style={{ fontSize: "1.15rem" }}
-                  //           />
-                  //         </IconButton>
-                  //       </Tooltip>
-                  //     )}
-                  //   </>
-                  // }
-                >
-                  <List
-                    component="nav"
-                    sx={{
-                      p: 0,
-                      "& .MuiListItemButton-root": {
-                        py: 0.5,
-                        "&.Mui-selected": {
-                          bgcolor: "grey.50",
-                          color: "text.primary",
-                        },
-                        "& .MuiAvatar-root": avatarSX,
-                        "& .MuiListItemSecondaryAction-root": {
-                          ...actionSX,
-                          position: "relative",
-                        },
+                <MainCard title="Notification" elevation={0} border={false} content={false}
+                  secondary={
+                    <>
+                      <Tooltip title="Mark as all read">
+                        <IconButton color="success" size="small" onClick={() => handleCall("read_all")}>
+                          <CheckCircleOutlined style={{ fontSize: '1.15rem' }} />
+                        </IconButton>
+                      </Tooltip>
+                    </>
+                  }>
+
+                  <List component="nav" sx={{
+                    p: 0,
+                    "& .MuiListItemButton-root": {
+                      py: 0.5,
+                      "&.Mui-selected": {
+                        bgcolor: "grey.50",
+                        color: "text.primary",
                       },
-                    }}
+                      "& .MuiAvatar-root": avatarSX,
+                      "& .MuiListItemSecondaryAction-root": {
+                        ...actionSX,
+                        position: "relative",
+                      },
+                    },
+                  }}
                   >
                     {
-                      data?.slice(0,5).map((item, i) => (
-                        <ListItemButton onClick={()=>{handleNotificationClick(item); setOpen(false)}} 
-                        style={{ cursor: 'pointer', background: item?.status === "unread" ? "#c4e2e2": "" }}
+                      data?.slice(0, 5).map((item, i) => (
+                        <ListItemButton onClick={() => { handleNotificationClick(item); setOpen(false) }}
+                          style={{ cursor: 'pointer', background: item?.status === "unread" ? "#c4e2e2" : "" }}
                         >
                           <ListItemAvatar>
-                          <Avatar sx={{ color: "#ffffff", bgcolor: "#008080" }}>
-  <MessageOutlined />
-</Avatar>
+                            <Avatar sx={{ color: "#ffffff", bgcolor: "#008080" }}>
+                              <MessageOutlined />
+                            </Avatar>
                           </ListItemAvatar>
                           <ListItemText
                             primary={<Typography variant="h6" sx={{ color: '#000' }}>{item?.message}</Typography>}
                             secondary={timeAgo(item?.created_at)}
                           />
+                          {/* {item?.status === "unread" && ( */}
+
+                          {/* )} */}
                         </ListItemButton>
                       ))
                     }
 
-                    <ListItemButton sx={{ textAlign: "center", py: `${12}px !important` }} onClick={() =>viewAll()}>
-                      <ListItemText primary={<Typography variant="h6" color="primary">View All</Typography>}/>
+                    <ListItemButton sx={{ textAlign: "center", py: `${12}px !important` }} onClick={() => handleCall("view")}>
+                      <ListItemText primary={<Typography variant="h6" color="primary">View All</Typography>} />
                     </ListItemButton>
                   </List>
                 </MainCard>
+
               </ClickAwayListener>
             </Paper>
           </Transitions>

@@ -250,6 +250,12 @@ const Cart = () => {
                                       <span>Finish :</span> {item?.quality}
                                     </li>
                                     {
+                                      item?.frame &&
+                                      <li>
+                                        <span>Frame : </span> {item?.frame}
+                                      </li>
+                                    }
+                                    {
                                       item?.frameType &&
                                       <li>
                                         <span>Color : </span> {item?.frameType}
@@ -276,9 +282,7 @@ const Cart = () => {
                                           }
                                         </>
                                     }
- 
                                     <button className='remove_btn' onClick={() => { handleShow(item) }}>Edit</button>
- 
                                     {/* <p>Item Price: <strong>${parseInt(item?.row_uid?.price) * item?.quantity}</strong></p> */}
                                   </div>
                                 </div>

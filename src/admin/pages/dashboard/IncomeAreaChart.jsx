@@ -93,7 +93,6 @@ export default function IncomeAreaChart({ forCharData }) {
           {};
 
       const api = forCharData ? `user/getSalesHistory` : role === "admin" ? `admin/getAdminSalesHistory` : `user/getSalesHistory`
-
       const res = await APICALL(api, 'post', forCharData ? fromAdminUserDetails : params);
       if (res?.status) {
         setSalesHistory(res?.data);
@@ -110,19 +109,12 @@ export default function IncomeAreaChart({ forCharData }) {
   }, [slot]);
 
   useEffect(() => {
-    const categories = slot === "week"
-      ? salesHistroy?.map(item => item.dayName || '')
-      : salesHistroy?.map(item => item.monthName || '');
-
+    const categories = slot === "week"? salesHistroy?.map(item => item.dayName || ''): slot === "month" ?  salesHistroy?.map(item => item.period || '')  : salesHistroy?.map(item => item.monthName || '');
     const salesAmounts = salesHistroy?.map(item => (item.totalSalesAmount ? item.totalSalesAmount.toFixed(2) : 0));
-
-    setSeries([
-      {
+    setSeries([{
         name: 'Sales Amount',
         data: salesAmounts || []
-      }
-    ]);
-
+      }]);
     setOptions((prevState) => ({
       ...prevState,
       xaxis: {
@@ -140,21 +132,14 @@ export default function IncomeAreaChart({ forCharData }) {
         </Grid>
         <Grid item>
           <Stack direction="row" alignItems="center" spacing={0}>
-            <Button
-              size="small"
-              onClick={() => setSlot('month')}
-              color={slot === 'month' ? 'primary' : 'secondary'}
-              variant={slot === 'month' ? 'outlined' : 'text'}
-            >
+            <Button  size="small"  onClick={() => setSlot('week')} color={slot === 'week' ? 'primary' : 'secondary'}  variant={slot === 'week' ? 'outlined' : 'text'}>
+              Week
+            </Button>
+            <Button size="small"  onClick={() => setSlot('month')} color={slot === 'month' ? 'primary' : 'secondary'} variant={slot === 'month' ? 'outlined' : 'text'}>
               Month
             </Button>
-            <Button
-              size="small"
-              onClick={() => setSlot('week')}
-              color={slot === 'week' ? 'primary' : 'secondary'}
-              variant={slot === 'week' ? 'outlined' : 'text'}
-            >
-              Week
+            <Button  size="small"  onClick={() => setSlot('year')} color={slot === 'year' ? 'primary' : 'secondary'}  variant={slot === 'year' ? 'outlined' : 'text'}>
+              Year
             </Button>
           </Stack>
         </Grid>

@@ -36,7 +36,7 @@ const GelatoPrice = () => {
     useEffect(() => {
         getGelatoPriceFun();
     }, []);
- 
+
     const getGelatoPriceFun = async () => {
         setLoading(true);
         try {
@@ -49,22 +49,22 @@ const GelatoPrice = () => {
             setLoading(false);
         }
     };
- 
+
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
- 
+
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
- 
+
     const [editIndex, setEditIndex] = useState(-1);
     const handleEditClick = (item, index) => {
         setPrice(item?.price)
         setEditIndex(index);
     };
- 
+
     const handleSaveClick = async (item, index) => {
         setEditIndex(-1);
         try {
@@ -93,7 +93,7 @@ const GelatoPrice = () => {
             });
         }
     };
- 
+
     const refresh = async () => {
         setSubmitLoading(true)
         const res = await APICALL('admin/updateGelatoPrice', 'post', {})
@@ -105,6 +105,8 @@ const GelatoPrice = () => {
         }
     }
     const startIndex = page * rowsPerPage;
+
+    console.log("data", data)
     return (
         <Paper className="table_samepattern">
             {loading ? (
@@ -120,7 +122,7 @@ const GelatoPrice = () => {
                             }
                         </div>
                     </CardHeader>
- 
+
                     <CardBody>
                         <TableContainer>
                             <Table>
@@ -138,7 +140,37 @@ const GelatoPrice = () => {
                                         .map((row, index) => (
                                             <TableRow key={index}>
                                                 <TableCell>{startIndex + index + 1}</TableCell>
-                                                <TableCell>{row?.productUid}</TableCell>
+                                                <TableCell>
+                                                    <div className="about_details_product mb-2">
+                                                    <ul>
+                                                        <li>
+                                                            <span>Size :</span> {row?.size}
+                                                        </li>
+                                                        <li>
+                                                            <span>Finish :</span> {row?.quality}
+                                                        </li>
+                                                        {
+                                                            row?.frame &&
+                                                            <li>
+                                                                <span>Frame : </span> {row?.frame}
+                                                            </li>
+                                                        }
+                                                        {
+                                                            row?.frameType &&
+                                                            <li>
+                                                                <span>Color : </span> {row?.frameType}
+                                                            </li>
+                                                        }
+                                                        {
+                                                            row?.assembly &&
+                                                            <li>
+                                                                <span>Assembly : </span> {row?.assembly}
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                    </div>
+                                                    {row?.productUid}
+                                                </TableCell>
                                                 <TableCell>{row?.gelato_price?.toFixed(2)}</TableCell>
                                                 <TableCell>
                                                     {editIndex === index ? (
@@ -180,5 +212,5 @@ const GelatoPrice = () => {
         </Paper>
     );
 };
- 
+
 export default GelatoPrice;

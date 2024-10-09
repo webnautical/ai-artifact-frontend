@@ -165,6 +165,7 @@ const MyAddress = () => {
             address1: value
         }));
     };
+    
     const handleLocationSelect = async (value) => {
         try {
             setValue((prevValue) => ({
@@ -208,8 +209,6 @@ const MyAddress = () => {
         const postalCode = addressComponents.find((comp) =>
             comp.types.includes("postal_code")
         )?.long_name || "";
-
-        // setLocationDetails({ country, state, city, postalCode });
         setValue((prevValue) => ({
             ...prevValue,
             "country": country,

@@ -122,6 +122,8 @@ export default function DashboardDefault() {
   ];
 
 
+  console.log("authhhhhhhhhhh", auth("admin"))
+
   return (
     <>
       {listLoading?.artist_info ? (
@@ -132,6 +134,8 @@ export default function DashboardDefault() {
             <Grid item xs={12} sx={{ mb: -2.25 }}>
               <Typography variant="h5">Dashboard</Typography>
             </Grid>
+
+            
             {(role === "artist" || role === "admin") && (
               <>
                 <Grid item xs={6} sm={4} md={3} lg={2}>
@@ -277,8 +281,34 @@ export default function DashboardDefault() {
                     extra="1,943"
                   />
                 </Grid>
-              <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
-              <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
+                <Grid item xs={6} sm={4} md={3} lg={2}>
+                  <AnalyticEcommerce
+                    title="Total Shipping Revenue"
+                    count={`$${
+                      dashboardInfo?.totalShippingRevenue
+                        ? dashboardInfo?.totalShippingRevenue?.toFixed(2)
+                        : 0
+                    }`}
+                    percentage={27.4}
+                    isLoss
+                    color="warning"
+                    extra="1,943"
+                  />
+                </Grid>
+                <Grid item xs={6} sm={4} md={3} lg={2}>
+                  <AnalyticEcommerce
+                    title="Total Artwork Revenue"
+                    count={`$${
+                      dashboardInfo?.totalArtworkRevenue
+                        ? dashboardInfo?.totalArtworkRevenue?.toFixed(2)
+                        : 0
+                    }`}
+                    percentage={27.4}
+                    isLoss
+                    color="warning"
+                    extra="1,943"
+                  />
+                </Grid>
               <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
               <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
               </>
