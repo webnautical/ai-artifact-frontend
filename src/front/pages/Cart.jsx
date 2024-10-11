@@ -5,7 +5,7 @@ import Newsletter from "../../components/Newsletter";
 import paymentimg from '../../assets/images/payment-method.png'
 // import p from '../../assets/images/payment-method.png'
 import whiteframe from '../../assets/images/framesSprite.png';
- 
+
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
 import { auth, defaultIMG, imgBaseURL, sizeBtnArr, toastifySuccess } from "../../helper/Utility";
 import FrontLoader from "../../components/FrontLoader";
@@ -20,26 +20,26 @@ import SelectableButtons from "../../components/SelectableButtons";
 import { APICALL } from "../../helper/api/api";
 const Cart = () => {
   const navigate = useNavigate()
-  const { contextLoader, getCartListFun, cartList, addToCartFun, guestCart, getGestCartListFun, removeFromGuestCart } = useFrontDataContext();
- 
+  const { contextLoader, getCartListFun, cartList, addToCartFun,setGuestCart, guestCart, getGestCartListFun, removeFromGuestCart } = useFrontDataContext();
+
   useEffect(() => {
     if (auth('customer')) {
       getCartListFun()
     } else {
-        getGestCartListFun(guestCart)
+      getGestCartListFun(guestCart)
     }
   }, [guestCart])
- 
+
   const qntChange = (qnt, product_id, uid, initialQuantity) => {
     const qntt = initialQuantity === undefined ? 1 : -1
     addToCartFun(product_id, qntt, uid, 0, "qntChange");
   };
- 
+
   const itemTotal = cartList.reduce((acc, item) => {
     return acc + (item?.row_uid?.price * item?.quantity || 0);
   }, 0);
   const totalPrice = parseInt(itemTotal)
- 
+
   const handleContinue = () => {
     const data = {
       cartItem: cartList,
@@ -48,27 +48,28 @@ const Cart = () => {
     }
     navigate(`/shipping-details`, { state: { data } })
   }
- 
+
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
- 
+
   const [editItemObj, setEditItemObj] = useState(null)
   const [brightness, setBrightness] = useState(1)
   const [frameTexture, setFrameTexture] = useState(null);
- 
-  const handleShow = (item) => {
+  const [itemIndex, setItemIndex] = useState(null)
+  const handleShow = (item, i) => {
     setShow(true);
     setEditItemObj(item)
+    setItemIndex(i)
   }
- 
- 
+
+
   const [artDetails, setArtDetails] = useState({
     price: 0,
     product_price: 0,
     uid: null,
     qnt: 1,
   })
- 
+
   const [selectedOptions, setSelectedOptions] = useState({
     frame: "",
     quality: "",
@@ -77,7 +78,7 @@ const Cart = () => {
     assembly: '',
     affiliateId: ""
   });
- 
+
   const handleClose = () => {
     setEditItemObj(null)
     setShow(false);
@@ -85,18 +86,18 @@ const Cart = () => {
       ...artDetails, price: 0, product_price: 0, qnt: 1, uid: null
     })
   }
- 
+
   const brightnessOptions = [
     { label: 'Matte', value: 1, url: '', 'Museum-Quality Matte': '250-gsm-100lb-uncoated-offwhite-archival', type: 'Museum-Quality Matte' },
     { label: 'Glossy', value: 1.25, url: '', 'Premium Semi-Glossy': '200-gsm-80lb-coated-silk', type: 'Premium Semi-Glossy' }
   ];
- 
+
   const texturesOptions = [
     { name: 'black', url: 'https://wallpaperaccess.com/full/173805.jpg', color: 'Black' },
     { name: 'white', url: whiteframe, color: 'White' },
     { name: 'wood', url: 'https://tse4.mm.bing.net/th?id=OIP.jdVkhxiOxZLMSNu5hFgTTQHaE8&pid=Api&P=0&h=220', color: 'Wood' },
   ];
- 
+
   useEffect(() => {
     if (editItemObj) {
       setSelectedOptions({
@@ -106,15 +107,15 @@ const Cart = () => {
         ...artDetails, price: editItemObj?.row_uid?.price, qnt: editItemObj?.quantity, uid: editItemObj?.row_uid?.productUid
       })
       // getPriceFun(editItemObj?.row_uid?.productUid)
- 
+
       const brightnessRes = brightnessOptions.find(option => option.type?.toLocaleLowerCase() == editItemObj?.quality?.toLocaleLowerCase());
       setBrightness(brightnessRes?.value)
- 
+
       const textures = texturesOptions.find(option => option.name?.toLocaleLowerCase() === editItemObj?.frameType?.toLocaleLowerCase());
       setFrameTexture(textures?.url)
     }
   }, [editItemObj, show])
- 
+
   const canvasQntChange = (qnt, product_id) => {
     setArtDetails({ ...artDetails, qnt: qnt })
   };
@@ -124,23 +125,23 @@ const Cart = () => {
     setSelectedOptions(newSelectedOptions)
     setBrightness(option?.value)
   };
- 
+
   const handleSizeSelect = (item) => {
     const newSelectedOptions = { ...selectedOptions, ['size']: item?.name };
     setSelectedOptions(newSelectedOptions)
   };
- 
+
   const handleTextureSelect = (texture) => {
     const newSelectedOptions = { ...selectedOptions, ['frame']: texture?.frame, ['frameType']: texture.color, ['assembly']: editItemObj?.assembly };
     setSelectedOptions(newSelectedOptions)
     setFrameTexture(texture.url);
   };
- 
+
   const handleSelect = (button, button2) => {
     const newSelectedOptions = { ...selectedOptions, ['assembly']: button2 };
     setSelectedOptions(newSelectedOptions)
   };
- 
+
   const editCartItem = async () => {
     setLoading(true)
     const params = {
@@ -151,11 +152,26 @@ const Cart = () => {
       ...selectedOptions
     }
     try {
-      const res = await APICALL('/user/updateCartItem', 'post', params)
-      if (res?.status) {
-        getCartListFun()
-        handleClose()
+      if (auth('customer')) {
+        const res = await APICALL('/user/updateCartItem', 'post', params)
+        if (res?.status) {
+          getCartListFun()
+          handleClose()
+        }
+      }else{
+        setGuestCart((prev) => {
+          const productIndex = itemIndex;
+      
+          let updatedCart = [...prev];
+      
+          if (productIndex !== undefined && productIndex >= 0 && productIndex < updatedCart.length) {
+              updatedCart[productIndex] = { ...updatedCart[productIndex], ...params };
+          }
+          localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+          return updatedCart;
+      });
       }
+
     } catch (error) {
       console.log(error)
     } finally {
@@ -167,23 +183,23 @@ const Cart = () => {
     if (selectedOptions) {
       const canvas = canvasRef.current;
       if (!canvas) return;
- 
+
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
- 
+
       const img = new Image();
       // ctx.filter = `brightness(${brightness})`;
       img.src = imgBaseURL() + editItemObj?.product_id?.image;
- 
+
       img.onload = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.filter = `brightness(${brightness})`;
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
- 
+
         if (frameTexture) {
           const frameImg = new Image();
           frameImg.src = frameTexture;
- 
+
           frameImg.onload = () => {
             const pattern = ctx.createPattern(frameImg, 'repeat');
             ctx.lineWidth = 30;
@@ -206,15 +222,15 @@ const Cart = () => {
   const GET_UID_AND_GELETO_PRICE_BY_PRODUCT_TYPE = async () => {
     try {
       const res = await APICALL('user/getGelatoUidByParams', 'post', selectedOptions)
-      if(res?.status){
+      if (res?.status) {
         const price = (parseInt(res?.data?.price)) * artDetails?.qnt
-        setArtDetails({ ...artDetails, 'product_price': price, 'uid': res?.data?.productUid , price: parseInt(res?.data?.price) })
+        setArtDetails({ ...artDetails, 'product_price': price, 'uid': res?.data?.productUid, price: parseInt(res?.data?.price) })
       }
     } catch (error) {
       console.log(error)
     }
   }
- 
+
   return (
     <>
       <div className="cart_page">
@@ -234,12 +250,12 @@ const Cart = () => {
                                 <img src={imgBaseURL() + item?.product_id?.thumbnail} alt="product-image" />
                               </Link>
                             </div>
- 
+
                             <div className="about_details_product">
                               <Link to={`/product-details/${item?.product_id?._id}`}>
                                 <h2>{item?.product_id?.title}</h2>
                               </Link>
- 
+
                               <div className="about_frame d-flex justify-content-between align-items-center">
                                 <div>
                                   <ul>
@@ -268,7 +284,7 @@ const Cart = () => {
                                       </li>
                                     }
                                   </ul>
- 
+
                                   <div className="add-remove-btn mt-2">
                                     {
                                       contextLoader.addToCart[item?.product_id?._id] ?
@@ -282,7 +298,7 @@ const Cart = () => {
                                           }
                                         </>
                                     }
-                                    <button className='remove_btn' onClick={() => { handleShow(item) }}>Edit</button>
+                                    <button className='remove_btn' onClick={() => { handleShow(item, i) }}>Edit</button>
                                     {/* <p>Item Price: <strong>${parseInt(item?.row_uid?.price) * item?.quantity}</strong></p> */}
                                   </div>
                                 </div>
@@ -291,8 +307,8 @@ const Cart = () => {
                                   <QuantitySelector initialQuantity={item?.quantity} onQuantityChange={qntChange} product_id={item?.product_id?._id} uid={item?.row_uid?.test_id || item?.row_uid?.productUid} />
                                 </div>
                               </div>
- 
- 
+
+
                             </div>
                           </div>
                         ))
@@ -306,13 +322,13 @@ const Cart = () => {
                               your cart!
                             </p>
                             <Link className="global_btn d-inline-block " to="/product-list">Shop</Link>
- 
+
                           </div>
                         </>
                     }
                   </div>
                 </Col>
- 
+
                 <Col lg={3}>
                   <div className="ship_to gloab_card mb-md-0 mb-3">
                     <ul className="p-0">
@@ -328,7 +344,7 @@ const Cart = () => {
                         :
                         <button class="global_btn w-100" type="button" style={{ cursor: "not-allowed" }} disabled>Checkout</button>
                     }
- 
+
                     <div className="payment_method W-100 mt-3">
                       <img className="w-100" src={paymentimg} alt="payment-method-icon" />
                     </div>
@@ -337,7 +353,7 @@ const Cart = () => {
               </Row>
           }
         </Container>
- 
+
         <Offcanvas className="cart_edit" placement="end" show={show} onHide={handleClose}>
           <Offcanvas.Header closeButton>
             <Offcanvas.Title>Edit item</Offcanvas.Title>
@@ -355,17 +371,17 @@ const Cart = () => {
               <div className="img-box">
                 <p>${artDetails?.product_price} per item</p>
               </div>
- 
+
               <div className="mt-3">
                 <span>Quantity</span>
                 <QuantitySelector onQuantityChange={canvasQntChange} product_id={editItemObj?.product_id?._id} initialQuantity={editItemObj?.quantity} />
               </div>
- 
+
               <div className="mt-3">
                 <span>Product type</span>
                 <GlossEffect onBrightnessChange={handleBrightnessChange} light={brightness} />
               </div>
- 
+
               <div className="mt-3">
                 <span className="d-block">Choose Size</span>
                 <div className="add_frame">
@@ -383,12 +399,12 @@ const Cart = () => {
                   ))}
                 </div>
               </div>
- 
+
               <div className="mt-3">
                 <span>Add frame</span>
                 <TexturePicker onTextureSelect={handleTextureSelect} url={frameTexture} />
               </div>
- 
+
               {selectedOptions.frame === 'With Frame' && (
                 <>
                   <p className="typehed mb-0 mt-3">Assembly</p>
@@ -409,5 +425,5 @@ const Cart = () => {
     </>
   );
 };
- 
+
 export default Cart;

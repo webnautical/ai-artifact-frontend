@@ -500,7 +500,7 @@ const Home = () => {
                           <div className="outer_top_ten">
                             <div className="top_ten_arts text-center mt-3">
                               <img src={noDataImg} alt="no-art" />
-                              <h5 className="mt-3">There are no artwork on this rank !</h5>
+                              <h5 className="mt-3">There are no artwork on this tier !</h5>
                             </div>
                           </div>
                         </>

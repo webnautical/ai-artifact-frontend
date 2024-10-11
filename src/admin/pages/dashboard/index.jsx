@@ -396,7 +396,7 @@ export default function DashboardDefault() {
                                 <ul>
                                   <li>
                                     {" "}
-                                    <b> Rank</b> - {dashboardInfo?.rank?.currentRank}
+                                    <b> Tier</b> - {dashboardInfo?.rank?.currentRank}
                                   </li>
                                   <li>
                                     {" "}

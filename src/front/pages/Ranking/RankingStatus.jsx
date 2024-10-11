@@ -204,7 +204,7 @@ const RankingStatus = () => {
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                       <TableHead>
                         <TableRow>
-                          <TableCell>Rank</TableCell>
+                          <TableCell>Tier</TableCell>
                           <TableCell align="center">Artist Name</TableCell>
                           <TableCell align="center">Total Sales</TableCell>
                           <TableCell align="center">Total Revenue</TableCell>
@@ -315,7 +315,7 @@ const RankingStatus = () => {
                               <>
                                 <TableCell colSpan={5} align="center">
                                   <div className="text-center mt-3">
-                                    <h6>There are no artist on this rank !</h6>
+                                    <h6>There are no artist on this tier !</h6>
                                   </div>
                                 </TableCell>
                               </>

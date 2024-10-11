@@ -363,7 +363,7 @@ const ViewUserDetails = () => {
                                         <ul>
                                           <li>
                                             {" "}
-                                            <b> Rank</b> -{" "}
+                                            <b> Tier</b> -{" "}
                                             {dashboardInfo?.rank?.currentRank}
                                           </li>
                                           <li>
