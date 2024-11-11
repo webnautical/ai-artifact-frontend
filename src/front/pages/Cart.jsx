@@ -5,7 +5,8 @@ import Newsletter from "../../components/Newsletter";
 import paymentimg from '../../assets/images/payment-method.png'
 // import p from '../../assets/images/payment-method.png'
 import whiteframe from '../../assets/images/framesSprite.png';
- 
+import {  InputGroup } from 'react-bootstrap';
+
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
 import { auth, defaultIMG, imgBaseURL, sizeBtnArr, toastifySuccess } from "../../helper/Utility";
 import FrontLoader from "../../components/FrontLoader";
@@ -20,8 +21,8 @@ import SelectableButtons from "../../components/SelectableButtons";
 import { APICALL } from "../../helper/api/api";
 const Cart = () => {
   const navigate = useNavigate()
-  const { contextLoader, getCartListFun, cartList, addToCartFun, guestCart, getGestCartListFun, removeFromGuestCart } = useFrontDataContext();
- 
+  const { contextLoader, getCartListFun, cartList, addToCartFun, setGuestCart, guestCart, getGestCartListFun, removeFromGuestCart } = useFrontDataContext();
+
   useEffect(() => {
     if (auth('customer')) {
       getCartListFun()
@@ -106,8 +107,7 @@ const Cart = () => {
       setArtDetails({
         ...artDetails, price: editItemObj?.row_uid?.price, qnt: editItemObj?.quantity, uid: editItemObj?.row_uid?.productUid
       })
-      // getPriceFun(editItemObj?.row_uid?.productUid)
- 
+
       const brightnessRes = brightnessOptions.find(option => option.type?.toLocaleLowerCase() == editItemObj?.quality?.toLocaleLowerCase());
       setBrightness(brightnessRes?.value)
 
@@ -152,11 +152,27 @@ const Cart = () => {
       ...selectedOptions
     }
     try {
-      const res = await APICALL('/user/updateCartItem', 'post', params)
-      if (res?.status) {
-        getCartListFun()
-        handleClose()
+      if (auth('customer')) {
+        const res = await APICALL('/user/updateCartItem', 'post', params)
+        if (res?.status) {
+          getCartListFun()
+          handleClose()
+        }
+      } else {
+        setGuestCart((prev) => {
+          const productIndex = itemIndex;
+
+          let updatedCart = [...prev];
+
+          if (productIndex !== undefined && productIndex >= 0 && productIndex < updatedCart.length) {
+            updatedCart[productIndex] = { ...updatedCart[productIndex], ...params };
+          }
+          localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+          handleClose()
+          return updatedCart;
+        });
       }
+
     } catch (error) {
       console.log(error)
     } finally {
