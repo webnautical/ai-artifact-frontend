@@ -1,4 +1,5 @@
 import { AccountCircleOutlined, AddModeratorOutlined, Dashboard, FolderSharedOutlined, NotificationsActiveOutlined, PaidOutlined, PeopleAltOutlined } from '@mui/icons-material';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 const icons = {
   Dashboard,
   FolderSharedOutlined,
@@ -7,7 +8,9 @@ const icons = {
   PaidOutlined,
   NotificationsActiveOutlined,
   AccountCircleOutlined,
+  WorkspacePremiumIcon
 };
+ 
 const artist = {
   id: 'group-dashboard',
   type: 'group',
@@ -47,8 +50,23 @@ const artist = {
           url: `artworks/pending`,
           breadcrumbs: false
         },
+        {
+          id: "collections",
+          title: "Collections",
+          type: "item",
+          url: `collections`,
+          breadcrumbs: false,
+        },
        
       ]
+    },
+    {
+      id: 'achievement',
+      title: 'Achievements',
+      type: 'item',
+      url: '/artist/achievement',
+      icon: WorkspacePremiumIcon,
+      breadcrumbs: false
     },
     {
       id: 'notifications',

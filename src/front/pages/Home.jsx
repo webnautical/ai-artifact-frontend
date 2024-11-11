@@ -298,10 +298,10 @@ const Home = () => {
           <section className="slider_sec">
             <Container>
               <Row>
-                <Col lg={8}>
+                <Col lg={8} className="web_banner">
                   <OwlCarousel className=" owl-theme" {...heroslider} ref={owlCarouselRef}>
                     {
-                      bannerList?.map((item, i) => (
+                      bannerList?.filter((item) => item?.type === "web")?.map((item, i) => (
                         <div className="item">
                           <div className="slider_big" >
                             <img className="w-100 full zoom" src={imgBaseURL() + item?.image} alt="slider-img" />
@@ -313,7 +313,24 @@ const Home = () => {
                         </div>
                       ))
                     }
- 
+                  </OwlCarousel>
+                </Col>
+
+                <Col lg={8} className="mobile_banner mb-4">
+                  <OwlCarousel className=" owl-theme" {...heroslider} ref={owlCarouselRef}>
+                    {
+                      bannerList?.filter((item) => item?.type === "mobile")?.map((item, i) => (
+                        <div className="item">
+                          <div className="slider_big" >
+                            <img className="w-100 full zoom" src={imgBaseURL() + item?.image} alt="slider-img" />
+                            <div className="cnt_slider">
+                              <h2>{item?.title}</h2>
+                              <Link to={item?.redirectUrl} className="global_btn">View More</Link>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    }
                   </OwlCarousel>
                 </Col>
  
@@ -500,7 +517,7 @@ const Home = () => {
                           <div className="outer_top_ten">
                             <div className="top_ten_arts text-center mt-3">
                               <img src={noDataImg} alt="no-art" />
-                              <h5 className="mt-3">There are no artwork on this rank !</h5>
+                              <h5 className="mt-3">There are no artwork on this tier !</h5>
                             </div>
                           </div>
                         </>

@@ -100,6 +100,8 @@ const FrontSignup = () => {
     try {
       const res = await APICALL("/user/registerUser", "post", formData);
       if (res?.status) {
+        console.log("formData",formData)
+        console.log("res",res)
         const dataParam = {
           token: res?.token,
           name: res?.registerUser?.first_name,
@@ -570,6 +572,9 @@ const FrontSignup = () => {
                     <form action="#" className="custom-form">
                       <h1>Create an account</h1>
                       <p className="mb-4 mt-4">Enter your details below</p>
+
+                      
+
                       <div>
                         <Form.Group
                           className={`form-group ${

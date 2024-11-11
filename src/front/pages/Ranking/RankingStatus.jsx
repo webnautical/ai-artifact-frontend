@@ -36,7 +36,7 @@ const RankingStatus = () => {
   const [period, setPeriod] = useState('week');
   const [topArtwork, setTopArtwork] = useState([]);
  
-  const categories = period === "week" ? salesHistroy?.map(item => item.dayName || '') : salesHistroy?.map(item => item.monthName || '');
+  const categories = period === "week" ? salesHistroy?.map(item => item.dayName || '') : period === "month" ?  salesHistroy?.map(item => item.period || '') : salesHistroy?.map(item => item.monthName || '');
   const salesAmounts = salesHistroy?.map(item => (item.totalSalesAmount ? item.totalSalesAmount.toFixed(2) : 0));
  
   const options = {
@@ -204,7 +204,7 @@ const RankingStatus = () => {
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                       <TableHead>
                         <TableRow>
-                          <TableCell>Rank</TableCell>
+                          <TableCell>Tier</TableCell>
                           <TableCell align="center">Artist Name</TableCell>
                           <TableCell align="center">Total Sales</TableCell>
                           <TableCell align="center">Total Revenue</TableCell>
@@ -297,6 +297,7 @@ const RankingStatus = () => {
                                               <div>
                                                 <FormControl>
                                                   <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group" value={period} onChange={handleChange}>
+                                                    <FormControlLabel value="year" control={<Radio />} label="Year" />
                                                     <FormControlLabel value="month" control={<Radio />} label="Month" />
                                                     <FormControlLabel value="week" control={<Radio />} label="Week" />
                                                   </RadioGroup>
@@ -315,7 +316,7 @@ const RankingStatus = () => {
                               <>
                                 <TableCell colSpan={5} align="center">
                                   <div className="text-center mt-3">
-                                    <h6>There are no artist on this rank !</h6>
+                                    <h6>There are no artist on this tier !</h6>
                                   </div>
                                 </TableCell>
                               </>

@@ -63,8 +63,9 @@ const dashboard = {
           url: `/admin/user-management/affiliate`,
           breadcrumbs: false
         }
-      ] 
+      ]
     },
+
 
     {
       id: 'Products',
@@ -93,10 +94,16 @@ const dashboard = {
           url: `reviews`,
           breadcrumbs: false,
         },
-      ] 
+        {
+          id: "collections",
+          title: "Collections",
+          type: "item",
+          url: `collections`,
+          breadcrumbs: false,
+        },
+      ]
     },
 
-    
     {
       id: 'orders',
       title: 'Orders Management ',
@@ -117,8 +124,8 @@ const dashboard = {
           type: 'item',
           url: `/admin/orders/transaction`,
           breadcrumbs: false
-        },  
-      ] 
+        },
+      ]
     },
 
 
@@ -134,9 +141,9 @@ const dashboard = {
           title: 'Blogs',
           type: 'item',
           url: '/admin/blogs',
-     
+
           breadcrumbs: false
-        }, 
+        },
         {
           id: 'contact-us',
           title: 'Contact Us',
@@ -186,7 +193,7 @@ const dashboard = {
           url: `/admin/pages/what-is-aiartifact`,
           breadcrumbs: false
         },
- 
+
         {
           id: 'aiartifact-club',
           title: 'Aiartifact club',
@@ -194,7 +201,7 @@ const dashboard = {
           url: `/admin/pages/aiartifact-club`,
           breadcrumbs: false
         },
- 
+
         {
           id: 'mounting-instructions',
           title: 'Mounting Instructions',
@@ -209,7 +216,14 @@ const dashboard = {
           url: `/admin/faq`,
           breadcrumbs: false
         },
-      ] 
+        {
+          id: 'contentGuidelines',
+          title: 'Content Guidelines',
+          type: 'item',
+          url: `/admin/pages/content-guidelines`,
+          breadcrumbs: false
+        },
+      ]
     },
 
 
@@ -220,7 +234,7 @@ const dashboard = {
       url: '/admin/notifications',
       icon: NotificationsNoneIcon,
       breadcrumbs: false
-    },  
+    },
 
 
 
@@ -237,24 +251,16 @@ const dashboard = {
           title: "General Settings",
           type: "item",
           url: "/admin/general-settings",
-    
+
           breadcrumbs: false,
         },
-
-        {
-          id: 'transaction',
-          title: 'Transaction History',
-          type: 'item',
-          url: `/admin/orders/transaction`,
-          breadcrumbs: false
-        },  
 
         {
           id: "GelatoPrice",
           title: "Gelato Price",
           type: "item",
           url: "/admin/gelato-price",
-       
+
           breadcrumbs: false,
         },
 
@@ -263,15 +269,15 @@ const dashboard = {
           title: "Banner & Images",
           type: "item",
           url: `/${auth('admin')?.user_role}/banner-images`,
-          
+
           breadcrumbs: false,
         },
-      ] 
+      ]
     },
 
 
 
-    
+
 
 
     {
@@ -290,8 +296,8 @@ const dashboard = {
       icon: icons.FolderSharedOutlined,
       breadcrumbs: false
     },
-   
-  
+
+
     {
       id: 'SubAdmin',
       title: 'Sub Admin',
@@ -299,8 +305,8 @@ const dashboard = {
       url: '/admin/sub-admin',
       icon: SecurityIcon,
       breadcrumbs: false
-    }, 
-    
+    },
+
     {
       id: 'contactQuery',
       title: 'Contact Query',
@@ -308,7 +314,7 @@ const dashboard = {
       url: '/admin/contact-query',
       icon: SupportAgentIcon,
       breadcrumbs: false
-    },  
+    },
     {
       id: 'Subscribers',
       title: 'Subscribers',
@@ -316,9 +322,9 @@ const dashboard = {
       url: '/admin/subscribers',
       icon: SubscriptionsIcon,
       breadcrumbs: false
-    },  
-   
-  
+    },
+
+
 
 
 

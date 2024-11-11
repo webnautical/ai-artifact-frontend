@@ -270,9 +270,9 @@ const Product = () => {
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{row.title}</TableCell>
                                 <TableCell>
-                                  {row.artist_id.first_name +
+                                  {row?.artist_id?.first_name +
                                     " " +
-                                    row.artist_id.last_name}
+                                    row?.artist_id?.last_name}
                                 </TableCell>
                                 <TableCell>{row?.category?.name}</TableCell>
                                 <TableCell>{row?.subcategory?.name}</TableCell>

@@ -380,7 +380,7 @@ export const FrontContextProvider = ({ children }) => {
             userInfoByID, getUserByIDFun,
  
             // FOR GUEST CONTEST STATE & METHODE/FUNCTIONS
-            guestWishlist, getGuestWishListProduct, guestCart, getGestCartListFun,removeFromGuestCart,isItemInGuestWishlist
+            guestWishlist, getGuestWishListProduct, guestCart,setGuestCart, getGestCartListFun,removeFromGuestCart,isItemInGuestWishlist
         }}>
             {children}
         </ContextData.Provider>

@@ -153,6 +153,7 @@ const Review = () => {
                               <TableCell>Star</TableCell>
                               <TableCell>Review Images</TableCell>
                               <TableCell>Comment</TableCell>
+                              <TableCell>Lottery Entry</TableCell>
                               <TableCell>Status</TableCell>
                               <TableCell>
                                 <TableSortLabel
@@ -201,6 +202,7 @@ const Review = () => {
                                   </div>
                                 </TableCell>
                                 <TableCell>{row.comment}</TableCell>
+                                <TableCell>{row.is_lottery ? "Yes" : "No"}</TableCell>
                                 <TableCell>
                                   <SwitchToggle
                                     checked={row?.status}

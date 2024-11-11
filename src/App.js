@@ -79,6 +79,7 @@ function App() {
               <Route path="/shipping" element={<FrontWeb cmp={StaticPages} />} />
               <Route path="/terms-of-use" element={<FrontWeb cmp={StaticPages} />} />
               <Route path="/privacy-policy" element={<FrontWeb cmp={StaticPages} />} />
+              <Route path="/content-guidelines" element={<FrontWeb cmp={StaticPages} />} />
               <Route path="/copyright-complaints" element={<FrontWeb cmp={StaticPages} />} />
               <Route path="/about-us" element={<FrontWeb cmp={StaticPages} />} />
               <Route path="/what-is-aiartifact" element={<FrontWeb cmp={StaticPages} />} />

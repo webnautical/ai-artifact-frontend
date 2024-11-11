@@ -12,6 +12,9 @@ import { Link } from "react-router-dom";
 import { APICALL } from "../../../helper/api/api";
 import AnalyticEcommerce from "../../components/cards/statistics/AnalyticEcommerce";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import { styled } from '@mui/material/styles';
+import { tableCellClasses } from '@mui/material/TableCell';
+import orderlisticon from '../../../assets/images/orderlist.png'
 
 import {
   Table,
@@ -69,6 +72,17 @@ const options = {
   labels: [""],
 };
 
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+
 const ViewUserDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -79,6 +93,7 @@ const ViewUserDetails = () => {
     useDataContext();
   useEffect(() => {
     getUserByIDFun(id);
+    getListFun()
   }, []);
 
   useEffect(() => {
@@ -127,6 +142,26 @@ const ViewUserDetails = () => {
     role: userInfoByID?.user_role,
     id: userInfoByID?._id,
   };
+  const [orders, setOrders] = useState([])
+
+  const getListFun = async () => {
+    try {
+      const res = await APICALL("admin/allOrders", "post", { customerId: id });
+      if (res?.status) {
+        setOrders(res.data);
+      } else {
+        setOrders([]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleButton = (row) => {
+    navigate('/admin/orders/list', { state: { orderDetails: row } })
+  }
+
+  console.log("dashboardInfo",dashboardInfo)
 
   return (
     <>
@@ -179,7 +214,7 @@ const ViewUserDetails = () => {
                       <Grid item xs={12} sm={6} md={4} lg={2}>
                         <AnalyticEcommerce
                           title="Total Artwork"
-                          count={<><>{dashboardInfo?.totalArtwork || 0}</>  {<>/ {dashboardInfo?.rank?.maxUploads}</>} </>}
+                          count={<><>{dashboardInfo?.totalArtwork || 0}</>  {<>/ {dashboardInfo?.artistData?.highestRank?.maxUploads}</>} </>}
                           percentage={59.3}
                           extra="35,000"
                         />
@@ -221,8 +256,8 @@ const ViewUserDetails = () => {
                           <AnalyticEcommerce
                             title="Total Revenue"
                             count={`$${dashboardInfo?.totalRevenue
-                                ? dashboardInfo?.totalRevenue?.toFixed(2)
-                                : 0
+                              ? dashboardInfo?.totalRevenue?.toFixed(2)
+                              : 0
                               }`}
                             percentage={27.4}
                             isLoss
@@ -233,19 +268,18 @@ const ViewUserDetails = () => {
                         <Grid item xs={6} sm={4} md={3} lg={2}>
                           <AnalyticEcommerce
                             title="Total Commission"
-                            count={`$${
-                              dashboardInfo?.totalCommission
-                                ? dashboardInfo?.totalCommission?.toFixed(2)
-                                : 0
-                            }`}
+                            count={`$${dashboardInfo?.totalCommission
+                              ? dashboardInfo?.totalCommission?.toFixed(2)
+                              : 0
+                              }`}
                           />
                         </Grid>
                         <Grid item xs={12} sm={6} md={4} lg={2}>
                           <AnalyticEcommerce
                             title="Total Paid"
                             count={`$${typeof dashboardInfo?.totalPaid === "number"
-                                ? dashboardInfo.totalPaid
-                                : 0
+                              ? dashboardInfo.totalPaid
+                              : 0
                               }`}
                             percentage={27.4}
                             isLoss
@@ -261,55 +295,97 @@ const ViewUserDetails = () => {
                   <Col md={12}>
                     <Row className="">
                       <Col md={12}>
-                        {/* <h5><strong>User Info</strong></h5>
-                                  <div className="table_border mb-3">
-                                      <p>
-                                          {" "}
-                                          <strong>Name:</strong>{" "}
-                                          {userInfoByID?.first_name +
-                                              " " +
-                                              userInfoByID?.last_name}
-                                      </p>
-                                      <p>
-                                          {" "}
-                                          <strong>Email:</strong>{" "}
-                                          {userInfoByID?.email}
-                                      </p>
-                                  </div> */}
+
                         <div>
                           {userInfoByID?.user_role === "customer" && (
-                            <Col md={12} className="mb-3 mt-2">
-                              <h5>
-                                <strong>Address</strong>
-                              </h5>
-                              <div className="table_border">
-                                <p>
-                                  {" "}
-                                  <strong>Address 1:</strong>{" "}
-                                  {userInfoByID?.address1 || "---"}
-                                </p>
-                                <p>
-                                  {" "}
-                                  <strong>Address 2:</strong>{" "}
-                                  {userInfoByID?.address2 || "---"}
-                                </p>
-                                <p>
-                                  {" "}
-                                  <strong>State:</strong>{" "}
-                                  {userInfoByID?.state || "---"}
-                                </p>
-                                <p>
-                                  {" "}
-                                  <strong>City:</strong>{" "}
-                                  {userInfoByID?.city || "---"}
-                                </p>
-                                <p>
-                                  {" "}
-                                  <strong>Postal Code:</strong>{" "}
-                                  {userInfoByID?.postalCode || "---"}
-                                </p>
-                              </div>
-                            </Col>
+                            <>
+                              <Col md={12} className="mb-3 mt-2">
+                                <h5>
+                                  <strong>Address</strong>
+                                </h5>
+                                <div className="table_border">
+                                  <p>
+                                    {" "}
+                                    <strong>Address 1:</strong>{" "}
+                                    {userInfoByID?.address1 || "---"}
+                                  </p>
+                                  <p>
+                                    {" "}
+                                    <strong>Address 2:</strong>{" "}
+                                    {userInfoByID?.address2 || "---"}
+                                  </p>
+                                  <p>
+                                    {" "}
+                                    <strong>State:</strong>{" "}
+                                    {userInfoByID?.state || "---"}
+                                  </p>
+                                  <p>
+                                    {" "}
+                                    <strong>City:</strong>{" "}
+                                    {userInfoByID?.city || "---"}
+                                  </p>
+                                  <p>
+                                    {" "}
+                                    <strong>Postal Code:</strong>{" "}
+                                    {userInfoByID?.postalCode || "---"}
+                                  </p>
+                                </div>
+                              </Col>
+                              <Col md={12} className="mb-3 mt-2">
+                                <div className='order_list_talbe'>
+                                  {
+                                    orders?.length > 0 ?
+                                      <TableContainer component={Paper} className='p-0'>
+                                        <Table aria-label="customized table">
+                                          <TableHead>
+                                            <TableRow>
+
+                                              <StyledTableCell>S.No</StyledTableCell>
+                                              <StyledTableCell>Order ID</StyledTableCell>
+                                              {/* <StyledTableCell>Customer Name</StyledTableCell> */}
+                                              <StyledTableCell>Price</StyledTableCell>
+                                              <StyledTableCell>Status</StyledTableCell>
+                                              <StyledTableCell>Payment</StyledTableCell>
+                                              <StyledTableCell> Date </StyledTableCell>
+                                              <StyledTableCell align="right">Actions</StyledTableCell>
+                                            </TableRow>
+                                          </TableHead>
+                                          <TableBody>
+                                            {orders?.map((row, index) => (
+                                              <TableRow key={index}>
+                                                <StyledTableCell>{index + 1}</StyledTableCell>
+                                                <StyledTableCell>{row._id}</StyledTableCell>
+                                                {/* <StyledTableCell>{row.shippingAddress?.firstName + " " + row?.shippingAddress?.lastName}</StyledTableCell> */}
+                                                <StyledTableCell>${row.totalPrice}</StyledTableCell>
+                                                <StyledTableCell>{row.status}</StyledTableCell>
+                                                <StyledTableCell>{row.paymentGateway}</StyledTableCell>
+                                                <StyledTableCell>{timeAgo(row.createdAt)}</StyledTableCell>
+                                                <StyledTableCell align="right">
+                                                  <button className='order_view_btn' onClick={() => handleButton(row)}>
+                                                    <RemoveRedEyeIcon style={{ marginRight: "4px" }} /> View
+                                                  </button>
+                                                </StyledTableCell>
+                                              </TableRow>
+                                            ))}
+                                          </TableBody>
+
+                                        </Table>
+                                      </TableContainer>
+                                      :
+                                      <>
+                                        <div className='cart_em_img text-center'>
+                                          <img src={orderlisticon} style={{ width: '128px ' }} alt='order-list-icon' />
+                                          <h5 className='mt-2'>They haven't placed any orders yet.</h5>
+                                          {/* <p> Start shopping now!</p>
+                                          <Link className="global_btn d-inline-block " to="/product-list">
+                                            Shop
+                                          </Link> */}
+                                        </div>
+                                      </>
+                                  }
+                                </div>
+                              </Col>
+                            </>
                           )}
                         </div>
                       </Col>
@@ -363,7 +439,7 @@ const ViewUserDetails = () => {
                                         <ul>
                                           <li>
                                             {" "}
-                                            <b> Rank</b> -{" "}
+                                            <b> Tier</b> -{" "}
                                             {dashboardInfo?.rank?.currentRank}
                                           </li>
                                           <li>

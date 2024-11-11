@@ -12,6 +12,7 @@ import { SOMETHING_ERR } from "../../../helper/Constant";
 import { useLocation, useNavigate } from "react-router";
 import artworkthumb from '../../../assets/images/placeholder.jpg'
 import { Alert, Stack } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const ArtWorkUpload = () => {
   const {
@@ -29,12 +30,12 @@ const ArtWorkUpload = () => {
   const [directoryToggle, setDirectoryToggle] = useState(false);
   const locationData = useLocation();
   const artData = locationData?.state ? locationData?.state?.data : null;
-  console.log("artData",artData)
+  console.log("artData", artData)
   const navigate = useNavigate();
   useEffect(() => {
     getCategoryFun();
     // getCollectionFun();
-    if(artData?.update_by !== "admin"){
+    if (artData?.update_by !== "admin") {
       getDirectoryFun()
     }
   }, []);
@@ -60,7 +61,7 @@ const ArtWorkUpload = () => {
     directoryId: "",
     directoryName: "",
   });
-// console.log("artData",artData)
+  // console.log("artData",artData)
   useEffect(() => {
     if (artData?.title) {
       setFormData({
@@ -77,7 +78,7 @@ const ArtWorkUpload = () => {
       });
       setImgPreview({ ...imgPreview, image: imgBaseURL() + artData?.thumbnail });
       getSubCategoryFun(artData?.category?._id);
-      if(artData?.update_by === "admin"){
+      if (artData?.update_by === "admin") {
         getDirectoryFun(artData?.artist_id?._id)
       }
     } else {
@@ -324,9 +325,9 @@ const ArtWorkUpload = () => {
           _id: res?.data?.directoryId?._id
         }
         getUserByIDFun(auth('admin')?.id)
-        if(artData?.update_by === "admin"){
+        if (artData?.update_by === "admin") {
           navigate(`/${auth('admin')?.user_role}/products`);
-        }else{
+        } else {
           navigate(`/${auth('admin')?.user_role}/artworks/pending`);
         }
       } else {
@@ -350,6 +351,8 @@ const ArtWorkUpload = () => {
   useEffect(() => {
     getUserByIDFun(auth('admin')?.id)
   }, [])
+
+  console.log("userInfoByID", userInfoByID)
 
   return (
     <>
@@ -429,27 +432,21 @@ const ArtWorkUpload = () => {
           <Col md={6}>
             <div className="images_type_req">
               <ul className="mt-3">
-                <li><i class="fa-solid fa-circle-dot"></i> Only high print quality uploads are published</li>
+                <li><i class="fa-solid fa-circle-dot"></i> Only high quality uploads are approved</li>
                 <li>
-                  <i class="fa-solid fa-circle-dot"></i> Minimum 300 DPI in RGB mode. JPG size up to 30MB (this must be
-                  scanned automatically).
+                  <i class="fa-solid fa-circle-dot"></i> Maximum 30 MB file size
                 </li>
                 <li>
-                  <i class="fa-solid fa-circle-dot"></i> The shortest side at least 2900px (this must be scanned
-                  automatically).
+                  <i class="fa-solid fa-circle-dot"></i> 5:7 ratio
                 </li>
                 <li>
-                  <i class="fa-solid fa-circle-dot"></i> 5:7 ratio for the best product fit (ex. 2900px x 4060px) (this
-                  must be scanned automatically).
+                  <i class="fa-solid fa-circle-dot"></i> Minimum 2900px x 4060px
                 </li>
-                <li><i class="fa-solid fa-circle-dot"></i> No logos, no watermarks, no borders</li>
+                <li><i class="fa-solid fa-circle-dot"></i> JPEG, JPG, PNG, or PDF format</li>
                 <li>
-                  <i class="fa-solid fa-circle-dot"></i> Text/content shall be from the edge at least 200px for the
-                  file with min. size 4060px x 2900px
-                </li>
-                <li>
-                  <i class="fa-solid fa-circle-dot"></i> The whole content of the design must be included in one
-                  uploaded file
+
+                  <i class="fa-solid fa-circle-dot"></i> Comply with the <Link to="/content-guidelines" className="teal_text" target="_blank">Content Guidelines </Link>
+
                 </li>
               </ul>
             </div>
@@ -559,9 +556,9 @@ const ArtWorkUpload = () => {
           </Col>
           {
             !formData?.productId &&
-            userInfoByID?.totalArtworks >= userInfoByID?.highestRank?.maxUploads ?
+              userInfoByID?.totalArtworks >= userInfoByID?.highestRank?.maxUploads ?
               <Col md={12} className="text-end">
-                <Button className="artist-btn" variant="primary" style={{cursor: "not-allowed"}}>
+                <Button className="artist-btn" variant="primary" style={{ cursor: "not-allowed" }}>
                   {formData?.productId ? "Update Product" : "Upload"}{" "}
                 </Button>
               </Col>
@@ -570,7 +567,7 @@ const ArtWorkUpload = () => {
                 {loading.submit ? (
                   <BTNLoader className={"artist-btn"} />
                 ) : (
-                  <Button  className="artist-btn"  variant="primary" onClick={() => validateFun()}>
+                  <Button className="artist-btn" variant="primary" onClick={() => validateFun()}>
                     {formData?.productId ? "Update Product" : "Upload"}{" "}
                   </Button>
                 )}

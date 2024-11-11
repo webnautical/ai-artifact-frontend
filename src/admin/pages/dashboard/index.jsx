@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import AdminLoader from "../../components/AdminLoader";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import noaccess from '../../../assets/images/noaccess.png'
+import step3 from "../../../assets/images/step3.png";
 import {
   Table,
   TableBody,
@@ -23,8 +24,8 @@ import {
   IconButton,
 } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
-import { Dropdown } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Button, Card, CardBody, CardHeader, Col, Dropdown } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import PiaChart from "./PiaChart";
 
 const options = {
@@ -136,7 +137,7 @@ export default function DashboardDefault() {
                   <Grid item xs={12} >
                     <MainCard sx={{ mt: 2 }} content={false}>
                       <div className="text-center py-5">
-                        <img src={noaccess} alt="" style={{width: "200px"}}/>
+                        <img src={noaccess} alt="" style={{ width: "200px" }} />
                         <h5>No access</h5>
                       </div>
                     </MainCard>
@@ -181,6 +182,7 @@ export default function DashboardDefault() {
                       </Grid>
                     </>
                   )}
+
                   <Grid item xs={6} sm={4} md={3} lg={2}>
                     <AnalyticEcommerce
                       title="Total Sold Items"
@@ -193,7 +195,21 @@ export default function DashboardDefault() {
                   </Grid>
                   <Grid item xs={6} sm={4} md={3} lg={2}>
                     <AnalyticEcommerce
-                      title="Total Revenue"
+                      title="Gross Revenue"
+                      count={`$${dashboardInfo?.grossRevenue
+                        ? dashboardInfo?.grossRevenue?.toFixed(2)
+                        : 0
+                        }`}
+                      percentage={27.4}
+                      isLoss
+                      color="warning"
+                      extra="$20,395"
+                    />
+                  </Grid>
+                  
+                  <Grid item xs={6} sm={4} md={3} lg={2}>
+                    <AnalyticEcommerce
+                      title="Net Revenue"
                       count={`$${dashboardInfo?.totalRevenue
                         ? dashboardInfo?.totalRevenue?.toFixed(2)
                         : 0
@@ -204,6 +220,7 @@ export default function DashboardDefault() {
                       extra="$20,395"
                     />
                   </Grid>
+                 
                   <Grid item xs={6} sm={4} md={3} lg={2}>
                     <AnalyticEcommerce
                       title="Total Commission"
@@ -279,7 +296,7 @@ export default function DashboardDefault() {
                       </Grid>
                       <Grid item xs={6} sm={4} md={3} lg={2}>
                         <AnalyticEcommerce
-                          title="Total Refunded Revenue"
+                          title="Total Refunded"
                           count={`$${dashboardInfo?.totalRefundedRevenue
                             ? dashboardInfo?.totalRefundedRevenue?.toFixed(2)
                             : 0
@@ -292,7 +309,7 @@ export default function DashboardDefault() {
                       </Grid>
                       <Grid item xs={6} sm={4} md={3} lg={2}>
                         <AnalyticEcommerce
-                          title="Total Shipping Revenue"
+                          title="Total Shipping"
                           count={`$${dashboardInfo?.totalShippingRevenue
                             ? dashboardInfo?.totalShippingRevenue?.toFixed(2)
                             : 0
@@ -303,7 +320,7 @@ export default function DashboardDefault() {
                           extra="1,943"
                         />
                       </Grid>
-                      <Grid item xs={6} sm={4} md={3} lg={2}>
+                      {/* <Grid item xs={6} sm={4} md={3} lg={2}>
                         <AnalyticEcommerce
                           title="Total Artwork Revenue"
                           count={`$${dashboardInfo?.totalArtworkRevenue
@@ -315,7 +332,7 @@ export default function DashboardDefault() {
                           color="warning"
                           extra="1,943"
                         />
-                      </Grid>
+                      </Grid> */}
                       <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
                       <Grid item xs={6} sm={4} md={3} lg={2}></Grid>
                     </>
@@ -335,9 +352,51 @@ export default function DashboardDefault() {
                   />
                   <>
                     {role === "affiliate" ? (
-                      <Grid item xs={12} md={12} lg={12}>
-                        <UniqueVisitorCard />
-                      </Grid>
+                      <>
+                        <Grid item xs={12} md={8} lg={8}>
+                          <UniqueVisitorCard />
+                        </Grid>
+
+                        <Grid item xs={12} md={4} lg={4}>
+                          <Grid item>
+                            <Typography variant="h5" className="mb-3">Affiliate Programme</Typography>
+                          </Grid>
+                          <Col md="12" className="mt-2">
+                            <div className="witdraw_amount">
+                              <div className="my_wallet">
+                                <h5 className="mb-3" style={{ color: "purple", fontWeight: "700" }}>Step 1</h5>
+                                <p className="mt-3">
+                                  Click the button below to begin the process of sharing the product.
+                                </p>
+                                <Link to="/product-list" target="_blank">
+                                  <button className="line-close-btn" variant="primary">Products List</button>
+                                </Link>
+                              </div>
+                            </div>
+                          </Col>
+                          <Col md="12" className="mt-2">
+                            <div className="witdraw_amount">
+                              <div className="my_wallet">
+                                <h5 className="mb-3" style={{ color: "purple", fontWeight: "700" }}>Step 2</h5>
+                                <p className="mt-3">
+                                  Click on the product whose link you want to share, and get ready to share it with others.
+                                </p>
+                              </div>
+                            </div>
+                          </Col>
+                          <Col md="12" className="mt-2">
+                            <div className="witdraw_amount">
+                              <div className="my_wallet">
+                                <h5 className="mb-3" style={{ color: "purple", fontWeight: "700" }}>Step 3</h5>
+                                <p className="mt-3">
+                                  Click the copy button to share the link.
+                                </p>
+                                {/* <img src={step3} alt="step-3 image" width={'100%'} /> */}
+                              </div>
+                            </div>
+                          </Col>
+                        </Grid>
+                      </>
                     ) : (
                       <Grid item xs={12} md={7} lg={8}>
                         <UniqueVisitorCard />
@@ -396,7 +455,7 @@ export default function DashboardDefault() {
                                 <ul>
                                   <li>
                                     {" "}
-                                    <b> Rank</b> - {dashboardInfo?.rank?.currentRank}
+                                    <b> Tier</b> - {dashboardInfo?.rank?.currentRank}
                                   </li>
                                   <li>
                                     {" "}

@@ -26,7 +26,6 @@ const OrderSuccess = () => {
     setLoading(true);
     try {
       const res = await APICALL("/user/getOrderById", "post", { id: order_id });
-      console.log(res);
       if (res?.status) {
         setOrderDetails(res?.data);
         setLoading(false);
@@ -42,6 +41,7 @@ const OrderSuccess = () => {
   const itemTotal = orderDetails?.orderItems?.reduce((acc, item) => {
     return acc + (item?.price * item?.quantity || 0);
   }, 0);
+
   return (
     <>
       {loading ? (
@@ -61,68 +61,68 @@ const OrderSuccess = () => {
                     <div className="order_details_inner gloab_card">
                       <Row>
                         <Col md={6} className="text-start mb-3">
-                        <div className="table_border">
-                        <h3>Shipping Address</h3>
-                          <ul className="p-0 m-0">
-                            <li>
-                              {" "}
-                              {orderDetails?.shippingAddress?.firstName +
-                                " " +
-                                orderDetails?.shippingAddress?.lastName}
-                            </li>
-                            <li>
-                              {" "}
-                              {orderDetails?.shippingAddress?.contactPhone}
-                            </li>
-                            <li>{orderDetails?.shippingAddress?.email}</li>
-                            <li>{orderDetails?.shippingAddress?.postalCode}, {orderDetails?.shippingAddress?.state}, {orderDetails?.shippingAddress?.city}</li>
-                            <li>
-                              {" "}
-                              {orderDetails?.shippingAddress?.addressLine1} -{" "}
-                              {orderDetails?.shippingAddress?.addressLine2}
-                            </li>
-                          </ul>
-                        </div>
+                          <div className="table_border">
+                            <h3>Shipping Address</h3>
+                            <ul className="p-0 m-0">
+                              <li>
+                                {" "}
+                                {orderDetails?.shippingAddress?.firstName +
+                                  " " +
+                                  orderDetails?.shippingAddress?.lastName}
+                              </li>
+                              <li>
+                                {" "}
+                                {orderDetails?.shippingAddress?.contactPhone}
+                              </li>
+                              <li>{orderDetails?.shippingAddress?.email}</li>
+                              <li>{orderDetails?.shippingAddress?.postalCode}, {orderDetails?.shippingAddress?.state}, {orderDetails?.shippingAddress?.city}</li>
+                              <li>
+                                {" "}
+                                {orderDetails?.shippingAddress?.addressLine1} -{" "}
+                                {orderDetails?.shippingAddress?.addressLine2}
+                              </li>
+                            </ul>
+                          </div>
                         </Col>
                         <Col md={6} className="text-start  mb-3">
-                       <div className="table_border">
-                       <h3>Order Summary</h3>
-                          <ul className="p-0 m-0">
-                            <li>
-                              <p> Item</p>
-                              <p>{orderDetails?.orderItems?.length}</p>
-                            </li>
+                          <div className="table_border">
+                            <h3>Order Summary</h3>
+                            <ul className="p-0 m-0">
+                              <li>
+                                <p> Quantity:</p>
+                                <p>{orderDetails?.orderItems?.reduce((sum, item) => sum + item.quantity, 0) || 0}</p>
+                              </li>
 
-                            <li>
-                              <p>Subtotal:</p>
-                              <p>${parseInt(itemTotal)}</p>
-                            </li>
+                              <li>
+                                <p>Subtotal:</p>
+                                <p>${parseInt(itemTotal)}</p>
+                              </li>
 
-                            <li>
-                              <p> Shipping:</p>
-                              <p>+ ${orderDetails?.shippingCharge}</p>
-                            </li>
-                            <li>
-                              <p> Discount:</p>
-                              <p> {orderDetails?.couponAmount ? `- $${orderDetails?.couponAmount}` : "---"}</p>
-                            </li>
-                            <hr/>
-                            <li>
-                              <p style={{ color:'black' }}> <strong>Total:</strong></p>
-                              <p style={{ color:'black' }}><strong>${orderDetails?.totalPrice.toFixed(2)}</strong></p>
-                            </li>
-                            <hr/>
-                          </ul>
-                       </div>
+                              <li>
+                                <p> Shipping:</p>
+                                <p>+ ${orderDetails?.shippingCharge}</p>
+                              </li>
+                              <li>
+                                <p> Discount:</p>
+                                <p> {orderDetails?.couponAmount ? `- $${orderDetails?.couponAmount}` : "---"}</p>
+                              </li>
+                              <hr />
+                              <li>
+                                <p style={{ color: 'black' }}> <strong>Total:</strong></p>
+                                <p style={{ color: 'black' }}><strong>${orderDetails?.totalPrice.toFixed(2)}</strong></p>
+                              </li>
+                              <hr />
+                            </ul>
+                          </div>
                         </Col>
 
                         <Col md={12} className="text-start  mb-3">
-                       <div className="table_border">
-                       <h3>Payment Method</h3>
-                          <ul className="p-0 m-0">
-                            <li>{orderDetails?.paymentGateway}</li>
-                          </ul>
-                       </div>
+                          <div className="table_border">
+                            <h3>Payment Method</h3>
+                            <ul className="p-0 m-0">
+                              <li>{orderDetails?.paymentGateway}</li>
+                            </ul>
+                          </div>
                         </Col>
 
                       </Row>
@@ -167,6 +167,7 @@ const OrderSuccess = () => {
                                       )}
                                     </ul>
                                   </div>
+                                  <h3 style={{fontSize: "16px"}} className="mt-2">Qnt : {row.quantity}</h3>
                                 </div>
                               </div>
                             </Link>

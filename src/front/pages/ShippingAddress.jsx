@@ -148,12 +148,12 @@ const ShippingAddress = () => {
     if (firstName.trim() === "") errors.firstName = "Required *";
     if (lastName.trim() === "") errors.lastName = "Required *";
     if (addressLine1.trim() === "") errors.addressLine1 = "Required *";
-    // if (addressLine2.trim() === "") errors.addressLine2 = "Required *";
-    if (postalCode.trim() === "") {
-      errors.postalCode = "Required *";
-    } else if (!/^\d+$/.test(postalCode)) {
-      errors.postalCode = "Invalid Postal code";
-    }
+    if (postalCode.trim() === "") errors.postalCode = "Required *";
+    // if (postalCode.trim() === "") {
+    //   errors.postalCode = "Required *";
+    // } else if (!/^\d+$/.test(postalCode)) {
+    //   errors.postalCode = "Invalid Postal code";
+    // }
     if (country.trim() === "") errors.country = "Required *";
     if (state.trim() === "") errors.state = "Required *";
     if (city.trim() === "") errors.city = "Required *";
@@ -231,8 +231,8 @@ const ShippingAddress = () => {
       getStateFun1(e.target.value);
     } else if (e.target.name === "state") {
       setFormData({ ...formData, state: e.target.value });
-        const countryCode = formData.country;
-        getCityFun(countryCode, e.target.value);
+      const countryCode = formData.country;
+      getCityFun(countryCode, e.target.value);
     } else {
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
@@ -585,7 +585,7 @@ const ShippingAddress = () => {
     if (newValue) {
       setFormData((prevValue) => ({ ...prevValue, city: newValue.value }));
     }
-};
+  };
 
   const extractLocationDetails = (place) => {
     // short_name 
@@ -1011,7 +1011,7 @@ const ShippingAddress = () => {
                                   )}
                                   renderInput={(params) => (
                                     <TextField
-                                    autoComplete="off"
+                                      autoComplete="off"
                                       {...params}
                                       variant="outlined"
                                     />
@@ -1468,11 +1468,17 @@ const ShippingAddress = () => {
                                       <span>Item</span>
                                       <p className="m-0">
                                         <b>
-                                          {orderDetails?.cartItem?.length}{" "}
-                                          {orderDetails?.cartItem?.length > 1
+                                          {orderDetails?.cartItem?.reduce(
+                                            (totalQuantity, item) => totalQuantity + item.quantity,
+                                            0
+                                          )}{" "}
+                                          {orderDetails?.cartItem?.reduce(
+                                            (totalQuantity, item) => totalQuantity + item.quantity,
+                                            0
+                                          ) > 1
                                             ? "items"
                                             : "item"}
-                                        </b>{" "}
+                                        </b>
                                       </p>
                                     </li>
 

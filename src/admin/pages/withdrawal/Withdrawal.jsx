@@ -39,8 +39,6 @@ const Withdrawal = () => {
     const handleShow = () => setShow(true);
 
     const [tabsData, setTabsData] = useState({ status: "pending", role: "artist" })
-    console.log("activeTab", activeTab)
-    console.log("tabsData", tabsData)
     const handleTabSelect = (key) => {
         let data;
         switch (key) {
@@ -345,14 +343,17 @@ const Withdrawal = () => {
                                 </Modal.Footer>
                                 :
                                 <Modal.Footer>
-                                    {userInfoByID?.withdrawableBalance < 100 ? (
+                                    {
+                                        userInfoByID?.withdrawableBalance < 100 &&
+                                        <Stack sx={{ width: '100%' }} spacing={3}>
+                                            <Alert variant="filled" severity="error">
+                                                {` You need to have $100 or more in your wallet to make a withdrawal.`}
+                                            </Alert>
+                                        </Stack>
+                                    }
+                                    {(userInfoByID?.withdrawableBalance < 100 || withdrawalAmount < 100) ? (
                                         <>
-                                            <Stack sx={{ width: '100%' }} spacing={3}>
-                                                <Alert variant="filled" severity="error">
-                                                    {` You need to have $100 or more in your wallet to make a withdrawal.`}
-                                                </Alert>
-                                            </Stack>
-                                            <Button className="global_btn" variant="primary" style={{ cursor: 'not-allowed' }}>Send Request</Button>
+                                            <Button className="gray_btn" variant="primary" style={{ cursor: 'not-allowed' }}>Send Request</Button>
                                         </>
                                     )
                                         :

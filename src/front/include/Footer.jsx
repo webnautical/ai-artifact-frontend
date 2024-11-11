@@ -112,6 +112,9 @@ const Footer = () => {
                   <li>
                     <Link to={'/privacy-policy'}>Privacy Policy</Link>
                   </li>
+                  <li>
+                    <Link to={'/content-guidelines'}>Content Guidelines</Link>
+                  </li>
                 </ul>
               </div>
             </Col>

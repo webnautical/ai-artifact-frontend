@@ -187,3 +187,8 @@ code {
       border: none;
       color:purple;
       font-weight: 600;}
+
+      .teal_text{
+        color: teal !important;
+        font-weight: 600;
+      }

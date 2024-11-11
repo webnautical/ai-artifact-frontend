@@ -69,8 +69,6 @@ const SoldArt = () => {
         setSelectedRow(row);
     };
 
-    console.log("filteredData",filteredData)
-
     return (
         <>
             {
@@ -114,6 +112,7 @@ const SoldArt = () => {
                                                                 <TableCell>Total Price</TableCell>
                                                                 <TableCell>Discount</TableCell>
                                                                 <TableCell>Commission</TableCell>
+                                                                <TableCell>Status</TableCell>
                                                                 <TableCell>Date</TableCell>
                                                                 <TableCell align="right">Actions</TableCell>
                                                             </TableRow>
@@ -131,6 +130,7 @@ const SoldArt = () => {
                                                                         <TableCell>${row?.price?.toFixed() * row?.quantity}</TableCell>
                                                                         <TableCell>{row?.discount ? `$${row?.discount?.toFixed(2)}` : "---"}</TableCell>
                                                                         <TableCell>${row?.commissionAmount}</TableCell>
+                                                                        <TableCell className="text-capitalize">{row?.refundStatus}</TableCell>
                                                                         <TableCell>{timeAgo(row?.created_at || row?.createdAt)}</TableCell>
                                                                         <TableCell align="right">
                                                                             <Dropdown className="dorpdown-curtom">

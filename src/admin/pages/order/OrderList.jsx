@@ -36,11 +36,13 @@ import {
     TABLE_ROW_PER_PAGE,
 } from "../../../helper/Constant";
 import "../../../App.css";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
 const OrderList = () => {
     const navigate = useNavigate();
+    const locationData = useLocation()
+    const orderDetails = locationData?.state ? locationData?.state?.orderDetails : null
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_PER_PAGE);
     const [data, setData] = useState([]);
@@ -62,7 +64,14 @@ const OrderList = () => {
         getListFun(pageNo, rowsPerPage, searchParams);
     }, [pageNo, rowsPerPage]);
 
-    const getListFun = async (pageNo, rowsPerPage,searchParams) => {
+    useEffect(() => {
+        if (orderDetails) {
+            setSelectedRow(orderDetails)
+        }
+    }, [orderDetails])
+
+
+    const getListFun = async (pageNo, rowsPerPage, searchParams) => {
         setListLoading(true);
         try {
             const params = { page: pageNo, limit: rowsPerPage, ...searchParams };
@@ -97,11 +106,12 @@ const OrderList = () => {
         return acc + (item?.price * item?.quantity || 0);
     }, 0);
 
-    const handleRefund = async () => {
+    const [itemQnt, setItemQnt] = useState(1)
+    const handleRefund = async (itemID) => {
         setLoading({ ...loading, refund: true });
         try {
-            const params = { orderId: selectedRow._id };
-            const res = await APICALL("admin/markOrderAsRefunded", "post", params);
+            const params = { orderItemId: itemID, quantity: itemQnt };
+            const res = await APICALL("admin/refundByAdmin", "post", params);
             if (res?.status) {
                 setSelectedRow(null);
                 getListFun(pageNo, rowsPerPage);
@@ -120,13 +130,10 @@ const OrderList = () => {
         geletoPrice,
         artistCommision,
         affiliateCommission,
-        qnt
+        qnt,
+        status
     ) => {
-        const profit =
-            TotalPrice * qnt -
-            geletoPrice * qnt -
-            affiliateCommission -
-            artistCommision;
+        const profit = status === "refunded" ? 0 :  (TotalPrice * qnt) - (geletoPrice + affiliateCommission + artistCommision);
         return parseFloat(profit);
     };
 
@@ -180,7 +187,7 @@ const OrderList = () => {
                                 </Button>
                                 <h2 className="title-admins-table m-0">Orders</h2>
                             </div>
-                            {loading?.refund ? (
+                            {/* {loading?.refund ? (
                                 <BTNLoader className="artist-btn" />
                             ) : (
                                 <>
@@ -199,16 +206,16 @@ const OrderList = () => {
                                         </button>
                                     )}
                                 </>
-                            )}
+                            )} */}
                         </div>
                         <Row className=" justify-content-center">
-                            <Col md={9}>
+                            <Col md={12}>
                                 <Row className="">
                                     <Col md={12} clas>
                                         <h5>
                                             <strong>Items details</strong>
                                         </h5>
-                                        <div className="table_border mb-3">
+                                        <div className="table_border mb-5">
                                             <TableContainer>
                                                 <Table>
                                                     <TableHead>
@@ -224,7 +231,9 @@ const OrderList = () => {
                                                             <TableCell>Artist Commission</TableCell>
                                                             <TableCell>Affiliate</TableCell>
                                                             <TableCell>Affiliate Commission</TableCell>
-                                                            <TableCell align="right">Profit</TableCell>
+                                                            <TableCell>Profit</TableCell>
+                                                            <TableCell>Status</TableCell>
+                                                            <TableCell align="right">Refund</TableCell>
                                                         </TableRow>
                                                     </TableHead>
                                                     <TableBody>
@@ -293,15 +302,34 @@ const OrderList = () => {
                                                                         ? `$${row?.affiliateCommission?.toFixed(2)}`
                                                                         : "---"}
                                                                 </TableCell>
-                                                                <TableCell align="right">
+                                                                <TableCell>
                                                                     $
                                                                     {calculateProfit(
                                                                         row.price,
                                                                         row.gelatoPrice,
                                                                         row.artistCommission,
                                                                         row?.affiliateCommission,
-                                                                        row.quantity
+                                                                        row.quantity,
+                                                                        row?.refundStatus
                                                                     ).toFixed(2)}
+                                                                </TableCell>
+                                                                <TableCell className="text-capitalize">{row?.refundStatus}</TableCell>
+                                                                <TableCell>
+                                                                    <div className="d-flex gap-2">
+                                                                        <select name="" onChange={(e) => setItemQnt(e.target.value)}>
+                                                                            {Array.from({ length: row?.quantity - row?.refundedQuantity }, (_, index) => (
+                                                                                <option key={index + 1} value={index + 1}>
+                                                                                    {index + 1}
+                                                                                </option>
+                                                                            ))}
+                                                                        </select>
+                                                                        {
+                                                                            row?.refundStatus === "refunded" ?
+                                                                                <button className="btn btn-danger btn-sm" disabled>Refund</button>
+                                                                                :
+                                                                                <button onClick={() => handleRefund(row?._id)} className="btn btn-danger btn-sm">Refund</button>
+                                                                        }
+                                                                    </div>
                                                                 </TableCell>
                                                             </TableRow>
                                                         ))}
@@ -315,9 +343,9 @@ const OrderList = () => {
                                                                 <span style={{ color: 'black', fontWeight: 'bold' }}> Total</span>
                                                             </TableCell>
                                                             <TableCell>
-                                                                {" "}
-                                                                {selectedRow?.orderItems?.length}
+                                                                {selectedRow?.orderItems?.reduce((sum, item) => sum + item.quantity, 0) || 0}
                                                             </TableCell>
+
                                                             <TableCell> ${parseInt(itemTotal)}</TableCell>
                                                             <TableCell>
                                                                 {" "}
@@ -355,13 +383,14 @@ const OrderList = () => {
                                                                 {selectedRow?.orderItems
                                                                     ?.reduce((total, row) => {
                                                                         return (
-                                                                            parseInt(total) +
+                                                                            parseFloat(total) +
                                                                             calculateProfit(
                                                                                 row.price,
                                                                                 row.gelatoPrice,
                                                                                 row.artistCommission,
                                                                                 row.affiliateCommission,
-                                                                                row.quantity
+                                                                                row.quantity,
+                                                                                row?.refundStatus
                                                                             )
                                                                         );
                                                                     }, 0).toFixed(2)}
@@ -395,48 +424,95 @@ const OrderList = () => {
                                                 </Table>
                                             </TableContainer>
                                         </div>
-                                        <div>
-                                            <div className="mt-3">
+                                        {selectedRow?.refundedItems.length !== 0 &&
+                                            <>
                                                 <h5>
-                                                    <strong>Billing details</strong>
+                                                    <strong>Refund History</strong>
                                                 </h5>
-                                                <div className="table_border mb-3">
-                                                    <p>
-                                                        {" "}
-                                                        <strong>Billing Name:</strong>{" "}
-                                                        {selectedRow?.shippingAddress?.firstName +
-                                                            " " +
-                                                            selectedRow?.shippingAddress?.lastName}
-                                                    </p>
-                                                    <p>
-                                                        {" "}
-                                                        <strong>Contact:</strong>{" "}
-                                                        {selectedRow?.shippingAddress?.contactPhone}
-                                                    </p>
-                                                    <p>
-                                                        {" "}
-                                                        <strong>Email:</strong>{" "}
-                                                        {selectedRow?.shippingAddress?.email}
-                                                    </p>
-                                                    <p>
-                                                        {" "}
-                                                        <strong>State:</strong>{" "}
-                                                        {selectedRow?.shippingAddress?.state}
-                                                    </p>
-                                                    <p>
-                                                        {" "}
-                                                        <strong>City:</strong>{" "}
-                                                        {selectedRow?.shippingAddress?.city}
-                                                    </p>
-                                                    <p>
-                                                        {" "}
-                                                        <strong>Postal Code:</strong>{" "}
-                                                        {selectedRow?.shippingAddress?.postalCode}
-                                                    </p>
+                                                <div className="table_border mb-5">
+                                                    <TableContainer>
+                                                        <Table>
+                                                            <TableHead>
+                                                                <TableRow>
+                                                                    <TableCell>S.No</TableCell>
+                                                                    <TableCell>Product</TableCell>
+                                                                    <TableCell>Artist</TableCell>
+                                                                    <TableCell>Artist Cancelled Commission</TableCell>
+                                                                    <TableCell>Affiliate Name</TableCell>
+                                                                    <TableCell>Affiliate Cancelled Commission</TableCell>
+                                                                    <TableCell>Total Quantity</TableCell>
+                                                                    <TableCell>Refunded Quantity</TableCell>
+                                                                    <TableCell>Date</TableCell>
+                                                                    <TableCell>Status</TableCell>
+                                                                </TableRow>
+                                                            </TableHead>
+                                                            <TableBody>
+                                                                {selectedRow?.refundedItems?.map((item, index) => (
+                                                                    <TableRow key={index}>
+                                                                        <TableCell>{index + 1}</TableCell>
+                                                                        <TableCell>{item?.productName}</TableCell>
+                                                                        <TableCell>{item?.artistName}</TableCell>
+                                                                        <TableCell>${item?.artistCancelledAmount.toFixed(2)}</TableCell>
+                                                                        <TableCell>{item?.affiliateName}</TableCell>
+                                                                        <TableCell>${item?.affiliateCancelledAmount.toFixed(2)}</TableCell>
+                                                                        <TableCell>{item?.totalQuantity}</TableCell>
+                                                                        <TableCell>{item?.refundedQuantity}</TableCell>
+                                                                        <TableCell>{timeAgo(item?.updatedAt)}</TableCell>
+                                                                        <TableCell className="text-capitalize">{item?.status}</TableCell>
+                                                                    </TableRow>
+                                                                ))}
+                                                            </TableBody>
+                                                        </Table>
+                                                    </TableContainer>
                                                 </div>
+                                            </>
+                                        }
+                                        <Row>
+                                            <div className="col-md-4">
+                                                <div className="mt-3">
+                                                    <h5>
+                                                        <strong>Billing details</strong>
+                                                    </h5>
+                                                    <div className="table_border mb-3">
+                                                        <p>
+                                                            {" "}
+                                                            <strong>Billing Name:</strong>{" "}
+                                                            {selectedRow?.shippingAddress?.firstName +
+                                                                " " +
+                                                                selectedRow?.shippingAddress?.lastName}
+                                                        </p>
+                                                        <p>
+                                                            {" "}
+                                                            <strong>Contact:</strong>{" "}
+                                                            {selectedRow?.shippingAddress?.contactPhone}
+                                                        </p>
+                                                        <p>
+                                                            {" "}
+                                                            <strong>Email:</strong>{" "}
+                                                            {selectedRow?.shippingAddress?.email}
+                                                        </p>
+                                                        <p>
+                                                            {" "}
+                                                            <strong>State:</strong>{" "}
+                                                            {selectedRow?.shippingAddress?.state}
+                                                        </p>
+                                                        <p>
+                                                            {" "}
+                                                            <strong>City:</strong>{" "}
+                                                            {selectedRow?.shippingAddress?.city}
+                                                        </p>
+                                                        <p>
+                                                            {" "}
+                                                            <strong>Postal Code:</strong>{" "}
+                                                            {selectedRow?.shippingAddress?.postalCode}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+
                                             </div>
 
-                                            <Col md={12} className="mb-3 mt-2">
+                                            <Col md={4} className="mb-3 mt-2">
                                                 <h5>
                                                     <strong>Shipping details</strong>
                                                 </h5>
@@ -481,50 +557,47 @@ const OrderList = () => {
                                                     </p>
                                                 </div>
                                             </Col>
-                                        </div>
+
+                                            <Col md={4} className="mb-3">
+                                                <h5>
+                                                    <strong>Order details</strong>
+                                                </h5>
+                                                <div className="table_border">
+                                                    <div>
+                                                        <p>
+                                                            {" "}
+                                                            <strong>Order ID:</strong> #{selectedRow._id}{" "}
+                                                        </p>
+                                                        <p>
+                                                            <strong>Customer Name:</strong>{" "}
+                                                            <Link
+                                                                to={`/admin/user-management-details/${selectedRow.userId?._id}`}
+                                                                className="text-bold"
+                                                            >
+                                                                {selectedRow?.shippingAddress?.firstName +
+                                                                    " " +
+                                                                    selectedRow?.shippingAddress?.lastName}
+                                                            </Link>
+                                                        </p>
+                                                        <p>
+                                                            {" "}
+                                                            <strong>Payment Method:</strong>{" "}
+                                                            {selectedRow.paymentGateway}{" "}
+                                                        </p>
+                                                        {/* <p><strong>Status:</strong> {selectedRow.status}</p> */}
+                                                        <p>
+                                                            <strong>Order Date:</strong>{" "}
+                                                            {timeAgo(selectedRow.createdAt)}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </Col>
+                                        </Row>
                                     </Col>
                                 </Row>
                             </Col>
 
-                            <Col md={3}>
-                                <Row>
-                                    <Col md={12} className="mb-3">
-                                        <h5>
-                                            <strong>Order details</strong>
-                                        </h5>
-                                        <div className="table_border">
-                                            <div>
-                                                <p>
-                                                    {" "}
-                                                    <strong>Order ID:</strong> #{selectedRow._id}{" "}
-                                                </p>
-                                                <p>
-                                                    <strong>Customer Name:</strong>{" "}
-                                                    <Link
-                                                        to={`/admin/user-management-details/${selectedRow.userId?._id}`}
-                                                        className="text-bold"
-                                                    >
-                                                        {selectedRow?.shippingAddress?.firstName +
-                                                            " " +
-                                                            selectedRow?.shippingAddress?.lastName}
-                                                    </Link>
-                                                </p>
-                                                <p>
-                                                    {" "}
-                                                    <strong>Payment Method:</strong>{" "}
-                                                    {selectedRow.paymentGateway}{" "}
-                                                </p>
-                                                {/* <p><strong>Status:</strong> {selectedRow.status}</p> */}
-                                                <p>
-                                                    <strong>Order Date:</strong>{" "}
-                                                    {timeAgo(selectedRow.createdAt)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </Col>
 
-                                </Row>
-                            </Col>
                         </Row>
                     </div>
                 </Paper>
@@ -540,7 +613,7 @@ const OrderList = () => {
                             <div className="row px-3 cutoms-login-artist  ship_address  ">
                                 <div className="col-md-4">
                                     <Form.Label>Select Customer</Form.Label>
-                                    <input type="text" className="form-control" name="order_id" value={searchParams?.order_id} onChange={(e)=> setSearchParams((prevValue) => ({ ...prevValue, order_id: e.target.value }))}/>
+                                    <input type="text" className="form-control" name="order_id" value={searchParams?.order_id} onChange={(e) => setSearchParams((prevValue) => ({ ...prevValue, order_id: e.target.value }))} />
                                 </div>
 
                                 <div className="col-md-4">
@@ -562,7 +635,7 @@ const OrderList = () => {
                                             if (newValue) {
                                                 const customerId = newValue._id;
                                                 setSearchParams((prevValue) => ({ ...prevValue, customer_id: customerId }));
-                                            }else {
+                                            } else {
                                                 setSearchParams((prevValue) => ({ ...prevValue, customer_id: '' }));
                                             }
                                         }}
@@ -588,7 +661,7 @@ const OrderList = () => {
                                             if (newValue) {
                                                 const customerId = newValue._id;
                                                 setSearchParams((prevValue) => ({ ...prevValue, artist_id: customerId }));
-                                            }else {
+                                            } else {
                                                 setSearchParams((prevValue) => ({ ...prevValue, artist_id: '' }));
                                             }
                                         }}
@@ -596,7 +669,7 @@ const OrderList = () => {
                                 </div>
 
                                 <div className="col-md-12 text-end mt-2">
-                                    <button className="global_btn" onClick={()=>handleSearch()}>Search</button>
+                                    <button className="global_btn" onClick={() => handleSearch()}>Search</button>
                                 </div>
 
                             </div>

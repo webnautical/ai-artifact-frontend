@@ -52,7 +52,7 @@ const OrderDetails = () => {
                             <div className='d-flex
                      
                      '>
-                                <div className='back_btn'><Link to="/customer/my-orders" className='global_btn me-3'><i class="fa-solid fa-arrow-left-long"></i></Link></div>
+                                <div className='back_btn'><Link to="#" onClick={() => navigate(-1)} className='global_btn me-3'><i class="fa-solid fa-arrow-left-long"></i></Link></div>
                                 <div > <span> Order Id :</span>#{order_id} </div>
                             </div>
                             <div className='date_order'>Date : {timeAgo(orderDetails?.createdAt)}</div>
@@ -90,15 +90,15 @@ const OrderDetails = () => {
 
                                     <Col md={4} className='mb-3'>
                                         <h3>Order Summary</h3>
-                                        
+
                                         <ul className="p-0 m-0">
-                                        <li>
+                                            <li>
                                                 <p> Order Status</p>
                                                 <p>{orderDetails?.status}</p>
                                             </li>
                                             <li>
-                                                <p> Item</p>
-                                                <p>{orderDetails?.orderItems?.length}</p>
+                                                <p>Quantity</p>
+                                                <p>{orderDetails?.orderItems?.reduce((sum, item) => sum + item.quantity, 0) || 0}</p>
                                             </li>
 
                                             <li>
@@ -162,6 +162,7 @@ const OrderDetails = () => {
                                                                 }
                                                             </ul>
                                                         </div>
+                                                        <h3 style={{fontSize: "16px"}} className="mt-2">Qnt : {row?.quantity}</h3>
                                                     </div>
                                                 </div>
                                             </Col>

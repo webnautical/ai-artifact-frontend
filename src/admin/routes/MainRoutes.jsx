@@ -1,15 +1,17 @@
 import { lazy } from 'react';
-import  Loadable  from '../components/Loadable';
-import  Dashboard  from '../layout/Dashboard';
+import Loadable from '../components/Loadable';
+import Dashboard from '../layout/Dashboard';
 import Faq from '../pages/faq/Faq';
 import ArtWorkUpload from '../pages/artist/ArtWorkUpload';
 import ViewUserDetails from '../pages/user-management/ViewUserDetails';
 import ProductDetails from '../pages/product/ProductDetails';
 import ChangePassword from '../pages/Common/ChangePassword';
-const Tier = Loadable( lazy(() => import("../pages/web/Tier")));
+import Collections from '../pages/Common/Collections';
+import Achievement from '../pages/artist/Achievement';
+const Tier = Loadable(lazy(() => import("../pages/web/Tier")));
 const DashboardDefault = Loadable(lazy(() => import('../pages/dashboard/index')));
 const RolesPermission = Loadable(lazy(() => import('../pages/roles-permission/RolesPermission')));
-const CategoriesList =  Loadable(lazy(() => import('../pages/categories/CategoriesList')));
+const CategoriesList = Loadable(lazy(() => import('../pages/categories/CategoriesList')));
 const UserManagement = Loadable(lazy(() => import('../pages/user-management/UserManagement')));
 const SubAdmin = Loadable(lazy(() => import('../pages/user-management/SubAdmin')));
 const StaticPages = Loadable(lazy(() => import('../pages/StaticPages')));
@@ -19,22 +21,22 @@ const ComingSoon = Loadable(lazy(() => import('../pages/MyPage/ComingSoon')));
 const Collection = Loadable(lazy(() => import("../pages/collection/collection")));
 const Products = Loadable(lazy(() => import("../pages/product/product")));
 const Reviews = Loadable(lazy(() => import("../pages/product/Review")));
-const GeneralSettings = Loadable( lazy(() => import("../pages/GeneralSettings")));
-const GelatoPrice = Loadable( lazy(() => import("../pages/web/GelatoPrice")));
-const SubscribersList = Loadable( lazy(() => import("../pages/web/SubscribersList")));
-const BannerAndImages = Loadable( lazy(() => import("../pages/web/BannerAndImages")));
-const OrderList = Loadable( lazy(() => import("../pages/order/OrderList")));
-const CouponList = Loadable( lazy(() => import("../pages/coupon/CouponList")));
-const ArtList = Loadable( lazy(() => import("../pages/artist/ArtList")));
-const SoldArt = Loadable( lazy(() => import("../pages/artist/SoldArt")));
-const TransactionList = Loadable( lazy(() => import("../pages/order/TransactionList")));
-const Commission = Loadable( lazy(() => import("../pages/Common/Commission")));
-const EditProfile = Loadable( lazy(() => import("../pages/Common/EditProfile")));
-const Withdrawal = Loadable( lazy(() => import("../pages/withdrawal/Withdrawal")));
-const BlogList = Loadable( lazy(() => import("../pages/blogs/BlogList")));
-const Lottery = Loadable( lazy(() => import("../pages/lottery/Lottery")));
+const GeneralSettings = Loadable(lazy(() => import("../pages/GeneralSettings")));
+const GelatoPrice = Loadable(lazy(() => import("../pages/web/GelatoPrice")));
+const SubscribersList = Loadable(lazy(() => import("../pages/web/SubscribersList")));
+const BannerAndImages = Loadable(lazy(() => import("../pages/web/BannerAndImages")));
+const OrderList = Loadable(lazy(() => import("../pages/order/OrderList")));
+const CouponList = Loadable(lazy(() => import("../pages/coupon/CouponList")));
+const ArtList = Loadable(lazy(() => import("../pages/artist/ArtList")));
+const SoldArt = Loadable(lazy(() => import("../pages/artist/SoldArt")));
+const TransactionList = Loadable(lazy(() => import("../pages/order/TransactionList")));
+const Commission = Loadable(lazy(() => import("../pages/Common/Commission")));
+const EditProfile = Loadable(lazy(() => import("../pages/Common/EditProfile")));
+const Withdrawal = Loadable(lazy(() => import("../pages/withdrawal/Withdrawal")));
+const BlogList = Loadable(lazy(() => import("../pages/blogs/BlogList")));
+const Lottery = Loadable(lazy(() => import("../pages/lottery/Lottery")));
 const MainRoutes = {
- 
+
   path: '/',
   element: <Dashboard />,
   children: [
@@ -90,13 +92,17 @@ const MainRoutes = {
       path: '/pages/:route',
       element: <StaticPages />
     },
+    {
+      path: '/collections',
+      element: <Collections />
+    },
     // {
     //   path: '/product-management',
     //   element: <ComingSoon />
     // },
     {
       path: '/withdrawal',
-      element: <Withdrawal/>
+      element: <Withdrawal />
     },
     {
       path: "/collection",
@@ -169,14 +175,17 @@ const MainRoutes = {
       path: '/sold-art',
       element: <SoldArt />
     },
-
+    {
+      path: '/achievement',
+      element: <Achievement />
+    },
     {
       path: "/tier",
       element: <Tier />,
     },
 
-    
+
   ]
 };
- 
+
 export default MainRoutes;

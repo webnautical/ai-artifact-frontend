@@ -38,7 +38,7 @@ export default function MainDrawer({ window }) {
           {drawerHeader}
           {drawerContent}
         </MiniDrawerStyled>
-      ) : (
+      ) : ( 
         <Drawer
           container={container}
           variant="temporary"

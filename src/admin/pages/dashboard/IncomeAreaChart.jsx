@@ -110,6 +110,7 @@ export default function IncomeAreaChart({ forCharData }) {
 
   useEffect(() => {
     const categories = slot === "week"? salesHistroy?.map(item => item.dayName || ''): slot === "month" ?  salesHistroy?.map(item => item.period || '')  : salesHistroy?.map(item => item.monthName || '');
+    
     const salesAmounts = salesHistroy?.map(item => (item.totalSalesAmount ? item.totalSalesAmount.toFixed(2) : 0));
     setSeries([{
         name: 'Sales Amount',

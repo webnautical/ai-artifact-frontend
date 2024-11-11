@@ -314,7 +314,7 @@ const ProductDetail = () => {
     try {
       const res = await APICALL('user/getGelatoUidByParams', 'post', selectedOptions)
       if (res?.status) {
-        const price = (parseInt(res?.data?.price)) * artDetails?.qnt
+        const price = (parseInt(res?.data?.price))
         setArtDetails({ ...artDetails, 'product_price': price, 'uid': res?.data?.productUid, price: parseInt(res?.data?.price) })
       } else {
         window.location.reload()
@@ -473,12 +473,12 @@ const ProductDetail = () => {
                             </>
                           )}
 
-                          <div className="price_and_buy_box mt-3">
+                          <div className="price_and_buy_box mt-4">
                             <p>USD(incl. of all taxes)</p>
-                            <h2>${artDetails?.product_price}</h2>
+                            <h2>${artDetails?.product_price} <span style={{fontSize: '18px'}}>per item</span></h2>
 
                             <div
-                              className="main_purchase d-flex align-items-center"
+                              className="main_purchase d-flex align-items-center mt-3"
                               style={{ gap: "20px" }}
                             >
                               <QuantitySelector onQuantityChange={qntChange} product_id={id} />

@@ -90,18 +90,21 @@ const TableData = (props) => {
                                         <TableRow>
                                             <TableCell>S.No</TableCell>
                                             {
-                                                activeTab === "decline" ? <></>:
+                                                activeTab === "decline" ? <></> :
                                                     logedRole === "admin" ?
-                                                    <TableCell> {tabsData?.status === "pending" ? "Withdrawal" : "Transaction"}  ID</TableCell>
-                                                    :
-                                                    <TableCell> {activeTab === "pending" ? "Withdrawal" : "Transaction"}  ID</TableCell>
+                                                        <TableCell> {tabsData?.status === "pending" ? "Withdrawal" : "Transaction"}  ID</TableCell>
+                                                        :
+                                                        <TableCell> {activeTab === "pending" ? "Withdrawal" : "Transaction"}  ID</TableCell>
                                             }
                                             <TableCell>Amount</TableCell>
                                             <TableCell>Status</TableCell>
                                             {
                                                 activeTab === "decline" ?
-                                                    <TableCell align="right"> Decline Date </TableCell>
-                                                    :
+                                                    <>
+                                                        <TableCell> Name </TableCell>
+                                                        <TableCell> Role </TableCell>
+                                                        <TableCell align="right"> Decline Date </TableCell>
+                                                    </> :
                                                     <TableCell align="right"> Date </TableCell>
                                             }
                                             {
@@ -116,11 +119,11 @@ const TableData = (props) => {
                                             <TableRow key={index}>
                                                 <TableCell>{index + 1}</TableCell>
                                                 {
-                                                   activeTab === "decline" ? <></>:
-                                                    logedRole === "admin" ?
-                                                        <TableCell>{tabsData?.status === "pending" ? row._id : row?.stripeTransactionId}</TableCell>
-                                                        :
-                                                        <TableCell>{activeTab === "pending" ? row._id : row?.stripeTransactionId}</TableCell>
+                                                    activeTab === "decline" ? <></> :
+                                                        logedRole === "admin" ?
+                                                            <TableCell>{tabsData?.status === "pending" ? row._id : row?.stripeTransactionId}</TableCell>
+                                                            :
+                                                            <TableCell>{activeTab === "pending" ? row._id : row?.stripeTransactionId}</TableCell>
                                                 }
                                                 <TableCell>${row.amount}</TableCell>
                                                 <TableCell>
@@ -130,7 +133,13 @@ const TableData = (props) => {
                                                 </TableCell>
                                                 {
                                                     activeTab === "decline" ?
-                                                        <TableCell align="right">{timeAgo(row.declineTimestamp)}</TableCell> :
+                                                        <>
+                                                            <TableCell>{row?.user_id?.first_name + " " + row?.user_id?.last_name}</TableCell>
+                                                            <TableCell className="text-capitalize">{row?.user_id?.user_role}</TableCell>
+                                                            <TableCell align="right">{timeAgo(row.declineTimestamp)}</TableCell>
+
+                                                        </>
+                                                        :
                                                         <TableCell align="right">{timeAgo(row.createdAt)}</TableCell>
                                                 }
                                                 {

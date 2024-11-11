@@ -11,7 +11,7 @@ import { filterByKey, imgBaseURL } from "../../../helper/Utility";
 import swal from "sweetalert";
 import BTNLoader from "../../../components/BTNLoader";
 import { useDataContext } from "../../../helper/context/ContextProvider";
- 
+
 const BannerAndImages = () => {
     const [loading, setLoading] = useState({
         'list': false,
@@ -32,7 +32,7 @@ const BannerAndImages = () => {
     const handleShow = (type) => {
         setShow(true)
     };
- 
+
     useEffect(() => {
         getListFun()
     }, [])
@@ -46,24 +46,29 @@ const BannerAndImages = () => {
             setLoading({ ...loading, 'list': false })
         }
     }
- 
+
     const initialFormData = {
         id: '',
         redirectUrl: '',
+        type: '',
         title: '',
         status: true,
         image: '',
     };
     const [imgPreview, setImgPreview] = useState({ image: "" });
     const [formData, setFormData] = useState(initialFormData);
- 
+
     const handleEditChange = (row) => {
         setShow(true)
         console.log(row)
-        setFormData({ ...formData, 'redirectUrl': row?.redirectUrl, 'id': row?._id, 'image': row.image, title: row.title, status: row.status })
+        setFormData({ ...formData, 'redirectUrl': row?.redirectUrl, 'id': row?._id, 
+        'image': row.image, 
+        title: row.title,
+        type: row.type, 
+        status: row.status })
         setImgPreview({ ...imgPreview, 'image': imgBaseURL() + row?.image })
     }
- 
+
     const handleChange = (e) => {
         if (e.target.name === "image") {
             setFormData({ ...formData, image: e.target.files[0] });
@@ -82,17 +87,18 @@ const BannerAndImages = () => {
             }));
         }
     }
- 
+
     const handleSubmit = async () => {
-        if (formData.category_name == "") {
-            swal({ title: `Banner is required !!`, icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
-            return false
-        }
+        // if (formData.category_name == "") {
+        //     swal({ title: `Banner is required !!`, icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
+        //     return false
+        // }
         setLoading({ ...loading, 'submit': true })
         const params = new FormData();
         formData.id && params.append("id", formData.id);
         params.append("title", formData.title);
         params.append("redirectUrl", formData.redirectUrl);
+        params.append("type", formData.type);
         params.append("status", formData.status);
         params.append("image", formData.image);
         try {
@@ -113,7 +119,7 @@ const BannerAndImages = () => {
             swal({ title: error?.response?.data?.message, icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
         }
     };
- 
+
     const handleDelete = async (item) => {
         try {
             const params = { id: item?._id }
@@ -129,7 +135,7 @@ const BannerAndImages = () => {
             swal({ title: SERVER_ERR, icon: "error", button: { text: "OK", className: "swal_btn_ok" } });
         }
     }
- 
+
     return (
         <>
             <Paper className="table_samepattern">
@@ -177,7 +183,7 @@ const BannerAndImages = () => {
                     </>
                 }
             </Paper>
- 
+
             <Modal
                 className="modal-all"
                 show={show}
@@ -199,8 +205,8 @@ const BannerAndImages = () => {
                         <Col md={12} className="mb-3">
                             <div class="file-uploader">
                                 <label for="logoID" class="global_file_upload_deisgn">
-                                    <p> <i class="fa-solid fa-arrow-up-from-bracket me-2"></i>Upload  image here</p> <br />
-                                    <p>(Recommended size 856 x 653)</p>
+                                    <p> <i class="fa-solid fa-arrow-up-from-bracket me-2"></i>Upload  image here</p> 
+                                    <p>(Recommended size 1920 x 1080 for desktop and 784 x 1120 for mobile)</p>
                                     <input type="file" id="logoID" name="image" value={formData.name} onChange={handleChange} />
                                 </label>
                             </div>
@@ -208,7 +214,16 @@ const BannerAndImages = () => {
                                 <div className="text-end">  <img src={imgPreview.image} style={{ height: '60px', width: '60px', marginTop: '20px' }} alt="alt" /></div>
                             )}
                         </Col>
- 
+                        <Col md={12} className="mb-3">
+                            <Form.Group className="mb-3" controlId="formmainTitle">
+                                <Form.Label>Banner Type</Form.Label>
+                                <select className="form-select" name="type" value={formData.type}
+                                    onChange={handleChange}>
+                                    <option value="web">Web</option>
+                                    <option value="mobile">Mobile</option>
+                                </select>
+                            </Form.Group>
+                        </Col>
                         <Col md={12} className="mb-3">
                             <Form.Group className="mb-3" controlId="formmainTitle">
                                 <Form.Label>Title</Form.Label>
@@ -220,7 +235,7 @@ const BannerAndImages = () => {
                                 />
                             </Form.Group>
                         </Col>
- 
+
                         <Col md={12} className="mb-3">
                             <Form.Group className="mb-3" controlId="formmainTitle">
                                 <Form.Label>Redirect Url</Form.Label>
@@ -232,7 +247,7 @@ const BannerAndImages = () => {
                                 />
                             </Form.Group>
                         </Col>
- 
+
                         {
                             <Col md={12} className="mb-3">
                                 <Form.Label>Status</Form.Label>
@@ -258,5 +273,5 @@ const BannerAndImages = () => {
         </>
     );
 };
- 
+
 export default BannerAndImages;

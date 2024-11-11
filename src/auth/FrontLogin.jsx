@@ -9,11 +9,12 @@ import SocialIcon from "./SocialIcon";
 import { APICALL } from "../helper/api/api";
 import { auth, encryptLocalStorageData } from "../helper/Utility";
 import { Alert, Button } from "@mui/material";
+import { Modal } from "react-bootstrap";
 
 const FrontLogin = () => {
   const navigate = useNavigate();
   const { role } = useParams();
-
+  const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -79,7 +80,7 @@ const FrontLogin = () => {
     setLoading(true);
     try {
       const res = await APICALL("/user/loginUser", "post", formData);
-      console.log("loginRes",res)
+      console.log("loginRes", res);
       if (res?.status) {
         const dataParam = {
           token: res?.token,
@@ -110,11 +111,11 @@ const FrontLogin = () => {
             dataParam,
             "DoNotTryToAccess"
           );
-          const productURL = sessionStorage.getItem('p-url')
-          if(productURL){
-            navigate(productURL)
-            sessionStorage.removeItem('p-url')
-          }else{
+          const productURL = sessionStorage.getItem("p-url");
+          if (productURL) {
+            navigate(productURL);
+            sessionStorage.removeItem("p-url");
+          } else {
             navigate("/");
           }
         } else {
@@ -162,56 +163,59 @@ const FrontLogin = () => {
                       Enter your details below
                     </p>
 
-                  <div>
-                  <Form.Group
-                      className={`form-group mb-3 ${
-                        formData.email.length ? "not-empty" : ""
-                      }`}
-                    >
-                      <Form.Control
-                        type="text"
-                        className="form-control"
-                        name="email"
-                        id="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                      />
-                      <Form.Label htmlFor="email" className="animated-label">
-                        Email Or Phone Number
-                      </Form.Label>
-                    </Form.Group>
-                    <span className="errmsg">{errors.email}</span>
-                  </div>
-
-                   <div className="main_tagg">
-                   <Form.Group
-                      className={`form-group ${
-                        formData.password.length ? "not-empty" : ""
-                      }`}
-                    >
-                      <Form.Control
-                        type={passToggle ? "text" : "password"}
-                        className="form-control"
-                        name="password"
-                        id="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                      />
-                      <Form.Label htmlFor="password" className="animated-label">
-                        Password
-                      </Form.Label>
-                    </Form.Group>
-                    <div className="taggole_eyw">
-                      {" "}
-                      <i
-                        className={`fa ${
-                          passToggle ? "fa-eye" : "fa-eye-slash"
+                    <div>
+                      <Form.Group
+                        className={`form-group mb-3 ${
+                          formData.email.length ? "not-empty" : ""
                         }`}
-                        onClick={() => setPassToggle(!passToggle)}
-                      />
+                      >
+                        <Form.Control
+                          type="text"
+                          className="form-control"
+                          name="email"
+                          id="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                        />
+                        <Form.Label htmlFor="email" className="animated-label">
+                          Email Or Phone Number
+                        </Form.Label>
+                      </Form.Group>
+                      <span className="errmsg">{errors.email}</span>
                     </div>
-                    <span className="errmsg">{errors.password}</span>
-                   </div>
+
+                    <div className="main_tagg">
+                      <Form.Group
+                        className={`form-group ${
+                          formData.password.length ? "not-empty" : ""
+                        }`}
+                      >
+                        <Form.Control
+                          type={passToggle ? "text" : "password"}
+                          className="form-control"
+                          name="password"
+                          id="password"
+                          value={formData.password}
+                          onChange={handleChange}
+                        />
+                        <Form.Label
+                          htmlFor="password"
+                          className="animated-label"
+                        >
+                          Password
+                        </Form.Label>
+                      </Form.Group>
+                      <div className="taggole_eyw">
+                        {" "}
+                        <i
+                          className={`fa ${
+                            passToggle ? "fa-eye" : "fa-eye-slash"
+                          }`}
+                          onClick={() => setPassToggle(!passToggle)}
+                        />
+                      </div>
+                      <span className="errmsg">{errors.password}</span>
+                    </div>
 
                     <div className="remember_forgot d-flex justify-content-between">
                       <Form>
@@ -265,11 +269,20 @@ const FrontLogin = () => {
                       )}
                     </div>
 
+                    <div class="divie">
+                      <hr />
+                      <div class="divi_text">or</div>
+                    </div>
+
                     <SocialIcon />
 
                     <div className="mt-5">
                       Don’t have an account ?{" "}
-                      <Link className="highlight_txt" to={`/signup/${role}`}>
+                      <Link
+                        className="highlight_txt"
+                        to={"#"}
+                        onClick={() => setModalOpen(true)}
+                      >
                         Sign Up Now
                       </Link>
                     </div>
@@ -293,9 +306,11 @@ const FrontLogin = () => {
 
                   <div className="cutoms-login-artist">
                     <Form>
-                    <Form.Group
-  className={`form-group ${formData.email.length ? "not-empty" : ""} mb-3`}
->
+                      <Form.Group
+                        className={`form-group ${
+                          formData.email.length ? "not-empty" : ""
+                        } mb-3`}
+                      >
                         <Form.Label htmlFor="email" className="animated-label">
                           Email Or Phone Number
                         </Form.Label>
@@ -396,7 +411,13 @@ const FrontLogin = () => {
                       </div>
                       <p className="signup-link">
                         Don't have an account ?{" "}
-                        <Link to={`/signup/${role}`}> Sign Up now</Link>
+                        <Link
+                          to={`/signup/${role}`}
+                          onClick={() => setModalOpen(true)}
+                        >
+                          {" "}
+                          Sign Up now
+                        </Link>
                       </p>
                       <p className="privacy-notice">
                         Our privacy notice includes information about how we use
@@ -418,6 +439,86 @@ const FrontLogin = () => {
           </div>
         </>
       )}
+
+      <Modal
+        className="modal-all"
+        centered
+        show={modalOpen}
+        onHide={() => setModalOpen(false)}
+        size="xl"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title> Choose Your Account Type</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="row g-3 role_choose">
+            <div className="col-12 text-center role-box">
+              <div className="row justify-content-center ">
+                <div className="col-md-4 mb-md-0 mb-4 text-center">
+                  <Link
+                    className="text-center d-inline-block main_circle"
+                    to={"/signup/customer"}
+                  >
+                    <div className="role_icon m-auto">
+                      <i class="fa-solid fa-users"></i>
+                    </div>
+                    <span className="d-flex align-items-center justify-content-center ">
+                      {" "}
+                      Customer Account
+                      <i class="fa-solid fa-arrow-right mx-2"></i>
+                    </span>
+
+                    <p className="mb-0">
+                      Shop, explore, and enjoy personalized recommendations.
+                    </p>
+                  </Link>
+                </div>
+
+                <div className="col-md-4 mb-md-0 mb-4">
+                  <Link
+                    className="text-center d-inline-block main_circle"
+                    to={"/signup/artist"}
+                  >
+                    <div className="role_icon m-auto">
+                      <i class="fa-solid fa-palette"></i>
+                    </div>
+                    <span className="d-flex align-items-center justify-content-center ">
+                      {" "}
+                      Artist Account
+                      <i class="fa-solid fa-arrow-right mx-2"></i>
+                    </span>
+
+                    <p className="mb-0">
+                      Showcase your work, connect with fans, and grow your
+                      brand.
+                    </p>
+                  </Link>
+                </div>
+                <div className="col-md-4 ">
+                  <Link
+                    className="text-center d-inline-block main_circle"
+                    to={"/signup/affiliate"}
+                  >
+                    <div className="role_icon m-auto">
+                      <i class="fa-solid fa-diagram-project"></i>
+                    </div>
+                    <span className="d-flex align-items-center justify-content-center ">
+                      {" "}
+                      Affiliate Account
+                      <i class="fa-solid fa-arrow-right mx-2"></i>
+                    </span>
+                    <p className="mb-0">
+                      Earn commissions by promoting our products and content.
+                    </p>
+                  </Link>
+                </div>
+                {/* <Link to={"/signup/artist"}>Sign Up as Artist</Link>
+                <Link to={"/signup/affiliate"}>Sign Up as Affiliate</Link> */}
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };

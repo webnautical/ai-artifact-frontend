@@ -83,12 +83,21 @@ const Tier = () => {
                                     <hr />
                                     <div className="row g-2">
                                         <div className="col-6">
-                                            <label htmlFor="">Auto Points</label>
+                                            <label htmlFor="">Demotion Auto Points</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
                                                 value={item?.autoPoints}
                                                 onChange={(e) => handleInputChange(e, i, 'autoPoints')}
+                                            />
+                                        </div>
+                                        <div className="col-6">
+                                            <label htmlFor="">Achievement Auto Points</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                value={item?.achievementPoints}
+                                                onChange={(e) => handleInputChange(e, i, 'achievementPoints')}
                                             />
                                         </div>
                                         <div className="col-6">
