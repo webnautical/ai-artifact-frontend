@@ -103,19 +103,21 @@ const OrderList = () => {
     };
 
     const itemTotal = selectedRow?.orderItems?.reduce((acc, item) => {
-        return acc + (item?.price * item?.quantity || 0);
+        return acc + (item?.price * (item?.quantity - item?.refundedQuantity) || 0);
     }, 0);
 
     const [itemQnt, setItemQnt] = useState(1)
+    const [refundType, setRefundType] = useState('before')
     const handleRefund = async (itemID) => {
         setLoading({ ...loading, refund: true });
         try {
-            const params = { orderItemId: itemID, quantity: itemQnt };
+            const params = { orderItemId: itemID, quantity: itemQnt, type: refundType };
             const res = await APICALL("admin/refundByAdmin", "post", params);
             if (res?.status) {
                 setSelectedRow(null);
                 getListFun(pageNo, rowsPerPage);
                 toastifySuccess(res?.message);
+                setItemQnt(1)
             }
         } catch (error) {
             console.error(error);
@@ -131,9 +133,12 @@ const OrderList = () => {
         artistCommision,
         affiliateCommission,
         qnt,
-        status
+        status,
+        rq
     ) => {
-        const profit = status === "refunded" ? 0 :  (TotalPrice * qnt) - (geletoPrice + affiliateCommission + artistCommision);
+        const gp =  ((geletoPrice / qnt) * (qnt - rq));
+        // const profit = status === "refunded" ? 0 : (TotalPrice * qnt) - (geletoPrice + affiliateCommission + artistCommision);
+        const profit = (TotalPrice * (qnt-rq)) - (gp + affiliateCommission + artistCommision);
         return parseFloat(profit);
     };
 
@@ -187,34 +192,17 @@ const OrderList = () => {
                                 </Button>
                                 <h2 className="title-admins-table m-0">Orders</h2>
                             </div>
-                            {/* {loading?.refund ? (
-                                <BTNLoader className="artist-btn" />
-                            ) : (
-                                <>
-                                    {selectedRow?.status === "refunded" ? (
-                                        <>
-                                            <p className="text-uppercase text-danger">
-                                                <b>{selectedRow?.status}</b>
-                                            </p>
-                                        </>
-                                    ) : (
-                                        <button
-                                            className="artist-btn"
-                                            onClick={() => handleRefund()}
-                                        >
-                                            Mark as Refund
-                                        </button>
-                                    )}
-                                </>
-                            )} */}
                         </div>
                         <Row className=" justify-content-center">
                             <Col md={12}>
                                 <Row className="">
-                                    <Col md={12} clas>
-                                        <h5>
-                                            <strong>Items details</strong>
-                                        </h5>
+                                    <Col md={12}>
+                                        <div className="d-flex justify-content-between align-items-center mb-2">
+                                            <h5>
+                                                <strong>Items details</strong>
+                                            </h5>
+                                            <button className={`btn ${refundType === "before" ? "artist-btn" : " lock-unlock artist-btn"}`} onClick={() => setRefundType((prevType) => (prevType === "before" ? "after" : "before"))}> {refundType === "before" ? "30 days haven't passed yet, Commissions not locked yet" : "30 days have passed, commissions are now locked"}</button>
+                                        </div>
                                         <div className="table_border mb-5">
                                             <TableContainer>
                                                 <Table>
@@ -265,12 +253,15 @@ const OrderList = () => {
                                                                     <p className="my-0">{row?.frameType}</p>
                                                                 </TableCell>
                                                                 <TableCell>${row.price}</TableCell>
-                                                                <TableCell>{row.quantity}</TableCell>
+                                                                <TableCell>{row?.quantity - row?.refundedQuantity}</TableCell>
                                                                 <TableCell>
-                                                                    ${row.price * row?.quantity}
+                                                                    ${row.price * (row?.quantity - row?.refundedQuantity)}
                                                                 </TableCell>
                                                                 <TableCell>
-                                                                    ${row?.gelatoPrice?.toFixed(2)}
+                                                                    {/* ${row?.gelatoPrice?.toFixed(2)} */}
+                                                                    ${
+                                                                   ((row.gelatoPrice / row?.quantity) * (row?.quantity - row?.refundedQuantity)).toFixed(2)
+                                                                    }
                                                                 </TableCell>
                                                                 <TableCell>
                                                                     <Link
@@ -282,7 +273,12 @@ const OrderList = () => {
                                                                     </Link>
                                                                 </TableCell>
                                                                 <TableCell>
-                                                                    ${row.artistCommission?.toFixed(2)}
+                                                                    {/* ${
+                                                                        ((row.artistCommission / row?.quantity) * (row?.quantity - row?.refundedQuantity)).toFixed(2)
+                                                                    } */}
+
+                                                                    ${row.artistCommission.toFixed(2)}
+
                                                                 </TableCell>
                                                                 <TableCell>
                                                                     {row?.affiliateId?.first_name ? (
@@ -297,10 +293,16 @@ const OrderList = () => {
                                                                         "---"
                                                                     )}
                                                                 </TableCell>
+
                                                                 <TableCell>
-                                                                    {row?.price
-                                                                        ? `$${row?.affiliateCommission?.toFixed(2)}`
-                                                                        : "---"}
+                                                                    {/* {row?.price
+                                                                        ? `$${((row.affiliateCommission / row?.quantity) * (row?.quantity - row?.refundedQuantity)).toFixed(2)
+
+                                                                        }`
+                                                                        : "---"} */}
+
+                                                                    ${row.affiliateCommission.toFixed(2)}
+
                                                                 </TableCell>
                                                                 <TableCell>
                                                                     $
@@ -310,7 +312,8 @@ const OrderList = () => {
                                                                         row.artistCommission,
                                                                         row?.affiliateCommission,
                                                                         row.quantity,
-                                                                        row?.refundStatus
+                                                                        row?.refundStatus,
+                                                                        row?.refundedQuantity
                                                                     ).toFixed(2)}
                                                                 </TableCell>
                                                                 <TableCell className="text-capitalize">{row?.refundStatus}</TableCell>
@@ -343,16 +346,18 @@ const OrderList = () => {
                                                                 <span style={{ color: 'black', fontWeight: 'bold' }}> Total</span>
                                                             </TableCell>
                                                             <TableCell>
-                                                                {selectedRow?.orderItems?.reduce((sum, item) => sum + item.quantity, 0) || 0}
+                                                                {selectedRow?.orderItems?.reduce((sum, item) => sum + item.quantity - item?.refundedQuantity, 0) || 0}
                                                             </TableCell>
 
                                                             <TableCell> ${parseInt(itemTotal)}</TableCell>
+
                                                             <TableCell>
                                                                 {" "}
                                                                 $
                                                                 {selectedRow?.orderItems
                                                                     ?.reduce((total, row) => {
-                                                                        return total + (row.gelatoPrice || 0);
+                                                                        // return total + ((row.gelatoPrice - row?.refundedQuantity) || 0);
+                                                                        return total + ((row.gelatoPrice / row?.quantity) * (row?.quantity - row?.refundedQuantity))
                                                                     }, 0)
                                                                     .toFixed(2)}
                                                             </TableCell>
@@ -390,7 +395,8 @@ const OrderList = () => {
                                                                                 row.artistCommission,
                                                                                 row.affiliateCommission,
                                                                                 row.quantity,
-                                                                                row?.refundStatus
+                                                                                row?.refundStatus,
+                                                                                row?.refundedQuantity
                                                                             )
                                                                         );
                                                                     }, 0).toFixed(2)}
@@ -418,7 +424,7 @@ const OrderList = () => {
                                                             <TableCell colSpan={2}></TableCell>
                                                             <TableCell colSpan={3}>  <span style={{ color: 'black', fontWeight: 'bold' }}>Order Total</span></TableCell>
 
-                                                            <TableCell colSpan={7}>  <span style={{ color: 'black', fontWeight: 'bold' }}> ${selectedRow?.totalPrice}</span></TableCell>
+                                                            <TableCell colSpan={7}>  <span style={{ color: 'black', fontWeight: 'bold' }}> ${ (itemTotal  - selectedRow?.couponAmount  + selectedRow?.shippingCharge)?.toFixed(2) }</span></TableCell>
                                                         </TableRow>
                                                     </TableFooter>
                                                 </Table>

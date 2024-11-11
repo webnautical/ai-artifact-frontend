@@ -6360,3 +6360,8 @@ transition: 0.6s;
       padding: 2px 10px;
       color: #bbbbbb;
   }
+
+
+  .lock-unlock.artist-btn{
+    background-color: #dc3636 !important;
+  }
