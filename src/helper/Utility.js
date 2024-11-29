@@ -20,8 +20,9 @@ export const imgBaseURL = () => {
     //     return "http://127.0.0.1:8000/storage/";
     // } else {
     // }
-    // return "https://aksvedas.webupdatecenter.com/storage/"
-    return "https://aiartifact.itworkshop.in/"
+    // return "https://phpstack-1369337-5047547.cloudwaysapps.com/"
+    // return "https://aiartifact.itworkshop.in/"
+    return "https://www.aiartifact.com/"
 }
 export const apiBaseURL = () => {
     // const hostname = window.location.hostname
@@ -29,8 +30,9 @@ export const apiBaseURL = () => {
     //     return "http://127.0.0.1:8000/api";
     // } else {
     // }
-    // return "https://aksvedas.webupdatecenter.com/api"
-    return "https://aiartifact.itworkshop.in"
+    // return "https://phpstack-1369337-5047547.cloudwaysapps.com"
+    // return "https://aiartifact.itworkshop.in"
+    return "https://www.aiartifact.com"
 }
 export const apiVersion = () => {
     return "/v1/"

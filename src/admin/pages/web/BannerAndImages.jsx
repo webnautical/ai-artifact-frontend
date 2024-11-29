@@ -50,7 +50,7 @@ const BannerAndImages = () => {
     const initialFormData = {
         id: '',
         redirectUrl: '',
-        type: '',
+        type: 'web',
         title: '',
         status: true,
         image: '',

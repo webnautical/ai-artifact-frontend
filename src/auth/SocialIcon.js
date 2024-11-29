@@ -107,7 +107,6 @@ const SocialIcon = () => {
 
     const login = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
-            console.log(tokenResponse);
             const userInfo = await axios.get(
                 'https://www.googleapis.com/oauth2/v3/userinfo',
                 { headers: { Authorization: `Bearer ${tokenResponse?.access_token}` } },
@@ -121,27 +120,16 @@ const SocialIcon = () => {
         onError: errorResponse => console.log(errorResponse),
     });
 
-    const onGoogleSuccess = async (tokenResponse) => {
-        try {
-            const userData = parseJwt(tokenResponse?.credential);
-            console.log("Userdata", userData)
-            // if (isSignup) {
-            //     setGoogleRes({ ...userData, ...tokenResponse });
-            // } else {
-            //     loginUser(userData, tokenResponse);
-            // }
-        } catch (error) {
-            // setOpen(true);
-            // setToastData(ToastConstant.SOMETHING_WENT_WRONG);
-            console.log("Google fetch error", { error });
-        }
-    };
+    // const onGoogleSuccess = async (tokenResponse) => {
+    //     try {
+    //         const userData = parseJwt(tokenResponse?.credential);
+    //         console.log("Userdata", userData)
 
-    const onGoogleError = (error) => {
-        // setGoogleRes(null);
-        // setOpen(true);
-        // setToastData(ToastConstant.SOMETHING_WENT_WRONG);
-    };
+    //     } catch (error) {
+
+    //         console.log("Google fetch error", { error });
+    //     }
+    // };
 
     return (
         <>

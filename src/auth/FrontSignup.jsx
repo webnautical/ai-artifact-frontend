@@ -80,18 +80,22 @@ const FrontSignup = () => {
 
   const isFormFilled = () => {
     for (const key in formData) {
-      if (formData[key] === "") {
-        return false;
+      if (formData.user_role === 'customer' && key === 'userName') {
+        continue; // Skip this field
+      }
+
+      if (formData[key] === '' && key !== 'iaccept') {
+        return false; // Return false if any field is empty
       }
     }
 
     for (const key in errors) {
       if (errors[key]) {
-        return false;
+        return false; // Return false if any errors exist
       }
     }
 
-    return true;
+    return true; // If all validations pass, return true
   };
 
   const handleRegister = async () => {
@@ -100,8 +104,8 @@ const FrontSignup = () => {
     try {
       const res = await APICALL("/user/registerUser", "post", formData);
       if (res?.status) {
-        console.log("formData",formData)
-        console.log("res",res)
+        console.log("formData", formData)
+        console.log("res", res)
         const dataParam = {
           token: res?.token,
           name: res?.registerUser?.first_name,
@@ -234,9 +238,8 @@ const FrontSignup = () => {
                       <div className="steppers-outer row">
                         <div className=" col-6 ">
                           <div
-                            className={`steppers-inner ${
-                              !isOtpSend && "activestepss"
-                            }`}
+                            className={`steppers-inner ${!isOtpSend && "activestepss"
+                              }`}
                           >
                             <p>Step 1</p>
                             <h6>Personal Data </h6>
@@ -244,9 +247,8 @@ const FrontSignup = () => {
                         </div>
                         <div className=" col-6">
                           <div
-                            className={`steppers-inner ${
-                              isOtpSend && "activestepss"
-                            }`}
+                            className={`steppers-inner ${isOtpSend && "activestepss"
+                              }`}
                           >
                             <p>Step 2</p>
                             <h6>Verification </h6>
@@ -259,9 +261,8 @@ const FrontSignup = () => {
                           <Row>
                             <Col md={6} className="mb-2">
                               <Form.Group
-                                className={`form-group ${
-                                  formData.first_name.length ? "not-empty" : ""
-                                } mb-3`}
+                                className={`form-group ${formData.first_name.length ? "not-empty" : ""
+                                  } mb-3`}
                               >
                                 <Form.Label
                                   htmlFor="first_name"
@@ -285,9 +286,8 @@ const FrontSignup = () => {
                             </Col>
                             <Col md={6} className="mb-2">
                               <Form.Group
-                                className={`form-group ${
-                                  formData.last_name.length ? "not-empty" : ""
-                                } mb-3`}
+                                className={`form-group ${formData.last_name.length ? "not-empty" : ""
+                                  } mb-3`}
                               >
                                 <Form.Label
                                   htmlFor="last_name"
@@ -310,35 +310,33 @@ const FrontSignup = () => {
                           </Row>
 
                           <Col md={12} className="mb-2">
-                              <Form.Group
-                                className={`form-group ${
-                                  formData.last_name.length ? "not-empty" : ""
+                            <Form.Group
+                              className={`form-group ${formData.last_name.length ? "not-empty" : ""
                                 } mb-3`}
+                            >
+                              <Form.Label
+                                htmlFor="last_name"
+                                className="animated-label"
                               >
-                                <Form.Label
-                                  htmlFor="last_name"
-                                  className="animated-label"
-                                >
-                                  Username
-                                </Form.Label>
-                                <Form.Control
-                                  type="text"
-                                  className="form-control"
-                                  name="userName"
-                                  id="userName"
-                                  value={formData.userName}
-                                  onChange={handleChange}
-                                  maxLength={26}
-                                />
-                              </Form.Group>
-                              <span className="errmsg">{errors.userName}</span>
-                            </Col>
+                                Username
+                              </Form.Label>
+                              <Form.Control
+                                type="text"
+                                className="form-control"
+                                name="userName"
+                                id="userName"
+                                value={formData.userName}
+                                onChange={handleChange}
+                                maxLength={26}
+                              />
+                            </Form.Group>
+                            <span className="errmsg">{errors.userName}</span>
+                          </Col>
 
                           <Col md={12} className="mb-2">
                             <Form.Group
-                              className={`form-group ${
-                                formData.email.length ? "not-empty" : ""
-                              } mb-3`}
+                              className={`form-group ${formData.email.length ? "not-empty" : ""
+                                } mb-3`}
                             >
                               <Form.Label
                                 htmlFor="email"
@@ -360,9 +358,8 @@ const FrontSignup = () => {
                           </Col>
 
                           <Form.Group
-                            className={`artist_tagg main_tagg form-group ${
-                              formData.password.length ? "not-empty" : ""
-                            } `}
+                            className={`artist_tagg main_tagg form-group ${formData.password.length ? "not-empty" : ""
+                              } `}
                           >
                             <Form.Label
                               htmlFor="password"
@@ -382,9 +379,8 @@ const FrontSignup = () => {
                             <div className="taggole_eyw">
                               {" "}
                               <i
-                                className={`fa ${
-                                  passToggle ? "fa-eye" : "fa-eye-slash"
-                                }`}
+                                className={`fa ${passToggle ? "fa-eye" : "fa-eye-slash"
+                                  }`}
                                 onClick={() => setPassToggle(!passToggle)}
                               />
                             </div>
@@ -448,7 +444,7 @@ const FrontSignup = () => {
                           </div>
 
                           <p className="signup-link">
-                            Already have an account ? 
+                            Already have an account ?
                             <Link to={`/login/${role}`}> Log In now</Link>
                           </p>
                           <p className="privacy-notice">
@@ -573,13 +569,10 @@ const FrontSignup = () => {
                       <h1>Create an account</h1>
                       <p className="mb-4 mt-4">Enter your details below</p>
 
-                      
-
                       <div>
                         <Form.Group
-                          className={`form-group ${
-                            formData.first_name.length ? "not-empty" : ""
-                          }`}
+                          className={`form-group ${formData.first_name.length ? "not-empty" : ""
+                            }`}
                         >
                           <Form.Control
                             type="text"
@@ -602,9 +595,8 @@ const FrontSignup = () => {
 
                       <div>
                         <Form.Group
-                          className={`form-group ${
-                            formData.last_name.length ? "not-empty" : ""
-                          }`}
+                          className={`form-group ${formData.last_name.length ? "not-empty" : ""
+                            }`}
                         >
                           <Form.Control
                             type="text"
@@ -626,9 +618,8 @@ const FrontSignup = () => {
                       </div>
                       <div>
                         <Form.Group
-                          className={`form-group ${
-                            formData.email.length ? "not-empty" : ""
-                          }`}
+                          className={`form-group ${formData.email.length ? "not-empty" : ""
+                            }`}
                         >
                           <Form.Control
                             type="email"
@@ -637,7 +628,7 @@ const FrontSignup = () => {
                             id="email"
                             value={formData.email}
                             onChange={handleChange}
-                            maxLength={26}
+                            maxLength={100}
                           />
                           <Form.Label
                             htmlFor="email"
@@ -651,9 +642,8 @@ const FrontSignup = () => {
 
                       <div className="">
                         <Form.Group
-                          className={` form-group ${
-                            formData.password.length ? "not-empty" : ""
-                          }`}
+                          className={` form-group ${formData.password.length ? "not-empty" : ""
+                            }`}
                         >
                           <Form.Control
                             type={passToggle ? "text" : "password"}
@@ -667,9 +657,8 @@ const FrontSignup = () => {
                           <div className="taggole_eyw">
                             {" "}
                             <i
-                              className={`fa ${
-                                passToggle ? "fa-eye" : "fa-eye-slash"
-                              }`}
+                              className={`fa ${passToggle ? "fa-eye" : "fa-eye-slash"
+                                }`}
                               onClick={() => setPassToggle(!passToggle)}
                             />
                           </div>
