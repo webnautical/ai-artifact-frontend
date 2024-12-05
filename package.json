@@ -34,6 +34,7 @@
     "react-facebook-login-lite": "^1.0.0",
     "react-google-button": "^0.8.0",
     "react-google-login": "^5.2.2",
+    "react-image-webp": "^0.8.0",
     "react-modal": "^3.16.1",
     "react-number-format": "^5.4.0",
     "react-owl-carousel": "^2.3.3",
@@ -50,6 +51,7 @@
     "swiper": "^11.1.4",
     "swr": "^2.2.5",
     "web-vitals": "^2.1.4",
+    "workbox-webpack-plugin": "^7.3.0",
     "xlsx": "^0.18.5",
     "yup": "^1.4.0"
   },
@@ -76,5 +78,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }

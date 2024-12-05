@@ -240,13 +240,14 @@ export default function UserManagement() {
                             type === "artist" &&
                             <TableCell>{getTierImg(row?.currentRank)?.icon}</TableCell>
                           }
+                         
+                          <TableCell component="th" scope="row">
+                            {row.first_name + " " + row.last_name}
+                          </TableCell>
                           {
                             type === "artist" &&
                             <TableCell>{row?.userName}</TableCell>
                           }
-                          <TableCell component="th" scope="row">
-                            {row.first_name + " " + row.last_name}
-                          </TableCell>
                           <TableCell>{row.email}</TableCell>
                           <TableCell>
                             <SwitchToggle

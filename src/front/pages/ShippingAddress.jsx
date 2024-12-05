@@ -254,6 +254,14 @@ const ShippingAddress = () => {
     setCityList(cityData);
   };
 
+  const [stateDisplayName, setStateDisplayName] = useState("")
+  useEffect(()=>{
+    if(stateList.length > 0){
+      const stateOBJ = stateList.find((item)=> item.value == formData.state)
+      setStateDisplayName(stateOBJ?.displayValue)
+    }
+  },[stateList, formData.state])
+
   const getStateFun1 = (country) => {
     const stateData = State?.getStatesOfCountry(country).map((state) => ({
       value: state.isoCode,
@@ -273,27 +281,33 @@ const ShippingAddress = () => {
 
   const [selectedMethod, setSelectedMethod] = useState("");
 
+  const totalPrice =
+  orderDetails?.totalPrice +
+  (shippingChargeRes?.price || 0) -
+  (couponRes?.discount || 0);
+
   const handleChange1 = (event) => {
     setSelectedMethod(event.target.value);
     if (event.target.value === "Stripe") {
       setOpenPaymentForm(event.target.value);
-      getClientSecretFun(orderDetails?.totalPrice);
+      getClientSecretFun(totalPrice);
     } else {
       setOpenPaymentForm();
     }
   };
 
   useEffect(() => {
-    if (shippingChargeRes) {
-      getClientSecretFun(orderDetails?.totalPrice);
+    if (shippingChargeRes || couponRes) {
+      getClientSecretFun(totalPrice);
     }
-  }, [shippingChargeRes]);
+  }, [shippingChargeRes, couponRes]);
 
   const [stripErr, setStripErr] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
 
   const getClientSecretFun = async (amount) => {
+    console.log("amount",amount)
     try {
       const params = { amount: amount };
       const res = await APICALL("user/createPaymentInstant", "post", params);
@@ -306,10 +320,8 @@ const ShippingAddress = () => {
   };
 
 
-  const totalPrice =
-    orderDetails?.totalPrice +
-    (shippingChargeRes?.price || 0) -
-    (couponRes?.discount || 0);
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -352,6 +364,7 @@ const ShippingAddress = () => {
           postalCode: formData?.postalCode,
           city: formData?.city,
           state: formData?.state,
+          // stateName: stateDisplayName,
           country: formData?.country,
           contactPhone: formData?.contactPhone,
           email: formData?.email,
@@ -1397,7 +1410,7 @@ const ShippingAddress = () => {
                                   </p>
                                   <p>{formData?.contactPhone}</p>
                                   <p>{formData?.email}</p>
-                                  <p>{formData?.state}</p>
+                                  <p>{stateDisplayName}</p>
                                   <p>{formData?.city}</p>
                                   <p>{formData?.postalCode}</p>
                                   <p>

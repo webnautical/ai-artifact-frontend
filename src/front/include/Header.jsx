@@ -432,6 +432,9 @@ const Header = () => {
                                                 item?.randomProduct?.thumbnail
                                               }
                                               alt=""
+
+                                              width="100%"
+                                              height="100%"
                                             />
                                             <Link>
                                             
@@ -474,10 +477,10 @@ const Header = () => {
             </div>
 
             <div className=" top_logo_section">
-              <Link to="/">
-                {" "}
-                <img className="mx-auto" src={logo} alt="" />
-              </Link>
+            <Link to="/">
+  <img className="" src={logo} alt="logo" width="100%" height="70px" />
+</Link>
+
             </div>
 
             <div className="right_option_bar">

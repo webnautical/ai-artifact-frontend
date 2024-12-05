@@ -1,10 +1,18 @@
 @media only screen and (max-width: 1450.98px) {
-  .main_icons h5 {
+
+  .promisses_box p{ font-size: 12px;}
+
+  .promisses_box h5 {
+    font-size: 13px;
+    font-weight: 600;
+}
+  .main_icons h4 {
     font-size: 28px;
   }
 
   .social_community li img {
     width: 32px;
+    height: 32px;
   }
 
   .my_header header {
@@ -136,7 +144,7 @@
     display: none;
   }
 
-  .main_icons h5 {
+  .main_icons h4 {
     margin-bottom: 20px !important;
   }
 
@@ -181,6 +189,12 @@
 }
 
 @media only screen and (max-width: 767.98px) {
+
+
+  .just_bought h1 {
+    font-size: 22px;
+}
+  
     .role_choose span {
 
         font-size: 16px;
@@ -409,8 +423,11 @@
     margin-bottom: 30px;
   }
 
-  .left_global_heading {
-    font-size: 26px;
+  
+
+
+  .left_global_heading h3 {
+    font-size: 22px;
   }
 
   .top_ten {
@@ -425,7 +442,7 @@
     width: 27px;
   }
 
-  .main_icons h5 {
+  .main_icons h4 {
     font-size: 24px;
     font-weight: 600;
   }

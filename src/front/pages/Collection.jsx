@@ -125,11 +125,15 @@ const Collection = () => {
  
                                   </div>
  
-                                  <button className="wishlist border-0" onClick={() => {
-                                    addRemoveWishList(item?._id, getData, true)
-                                  }}>
-                                    <WishlistIcon item={item}/>
-                                  </button>
+                                  <button
+  className="wishlist border-0"
+  onClick={() => {
+    addRemoveWishList(item?._id, getData, true);
+  }}
+  aria-label={item?.isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
+>
+  <WishlistIcon item={item} />
+</button>
                                 </div>
                               </Col>
                             ))

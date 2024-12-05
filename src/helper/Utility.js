@@ -1,5 +1,5 @@
 // import img1 from '../assets/img/1.png'
-import dfIMG from '../assets/images/placeholder.jpg'
+import dfIMG from '../assets/images/placeholder.webp'
 import bronze from '../assets/images/1 - Bronze.png'
 import silver from '../assets/images/2 - Silver.png'
 import gold from '../assets/images/3 - Gold.png'

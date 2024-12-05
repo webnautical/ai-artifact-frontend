@@ -43,6 +43,7 @@ import OrderFailure from "./front/pages/orders/OrderFailure";
 import CustomerRoot from "./front/pages/customer/CustomerRoot";
 import { auth, libraries } from "./helper/Utility";
 import ArtistCollections from "./front/pages/ArtistCollections";
+import TestingSpeed from "./front/pages/TestingSpeed";
 // const stripePromise = loadStripe('pk_test_51PdpfWCeFWsCdKvD0zd3KZ2tQGXw0SwEOaHFWiQqhTTdjGMiPCg5sLJYVdrn8AOkAsrFHqktWs9ZyjLnrvcUy2Xl00YltTFAaq');
 const stripePromise = loadStripe('pk_live_51PdpfWCeFWsCdKvDhbHIAVDeAOaTEkkpd7jippudVyVCW6Mi6gBZXTnSrXAxHMNsiMbpgtShmMn1QKQIAu00UKnQ00FawrFBs6');
 function App() {
@@ -59,6 +60,7 @@ function App() {
           <Elements stripe={stripePromise}>
             <Routes>
               <Route path="/" element={<FrontWeb cmp={Home} header={true} footer={true} />} />
+              <Route path="/testing-speed" element={<TestingSpeed />} />
               <Route path="/login/:role" element={<FrontWeb cmp={FrontLogin} header={false} footer={false} />} />
               <Route path="/forgot-password" element={<FrontWeb cmp={ForgotPassword} header={true} footer={true} />} />
               <Route path="/collection/:artist/:directory?" element={<FrontWeb cmp={Collection} header={true} footer={true} />} />

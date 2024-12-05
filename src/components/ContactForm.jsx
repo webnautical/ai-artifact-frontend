@@ -146,7 +146,7 @@ function ContactForm() {
   };
 
   return (
-    <Container className="mb-md-5 mb-4">
+    <Container className="mb-md-3 mb-2">
       <div className="contact-us-section">
         <Row className="justify-content-center align-items-center">
           <Col md={6} className="text-left mb-md-0 mb-4">
@@ -155,7 +155,9 @@ function ContactForm() {
             <div>
               <i class="fa-solid fa-envelope me-2 me-3"></i>For Other Query<br/>
               <b>
-                <Link>{generalSetting?.adminEmail}</Link>
+              <Link to={`mailto:${generalSetting?.adminEmail}`}>
+  {generalSetting?.adminEmail}
+</Link>
               </b>
             </div>
           </Col>

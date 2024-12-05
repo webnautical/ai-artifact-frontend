@@ -93,10 +93,11 @@ const Wishlist = () => {
                                 );
                               }}
                             >
-                              <i
-                                class="fa-solid fa-heart"
-                                style={{ color: "#008080" }}
-                              ></i>
+                            <i
+  className="fa-solid fa-heart"
+  style={{ color: "#008080" }}
+  aria-hidden="true"
+></i>
                             </button>
 
                             {contextLoader?.addToCart[item?.product_id?._id] ? (

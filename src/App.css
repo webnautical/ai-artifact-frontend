@@ -643,7 +643,11 @@ select:focus {
 .promisses_box {
   display: flex;
   gap: 15px;
+  align-items: center;
 }
+
+.promisses_box p{ font-size: 14px;font-size: 14px;
+  margin-top: 5px !important;}
 
 .promisses_box h5 {
   font-size: 16px;
@@ -1450,7 +1454,7 @@ footer {
 /* -----------------------------------newslettercss------------------------------------- */
 
 .neweletter {
-  background-image: url(../src/assets/images/newsbg.png);
+  background-image: url(../src/assets/images/newsbg.webp);
   background-repeat: no-repeat;
   background-size: cover;
   padding: 70px;
@@ -1709,6 +1713,7 @@ section.header.d-lg-block.d-none.scrolled-class {
 .top_logo_section {
   padding: 12px 0px 10px;
   width: 20%;
+  text-align: center;
 }
 
 .main_inner_header .top_logo_section a {
@@ -1889,7 +1894,7 @@ header nav ul li a {
 }
 
 .slider_sec .item {
-  border-radius: 16px;
+  /* border-radius: 16px; */
   overflow: hidden;
 }
 
@@ -1965,7 +1970,7 @@ header nav ul li a {
 .slider_big {
   position: relative;
   overflow: hidden;
-  filter: drop-shadow(0px 2px 16px rgba(0, 0, 0, 0.25));
+  /* filter: drop-shadow(0px 2px 16px rgba(0, 0, 0, 0.25)); */
   border-radius: 16px;
   overflow: hidden;
 }
@@ -2046,7 +2051,7 @@ header nav ul li a {
 
 .main_baught_list_box:last-child {
   border-bottom: none;
-  padding-bottom: 0px !important;
+  /* padding-bottom: 0px !important; */
 }
 
 .baought_list:last-child {
@@ -2096,10 +2101,11 @@ header nav ul li a {
   /* width: 87px !important; */
 }
 
-.left_global_heading {
+.left_global_heading h3 {
   font-size: 30px;
   font-weight: 600;
 }
+
 
 .newartwork {
   padding: 50px 0;
@@ -2166,8 +2172,8 @@ header nav ul li a {
 }
 
 .top_ten_arts img {
-  width: 200px;
-  height: 200px;
+  width: 115px;
+  height: 115px;
   object-fit: cover;
   border-radius: 100%;
 }
@@ -2203,7 +2209,7 @@ header nav ul li a {
   border: 1px solid #1f8e8e !important;
 }
 
-.main_icons h5 {
+.main_icons h4 {
   font-size: 38px;
   font-weight: 600;
 }
@@ -2261,7 +2267,7 @@ header nav ul li a {
   object-fit: cover;
 }
 
-.blog_box h6 {
+.blog_box h5 {
   font-size: 20px;
   font-weight: 600;
 }
@@ -2274,7 +2280,7 @@ header nav ul li a {
   transition: 0.6s;
 }
 
-.blog_box:hover h6 {
+.blog_box:hover h5 {
   color: purple;
 }
 
@@ -2336,7 +2342,7 @@ header nav ul li a {
 }
 
 .join_community .main_ouetr {
-  background-image: url(/src/assets/images/communtiybg.png);
+  background-image: url(/src/assets/images/communtiybg.webp);
   background-repeat: no-repeat;
   background-attachment: fixed;
   padding: 40px;
@@ -2364,6 +2370,8 @@ header nav ul li a {
 
 .social_community li img {
   width: 54px;
+  object-fit: contain;
+
 }
 
 .social_community li {
@@ -5466,7 +5474,7 @@ nav.sidebr-admin .simplebar-scrollable-x {
   text-align: left;
 }
 
-.blog_box h6 {
+.blog_box h5 {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: pre;
@@ -6364,4 +6372,14 @@ transition: 0.6s;
 
   .lock-unlock.artist-btn{
     background-color: #dc3636 !important;
+  }
+
+  .front_loder {
+
+    display: flex
+    ;
+        flex-direction: column-reverse;
+        justify-content: center;
+        align-items: center;
+        gap: 21px;
   }

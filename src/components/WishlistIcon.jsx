@@ -9,12 +9,13 @@ const WishlistIcon = ({item}) => {
     const isWishlisted = isLoggedIn ? item?.isWishlist : isItemInGuestWishlist(item?._id);
     return (
         <>
-            {isWishlisted ? (
-                <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i>
-            ) : (
-                <i className="fa-regular fa-heart"></i>
-            )}
-        </>
+        {isWishlisted ? (
+            <i className="fa-solid fa-heart" style={{ color: '#008080' }} aria-hidden="true"></i>
+        ) : (
+            <i className="fa-regular fa-heart" aria-hidden="true"></i>
+        )}
+    </>
+    
     )
 }
 

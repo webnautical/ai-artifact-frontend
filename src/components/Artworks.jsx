@@ -30,7 +30,9 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
       <Container>
         <Row className="align-items-center" >
           <Col md={6}>
-            <h4 class="left_global_heading mb-4">{title || "Best Selling Artworks"}</h4>
+          <div className="left_global_heading ">
+            <h3 class="mb-4">{title || "Best Selling Artworks"}</h3>
+            </div>
           </Col>
         </Row>
  
@@ -47,7 +49,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                           <div className="grid_box_artwork_big">
                             <Link to={`/product-details/${productList[0]?._id}`}>
                               <img
-                                src={imgBaseURL() + productList[0]?.image}
+                                src={imgBaseURL() + productList[0]?.thumbnail}
                                 alt="artwork-images"
                                 className="w-100"
                               />
@@ -146,7 +148,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                           <div className="grid_box_artwork_big">
                             <Link to={`/product-details/${productList[3]?._id}`}>
                               <img
-                                src={imgBaseURL() + productList[3]?.image}
+                                src={imgBaseURL() + productList[3]?.thumbnail}
                                 alt="artwork-images"
                                 className="w-100"
                               />
@@ -250,7 +252,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                           <div className="grid_box_artwork_big">
                             <Link to={`/product-details/${data[0]?.product?._id}`}>
                               <img
-                                src={imgBaseURL() + data[0]?.product?.image}
+                                src={imgBaseURL() + data[0]?.product?.thumbnail}
                                 alt="artwork-images"
                                 className="w-100"
                               />
@@ -348,7 +350,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                           <div className="grid_box_artwork_big">
                             <Link to={`/product-details/${data[3]?.product?._id}`}>
                               <img
-                                src={imgBaseURL() + data[3]?.product?.image}
+                                src={imgBaseURL() + data[3]?.product?.thumbnail}
                                 alt="artwork-images"
                                 className="w-100"
                               />

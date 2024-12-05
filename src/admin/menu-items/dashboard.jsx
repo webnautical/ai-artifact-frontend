@@ -307,14 +307,14 @@ const dashboard = {
       breadcrumbs: false
     },
 
-    {
-      id: 'contactQuery',
-      title: 'Contact Query',
-      type: 'item',
-      url: '/admin/contact-query',
-      icon: SupportAgentIcon,
-      breadcrumbs: false
-    },
+    // {
+    //   id: 'contactQuery',
+    //   title: 'Contact Query',
+    //   type: 'item',
+    //   url: '/admin/contact-query',
+    //   icon: SupportAgentIcon,
+    //   breadcrumbs: false
+    // },
     {
       id: 'Subscribers',
       title: 'Subscribers',

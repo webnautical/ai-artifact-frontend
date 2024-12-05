@@ -252,11 +252,16 @@ const ProductList = () => {
                               </div>
  
                             </Link>
-                            <button className="wishlist border-0" onClick={() => {
-                              addRemoveWishList(item?._id, getArtWorkListFun, true)
-                            }}>
-                              <WishlistIcon item={item} />
-                            </button>
+                            <button
+  className="wishlist border-0"
+  aria-label={`Add or remove ${item?.name || 'artwork'} from wishlist`}
+  onClick={() => {
+    addRemoveWishList(item?._id, getArtWorkListFun, true);
+  }}
+>
+  <WishlistIcon item={item} />
+</button>
+
                           </div>
                         </Col>
                       ))

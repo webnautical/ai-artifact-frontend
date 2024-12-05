@@ -9,7 +9,9 @@ const CollectionLIst = ({ title, data, btnHide }) => {
       <Container>
         <Row className="mb-4">
           <Col md={12}>
-            <h4 class="left_global_heading">{title}</h4>
+          <div className="left_global_heading">
+            <h3>{title}</h3>
+            </div>
           </Col>
         </Row>
 
