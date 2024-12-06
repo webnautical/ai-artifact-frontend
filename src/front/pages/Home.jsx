@@ -147,7 +147,6 @@ const Home = () => {
       },
       1000: {
         items: 1,
-
         loop: true,
       },
     },
