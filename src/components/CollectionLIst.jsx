@@ -33,6 +33,7 @@ const CollectionLIst = ({ title, data, btnHide }) => {
                                   : defaultIMG
                               }
                               alt="popular-collection-img"
+                              loading="lazy" 
                             />
                           </div>
                         </Col>
@@ -41,7 +42,7 @@ const CollectionLIst = ({ title, data, btnHide }) => {
                   </Row>
                   <div className="collection_by">
                     <div className="review_person_img">
-                      <h5 className="first_letter" style={{ background: '#849393 !important' }}>{item?.artist?.userName.charAt(0)}</h5>
+                      <div className="first_letter" style={{ background: '#849393 !important' }}>{item?.artist?.userName.charAt(0)}</div>
                     </div>
                     <div className="collection_by_details">
                       <h4>{item?.directoryName}</h4>
@@ -57,7 +58,7 @@ const CollectionLIst = ({ title, data, btnHide }) => {
         {
           !btnHide &&
           <div className="text-center mt-5">
-            <Link to={`/collections`} class="global_btn">Sell All Collections</Link>
+            <Link to={`/collections`} className="global_btn">Sell All Collections</Link>
           </div>
         }
       </Container>

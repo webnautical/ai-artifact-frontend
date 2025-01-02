@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/logo.webp";
 import { auth, getTokenType, imgBaseURL } from "../../helper/Utility";
 import { Row, Col } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
 const Header = () => {
-  const pathname =useLocation().pathname
+  const pathname = useLocation().pathname;
   const {
     getHeaderContent,
     headerContent,
@@ -116,10 +116,13 @@ const Header = () => {
     navigate(`/product-list`, { state: { data: data } });
   };
 
-  const getActive = (path) =>{
-    if(pathname===path) { return true }
-    else{ return false }
-  }
+  const getActive = (path) => {
+    if (pathname === path) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return (
     <>
@@ -128,14 +131,14 @@ const Header = () => {
         <div className="container">
           <div className="mobile-menu-inner">
             <div className="moble-logo">
-              <Link to="/">
-                <img src={logo} alt="" />
+              <Link to="/" aria-label="Home">
+                <img src={logo} alt=" Logo" loading="lazy" />
               </Link>
             </div>
             <div className="mboiel-right">
               <ul>
                 <li className="wish_li">
-                  <Link to="/wishlist">
+                  <Link to="/wishlist" aria-label="View Wishlist">
                     <i class="fa-regular fa-heart"></i>
                     {auth("customer") ? (
                       customerInfo?.wishlistTotal > 0 && (
@@ -150,11 +153,10 @@ const Header = () => {
                         )}
                       </>
                     )}
-
                   </Link>
                 </li>
                 <li className="cart_li cart_li_phone ">
-                  <Link to="/cart">
+                  <Link to="/cart" aria-label="View Cart">
                     <svg
                       className=""
                       width="26"
@@ -303,7 +305,11 @@ const Header = () => {
                       {/* <span className="d-block">{"Join"}</span> */}
                     </Link>
                   ) : (
-                    <Link className="text-center" to="/login/customer">
+                    <Link
+                      className="text-center"
+                      to="/login/customer"
+                      aria-label="Login as Customer"
+                    >
                       <svg
                         width="24"
                         height="24"
@@ -334,7 +340,11 @@ const Header = () => {
                   )}
                 </li>
                 <li>
-                  <button onClick={handleShow} className="navbar-toggler">
+                  <button
+                    onClick={handleShow}
+                    className="navbar-toggler"
+                    aria-label="Toggle navigation"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       version="1.1"
@@ -369,7 +379,7 @@ const Header = () => {
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
-            <button onClick={handleSearch}>
+            <button onClick={handleSearch} aria-label="Search">
               <i className="fa fa-magnifying-glass"></i>
             </button>
           </div>
@@ -388,7 +398,12 @@ const Header = () => {
                 <nav>
                   <ul>
                     <li className="hover_menu">
-                      <Link to="/product-list" className={getActive("/product-list") && "active"}>Browse</Link>
+                      <Link
+                        to="/product-list"
+                        className={getActive("/product-list") && "active"}
+                      >
+                        Browse
+                      </Link>
 
                       <div className="hover_menu_show_box">
                         <div className="container">
@@ -431,20 +446,18 @@ const Header = () => {
                                                 imgBaseURL() +
                                                 item?.randomProduct?.thumbnail
                                               }
-                                              alt=""
-
+                                              alt="browse_with_img"
                                               width="100%"
                                               height="100%"
+                                              loading="lazy"
                                             />
                                             <Link>
-                                            
-                                                {item?.subcategories.find(
-                                                  (category) =>
-                                                    category._id ===
-                                                    item?.randomProduct
-                                                      ?.subcategory
-                                                )?.name || "Category not found"}
-                                            
+                                              {item?.subcategories.find(
+                                                (category) =>
+                                                  category._id ===
+                                                  item?.randomProduct
+                                                    ?.subcategory
+                                              )?.name || "Category not found"}
                                             </Link>
                                           </div>
                                         </Link>
@@ -460,16 +473,31 @@ const Header = () => {
                     </li>
 
                     <li>
-                      <Link to="/collections" className={getActive("/collections") && "active"}>Collections</Link>
+                      <Link
+                        to="/collections"
+                        className={getActive("/collections") && "active"}
+                      >
+                        Collections
+                      </Link>
                     </li>
                     {/* <li>
                       <Link to="/product-list" className={getActive("/product-list") && "active"}>Artworks</Link>
                     </li> */}
                     <li>
-                      <Link to="/artists" className={getActive("/artists") && "active"}>Artists</Link>
+                      <Link
+                        to="/artists"
+                        className={getActive("/artists") && "active"}
+                      >
+                        Artists
+                      </Link>
                     </li>
                     <li>
-                      <Link to="/ranking" className={getActive("/ranking") && "active"}>Ranking</Link>
+                      <Link
+                        to="/ranking"
+                        className={getActive("/ranking") && "active"}
+                      >
+                        Ranking
+                      </Link>
                     </li>
                   </ul>
                 </nav>
@@ -477,10 +505,16 @@ const Header = () => {
             </div>
 
             <div className=" top_logo_section">
-            <Link to="/">
-  <img className="" src={logo} alt="logo" width="100%" height="70px" />
-</Link>
-
+              <Link to="/">
+                <img
+                  className=""
+                  src={logo}
+                  alt="logo"
+                  width="300"
+                  height="69px"
+                  loading="lazy"
+                />
+              </Link>
             </div>
 
             <div className="right_option_bar">
@@ -529,7 +563,11 @@ const Header = () => {
                               onChange={(e) => setSearchText(e.target.value)}
                             />
                           </form>
-                          <button type="button" onClick={closeSearch}>
+                          <button
+                            type="button"
+                            onClick={closeSearch}
+                            aria-label="Search"
+                          >
                             <i className="fa-solid fa-xmark"></i>
                           </button>
                         </div>
@@ -539,7 +577,11 @@ const Header = () => {
                 </li>
 
                 <li>
-                  <Link className="text-center wishlist_desktop" to="/wishlist">
+                  <Link
+                    className="text-center wishlist_desktop"
+                    to="/wishlist"
+                    aria-label="View Wishlist"
+                  >
                     <svg
                       width="24"
                       height="24"
@@ -583,7 +625,11 @@ const Header = () => {
                 </li>
 
                 <li className="cart_li">
-                  <Link to="/cart" className="text-center">
+                  <Link
+                    to="/cart"
+                    className="text-center"
+                    aria-label="View Cart"
+                  >
                     <svg
                       width="24"
                       height="24"
@@ -725,7 +771,11 @@ const Header = () => {
                     </Link>
                   ) : (
                     <>
-                      <Link className="text-center" to="/login/customer">
+                      <Link
+                        className="text-center"
+                        to="/login/customer"
+                        aria-label="Login as Customer"
+                      >
                         <svg
                           width="24"
                           height="24"
@@ -768,7 +818,7 @@ const Header = () => {
           <Offcanvas.Header closeButton>
             <Offcanvas.Title>
               <div className="logo_side_mrenu">
-                <img src={logo} alt="logo" />
+                <img src={logo} alt="logo" loading="lazy" />
               </div>
             </Offcanvas.Title>
           </Offcanvas.Header>
@@ -776,20 +826,40 @@ const Header = () => {
             <div className="mobile_side_menu">
               <ul className="p-0">
                 <li>
-                  <Link to="/" className={getActive("/") && "active"} onClick={handleClose}>
+                  <Link
+                    to="/"
+                    className={getActive("/") && "active"}
+                    onClick={handleClose}
+                  >
                     Home
                   </Link>
                 </li>
                 <li className="d-flex justify-content-between">
-                  <Link  to="#"   onClick={(e) => {   handleBrowseShow(); handleClose(); }}>
+                  <Link
+                    to="#"
+                    onClick={(e) => {
+                      handleBrowseShow();
+                      handleClose();
+                    }}
+                  >
                     Browse
                   </Link>
-                  <Link  to="/product-list" className={getActive("/product-list") && "active"} onClick={(e) => { handleClose(); }}>
+                  <Link
+                    to="/product-list"
+                    className={getActive("/product-list") && "active"}
+                    onClick={(e) => {
+                      handleClose();
+                    }}
+                  >
                     <i class="fa-solid fa-chevron-right"></i>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/collections"  className={getActive("/collections") && "active"} onClick={handleClose}>
+                  <Link
+                    to="/collections"
+                    className={getActive("/collections") && "active"}
+                    onClick={handleClose}
+                  >
                     Collection
                   </Link>
                 </li>
@@ -797,12 +867,20 @@ const Header = () => {
                       <Link to="/product-list" className={getActive("/product-list") && "active"}>Artworks</Link>
                     </li> */}
                 <li>
-                  <Link to="/artists" className={getActive("/artists") && "active"} onClick={handleClose}>
+                  <Link
+                    to="/artists"
+                    className={getActive("/artists") && "active"}
+                    onClick={handleClose}
+                  >
                     Artists
                   </Link>
                 </li>
                 <li>
-                  <Link to="/ranking" className={getActive("/ranking") && "active"} onClick={handleClose}>
+                  <Link
+                    to="/ranking"
+                    className={getActive("/ranking") && "active"}
+                    onClick={handleClose}
+                  >
                     Ranking
                   </Link>
                 </li>
@@ -854,7 +932,8 @@ const Header = () => {
                     <img
                       className="w-100"
                       src={imgBaseURL() + item?.randomProduct?.thumbnail}
-                      alt=""
+                      alt="Cart"
+                      loading="lazy"
                     />
                     <p className="m-0">
                       {item?.subcategories.find(

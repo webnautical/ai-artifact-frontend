@@ -1,29 +1,15 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import partner from "../../assets/images/partner.png";
-import payment from "../../assets/images/payment.png";
+import payment from "../../assets/images/payment.webp";
 import iconprmises from "../../assets/images/ship.png";
 import iconprmisestwo from "../../assets/images/premium.webp";
 import iconprmisesthree from "../../assets/images/money.png";
 import iconprfour from "../../assets/images/robot.webp";
-import marvel from '../../assets/images/marvel.png'
-import dc from '../../assets/images/dc.png'
-import starwars from '../../assets/images/starwars.png'
-import destiny from '../../assets/images/destiny.png'
-import Cyberpunk from '../../assets/images/cyberpunk.png'
-import eldunring from '../../assets/images/eldenring.png'
-import harrypotter from '../../assets/images/harrypotter.png'
-import strangerthing from '../../assets/images/harrypotter.png'
-
-
-
-
-
 import { Link } from "react-router-dom";
-// import { Link } from 'react-router-dom'
 import { useLocation } from "react-router-dom";
 const Footer = () => {
   const location = useLocation().pathname;
+  const currentYear = new Date().getFullYear();
   return (
     <div>
       {(location !== "/favorite" || location !== "/favorite") && (
@@ -32,17 +18,17 @@ const Footer = () => {
             <Row>
               <Col md={6} lg={6} xl={3} mb-4>
                 <div className="promisses_box">
-                <div className="icon">
-  <img
-    src={iconprmises}
-    alt="shipping-policy"
-    width="54px"
-    height="54px"
-    loading="lazy"  // This defers the image load until it's near the viewport
-  />
-</div>
+                  <div className="icon">
+                    <img
+                      src={iconprmises}
+                      alt="shipping-policy"
+                      width="54px"
+                      height="54px"
+                      loading="lazy" // This defers the image load until it's near the viewport
+                    />
+                  </div>
                   <div>
-                    <h5 className="m-0">Quick and reliable shipping</h5>
+                    <h3 className="m-0">Quick and reliable shipping</h3>
                     <p className="m-0">Worldwide production hubs</p>
                   </div>
                 </div>
@@ -51,10 +37,16 @@ const Footer = () => {
               <Col md={6} lg={6} xl={3} mb-4>
                 <div className="promisses_box">
                   <div className="icon">
-                    <img src={iconprmisestwo}  alt="quality" width="64px" height="64px" loading="lazy"/>
+                    <img
+                      src={iconprmisestwo}
+                      alt="quality"
+                      width="64px"
+                      height="64px"
+                      loading="lazy"
+                    />
                   </div>
                   <div>
-                    <h5 className="m-0">High-Quality Prints</h5>
+                    <h3 className="m-0">High-Quality Prints</h3>
                     <p className="m-0">Printed on Premium Materials</p>
                   </div>
                 </div>
@@ -63,10 +55,16 @@ const Footer = () => {
               <Col md={6} lg={6} xl={3} mb-4>
                 <div className="promisses_box">
                   <div className="icon">
-                    <img src={iconprmisesthree}  alt="secure-payment" width="54px" height="54px" loading="lazy" />
+                    <img
+                      src={iconprmisesthree}
+                      alt="secure-payment"
+                      width="54px"
+                      height="54px"
+                      loading="lazy"
+                    />
                   </div>
                   <div>
-                    <h5 className="m-0">Secure Payment</h5>
+                    <h3 className="m-0">Secure Payment</h3>
                     <p className="m-0">100% Secure With Stripe</p>
                   </div>
                 </div>
@@ -75,10 +73,16 @@ const Footer = () => {
               <Col md={6} lg={6} xl={3} mb-4>
                 <div className="promisses_box">
                   <div className="icon">
-                    <img src={iconprfour}  alt="ai-platform" width="64px" height="64px" loading="lazy" />
+                    <img
+                      src={iconprfour}
+                      alt="ai-platform"
+                      width="64px"
+                      height="64px"
+                      loading="lazy"
+                    />
                   </div>
                   <div>
-                    <h5 className="m-0">Ai-Friendly Platform</h5>
+                    <h3 className="m-0">Ai-Friendly Platform</h3>
                     <p className="m-0">Support a new era of creativity</p>
                   </div>
                 </div>
@@ -93,33 +97,32 @@ const Footer = () => {
           <Row>
             <Col md={3}>
               <div className="footetr_links">
-                <h6>Support</h6>
+                <h3>Support</h3>
 
                 <ul className="p-0">
-            
                   <li>
-                    <Link to={'/shipping'}>Shipping  & Returns</Link>
+                    <Link to={"/shipping"}>Shipping & Returns</Link>
                   </li>
                   <li>
-                    <Link to={'/faq'}>Help / FAQ</Link>
+                    <Link to={"/faq"}>Help / FAQ</Link>
                   </li>
                   <li>
-                    <Link to={'/terms-of-use'}>Terms of Use</Link>
+                    <Link to={"/terms-of-use"}>Terms of Use</Link>
                   </li>
                   {/* <li>
                     <Link to={'/mounting-instructions'}>Mounting instructions</Link>
                   </li> */}
                   <li>
-                    <Link to={'/contact-us'}>Contact us</Link>
+                    <Link to={"/contact-us"}>Contact us</Link>
                   </li>
                   <li>
-                    <Link to={'/copyright-complaints'}>Copyrights</Link>
+                    <Link to={"/copyright-complaints"}>Copyrights</Link>
                   </li>
                   <li>
-                    <Link to={'/privacy-policy'}>Privacy Policy</Link>
+                    <Link to={"/privacy-policy"}>Privacy Policy</Link>
                   </li>
                   <li>
-                    <Link to={'/content-guidelines'}>Content Guidelines</Link>
+                    <Link to={"/content-guidelines"}>Content Guidelines</Link>
                   </li>
                 </ul>
               </div>
@@ -127,7 +130,7 @@ const Footer = () => {
 
             <Col md={3}>
               <div className="footetr_links">
-                <h6>About</h6>
+                <h3>About</h3>
 
                 <ul className="p-0">
                   <li>
@@ -140,7 +143,7 @@ const Footer = () => {
                     <Link to="/about-us">About us</Link>
                   </li>
                   <li>
-                    <Link to='/blog'>Blog</Link>
+                    <Link to="/blog">Blog</Link>
                   </li>
                 </ul>
               </div>
@@ -148,7 +151,7 @@ const Footer = () => {
 
             <Col md={3}>
               <div className="footetr_links">
-                <h6>Earn with AiArtifact</h6>
+                <h3>Earn with AiArtifact</h3>
 
                 <ul className="p-0">
                   <li>
@@ -163,59 +166,32 @@ const Footer = () => {
 
             <Col md={3}>
               <div className="footetr_links">
-                {/* <h6>Partners</h6>
-                <div className="partnerimg mb-4">
-                <ul className="p-0">
-  <li>
-    <Link to="">
-      <img src={marvel} alt="partner-logo" width="58px" height="100%" loading="lazy" />
-    </Link>
-  </li>
-  <li>
-    <Link to="">
-      <img src={strangerthing} alt="partner-logo" width="58px" height="100%" loading="lazy" />
-    </Link>
-  </li>
-  <li>
-    <Link to="">
-      <img src={harrypotter} alt="partner-logo" width="58px" height="100%" loading="lazy" />
-    </Link>
-  </li>
-  <li>
-    <Link to="">
-      <img src={eldunring} alt="partner-logo" width="58px" height="100%" loading="lazy" />
-    </Link>
-  </li>
-  <li>
-    <Link to="">
-      <img src={dc} alt="partner-logo" width="58px" height="100%" loading="lazy" />
-    </Link>
-  </li>
-  <li>
-    <Link to="">
-      <img src={starwars} alt="partner-logo" width="58px" height="100%" loading="lazy" />
-    </Link>
-  </li>
-  <li>
-    <Link to="">
-      <img src={destiny} alt="partner-logo" width="58px" height="100%" loading="lazy" />
-    </Link>
-  </li>
-</ul>
-
-                </div> */}
-
-                <h6>Secure payment</h6>
+                <h3>Secure payment</h3>
                 <div className="partnerimg">
                   {" "}
-                  <img className="w-100" src={payment} alt="partners-img" width="100%" height="100%" loading="lazy" />
+                  <img
+                    className="w-100"
+                    src={payment}
+                    alt="partners-img"
+                    width="100%"
+                    height="100%"
+                    loading="lazy"
+                  />
                 </div>
               </div>
             </Col>
           </Row>
           <hr></hr>
 
-          <div className="copy_right text-center m-0">Copyright © 2024 <b>AIARTIFACT</b>. All rights reserved. Designed and developed by <Link className="web_nautical" to="https://www.webnautical.com/"> <b>Web Nautical</b></Link>. </div>
+          <div className="copy_right text-center m-0">
+            Copyright © {currentYear} <b>AIARTIFACT</b>. All rights reserved. Designed
+            and developed by{" "}
+            <Link className="web_nautical" to="https://www.webnautical.com/">
+              {" "}
+              <b>Web Nautical</b>
+            </Link>
+            .{" "}
+          </div>
         </Container>
       </footer>
     </div>

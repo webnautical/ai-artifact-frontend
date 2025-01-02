@@ -392,9 +392,9 @@ const ArtWorkUpload = () => {
                 <img src={artworkthumb} alt="" />
               }
             </div>
-            <div class="file-uploader">
-              <label for="logoID" class="global_file_upload_deisgn">
-                <i class="fa-solid fa-arrow-up-from-bracket"></i>  Upload Artwork Here
+            <div className="file-uploader">
+              <label for="logoID" className="global_file_upload_deisgn">
+                <i className="fa-solid fa-arrow-up-from-bracket"></i>  Upload Artwork Here
                 <input
                   type="file"
                   id="logoID"
@@ -432,20 +432,20 @@ const ArtWorkUpload = () => {
           <Col md={6}>
             <div className="images_type_req">
               <ul className="mt-3">
-                <li><i class="fa-solid fa-circle-dot"></i> Only high quality uploads are approved</li>
+                <li><i className="fa-solid fa-circle-dot"></i> Only high quality uploads are approved</li>
                 <li>
-                  <i class="fa-solid fa-circle-dot"></i> Maximum 30 MB file size
+                  <i className="fa-solid fa-circle-dot"></i> Maximum 30 MB file size
                 </li>
                 <li>
-                  <i class="fa-solid fa-circle-dot"></i> 5:7 ratio
+                  <i className="fa-solid fa-circle-dot"></i> 5:7 ratio
                 </li>
                 <li>
-                  <i class="fa-solid fa-circle-dot"></i> Minimum 2900px x 4060px
+                  <i className="fa-solid fa-circle-dot"></i> Minimum 2900px x 4060px
                 </li>
-                <li><i class="fa-solid fa-circle-dot"></i> JPEG, JPG, PNG, or PDF format</li>
+                <li><i className="fa-solid fa-circle-dot"></i> JPEG, JPG, PNG, or PDF format</li>
                 <li>
 
-                  <i class="fa-solid fa-circle-dot"></i> Comply with the <Link to="/content-guidelines" className="teal_text" target="_blank">Content Guidelines </Link>
+                  <i className="fa-solid fa-circle-dot"></i> Comply with the <Link to="/content-guidelines" className="teal_text" target="_blank">Content Guidelines </Link>
 
                 </li>
               </ul>

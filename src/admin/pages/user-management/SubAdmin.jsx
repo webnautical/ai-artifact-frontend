@@ -25,7 +25,7 @@ import ViewAdmin from "./ViewAdmin";
 import SwitchToggle from "../../../components/SwitchToggle";
 import Form from 'react-bootstrap/Form';
 import { Col, Dropdown, Row } from "react-bootstrap";
-import { Edit, MoreVert } from "@mui/icons-material";
+import { Delete, Edit, MoreVert } from "@mui/icons-material";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { TABLE_PAGINATION_DROPDOWN, TABLE_ROW_PER_PAGE } from "../../../helper/Constant";
 const SubAdmin = () => {
@@ -183,11 +183,11 @@ const SubAdmin = () => {
                                                                             Assigned Role
                                                                         </TableSortLabel>
                                                                     </TableCell>
-                                                                    <TableCell>
+                                                                    {/* <TableCell>
                                                                         <TableSortLabel active={orderBy === "role"} direction={orderBy === "role" ? order : "asc"} onClick={() => handleRequestSort("role")}>
                                                                             Status
                                                                         </TableSortLabel>
-                                                                    </TableCell>
+                                                                    </TableCell> */}
                                                                     <TableCell>
                                                                         <TableSortLabel
                                                                             active={orderBy === "admins"}
@@ -209,11 +209,11 @@ const SubAdmin = () => {
                                                                             <TableCell>{row?.first_name + row?.last_name}</TableCell>
                                                                             <TableCell>{row?.email}</TableCell>
                                                                             <TableCell>{row?.user_role}</TableCell>
-                                                                            <TableCell>
+                                                                            {/* <TableCell>
                                                                                 <SwitchToggle
                                                                                     checked={row?.status}
                                                                                     onChange={(event) => handleStatusChange(event, row)} />
-                                                                            </TableCell>
+                                                                            </TableCell> */}
                                                                             <TableCell>{timeAgo(row?.created_at)}</TableCell>
                                                                             <TableCell style={{ width: 160 }} align="right">
                                                                                 <Dropdown className="dorpdown-curtom">
@@ -226,6 +226,9 @@ const SubAdmin = () => {
                                                                                         </Dropdown.Item>
                                                                                         <Dropdown.Item href="#" onClick={() => handleEditChange(row, 'view')}>
                                                                                             <RemoveRedEyeIcon style={{ marginRight: "8px" }} />View
+                                                                                        </Dropdown.Item>
+                                                                                        <Dropdown.Item href="#" onClick={(event) => handleStatusChange(event, row)}>
+                                                                                            <Delete style={{ marginRight: "8px" }} />Delete
                                                                                         </Dropdown.Item>
                                                                                     </Dropdown.Menu>
                                                                                 </Dropdown>

@@ -6,37 +6,39 @@ import BTNLoader from "./BTNLoader";
 import HTMLContent from "./HTMLContent";
 import { useFrontDataContext } from "../helper/context/FrontContextProvider";
 import { Link } from "react-router-dom";
-
+import ReCAPTCHA from 'react-google-recaptcha';
 function ContactForm() {
   const [submitLoading, setSubmitLoading] = useState(false);
   const { getGeneralSettingFun, generalSetting } = useFrontDataContext();
-
+ 
   const [form, setForm] = useState({
     name: "",
     email: "",
     query: "",
+    captcha: "",
   });
-
+ 
   const [errors, setErrors] = useState({
     name: "",
     email: "",
     query: "",
+    captcha: "",
   });
-
+ 
   useEffect(() => {
     getPageContentFun();
   }, []);
-
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({
       ...form,
       [name]: value,
     });
-
+ 
     validateField(name, value);
   };
-
+ 
   const validateField = (name, value) => {
     let error = "";
     switch (name) {
@@ -67,7 +69,7 @@ function ContactForm() {
       [name]: error,
     });
   };
-
+ 
   const validateForm = () => {
     const formErrors = {};
     Object.keys(form).forEach((key) => {
@@ -92,6 +94,11 @@ function ContactForm() {
             error = "Message must be at least 20 characters";
           }
           break;
+        case "captcha":
+          if (!form[key].trim()) {
+            error = "Please complete the CAPTCHA";
+          }
+          break;
         default:
           break;
       }
@@ -102,7 +109,9 @@ function ContactForm() {
     setErrors(formErrors);
     return Object.keys(formErrors).length === 0;
   };
-
+ 
+  console.log("errors", errors)
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitLoading(true);
@@ -144,7 +153,20 @@ function ContactForm() {
       setLoading(false);
     }
   };
-
+ 
+  const handleCaptchaChange = (value) => {
+    console.log("Captcha Value:", value);
+    setForm({
+      ...form,
+      ['captcha']: value,
+    });
+ 
+    setErrors({
+      ...errors,
+      ['captcha']: "",
+    });
+  };
+ 
   return (
     <Container className="mb-md-3 mb-2">
       <div className="contact-us-section">
@@ -153,11 +175,11 @@ function ContactForm() {
             <h3>{pageData?.mainTitle}</h3>
             <HTMLContent data={pageData?.editorContent1} />
             <div>
-              <i class="fa-solid fa-envelope me-2 me-3"></i>For Other Query<br/>
+              <i class="fa-solid fa-envelope me-2 me-3"></i>
               <b>
-              <Link to={`mailto:${generalSetting?.adminEmail}`}>
-  {generalSetting?.adminEmail}
-</Link>
+                <Link to={`mailto:${generalSetting?.adminEmail}`}>
+                  {generalSetting?.adminEmail}
+                </Link>
               </b>
             </div>
           </Col>
@@ -210,11 +232,22 @@ function ContactForm() {
                       {errors.query}
                     </Form.Control.Feedback>
                     <div className="text-end mt-2">
-                      <span>Charecter {form.query?.length}/150</span>
+                      <span>{form.query?.length}/150</span>
                     </div>
                   </Form.Group>
                 </Col>
-                <Col md={12} className="text-md-end text-center">
+                <Col md={12}>
+                  <ReCAPTCHA
+                    sitekey="6Le1zZQqAAAAAJAEe6a0LiXD4-T-YfzgxgCeOksz"
+                    onChange={handleCaptchaChange}
+                  />
+ 
+                    <div className="text-danger" style={{fontSize: "14px"}}>
+                      {errors.captcha}
+                    </div>
+ 
+                </Col>
+                <Col md={12} className="text-md-end text-center mt-2">
                   {submitLoading ? (
                     <BTNLoader className={"global_btn"} />
                   ) : (
@@ -231,5 +264,5 @@ function ContactForm() {
     </Container>
   );
 }
-
+ 
 export default ContactForm;

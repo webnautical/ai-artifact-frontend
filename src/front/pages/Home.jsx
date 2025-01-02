@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import sliderbanner from "../../assets/images/sliderbanner.png";
-import sliderbannertwo from "../../assets/images/bannertwo.webp";
+// import sliderbanner from "../../assets/images/sliderbanner.png";
+// import sliderbannertwo from "../../assets/images/bannertwo.webp";
 // import baughtlistnew from "../../assets/images/baughtlisttwo.png";
 import noDataImg from "../../assets/images/noart.png";
 // import baughtlisttwo from "../../assets/images/baughtlist.png";
 // import baughtlistthree from "../../assets/images/baought-4.png";
 // import baughtlistfour from "../../assets/images/baought-3.png";
-import badge from "../../assets/images/badge (1).png";
-import badgebronze from "../../assets/images/1 - Bronze.png";
+// import badge from "../../assets/images/badge (1).png";
+// import badgebronze from "../../assets/images/1 - Bronze.png";
 // import badgesilver from "../../assets/images/2 - Silver.png";
 // import badgegold from "../../assets/images/3 - Gold.png";
 // import badgedimond from "../../assets/images/4 - Diamond.png";
@@ -23,21 +23,21 @@ import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import collectionimg from "../../assets/images/top (1).png";
-import toptwo from "../../assets/images/top (2).png";
-import topthree from "../../assets/images/top (3).png";
-import topfour from "../../assets/images/top (4).png";
-import topfive from "../../assets/images/top-5.png";
-import topsix from "../../assets/images/top-6.png";
+// import collectionimg from "../../assets/images/top (1).png";
+// import toptwo from "../../assets/images/top (2).png";
+// import topthree from "../../assets/images/top (3).png";
+// import topfour from "../../assets/images/top (4).png";
+// import topfive from "../../assets/images/top-5.png";
+// import topsix from "../../assets/images/top-6.png";
 
-import firsttier from "../../assets/images/1 - Bronze.png";
-import silver from "../../assets/images/2 - Silver.png";
-import gold from "../../assets/images/3 - Gold.png";
-import diamond from "../../assets/images/4 - Diamond.png";
-import topimages from "../../assets/images/top (1).png";
-import topimagesone from "../../assets/images/top (2).png";
-import topimagestwo from "../../assets/images/top (3).png";
-import topimagesthree from "../../assets/images/top (4).png";
+// import firsttier from "../../assets/images/1 - Bronze.png";
+// import silver from "../../assets/images/2 - Silver.png";
+// import gold from "../../assets/images/3 - Gold.png";
+// import diamond from "../../assets/images/4 - Diamond.png";
+// import topimages from "../../assets/images/top (1).png";
+// import topimagesone from "../../assets/images/top (2).png";
+// import topimagestwo from "../../assets/images/top (3).png";
+// import topimagesthree from "../../assets/images/top (4).png";
 import CollectionLIst from "../../components/CollectionLIst";
 import Artworks from "../../components/Artworks";
 import Newsletter from "../../components/Newsletter";
@@ -54,9 +54,9 @@ import pinterst from "../../assets/images/pinterset.png";
 import twitter from "../../assets/images/twitter.png";
 import discord from "../../assets/images/discord.png";
 import blog from "../../assets/images/blog-1.png";
-import blogthree from "../../assets/images/blog-3.png";
-import blogfaour from "../../assets/images/blog-4.png";
-import avtar from "../../assets/images/Avatar.png";
+// import blogthree from "../../assets/images/blog-3.png";
+// import blogfaour from "../../assets/images/blog-4.png";
+// import avtar from "../../assets/images/Avatar.png";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
 import {
   defaultIMG,
@@ -147,6 +147,7 @@ const Home = () => {
       },
       1000: {
         items: 1,
+
         loop: true,
       },
     },
@@ -181,33 +182,29 @@ const Home = () => {
   };
 
   const newestartwork = {
-    loop: true,
-    autoplay: false,
-    autoplaySpeed: 100,
-    margin: 30,
-    dots: false,
-    nav: false,
-    responsiveClass: true,
-    infinite: true,
-    speed: 100,
+    loop: true, // Enable looping
+    autoplay: false, // Autoplay can be turned off
+    margin: 30, // General margin for items
+    dots: false, // Disable dots
+    nav: true, // Enable navigation
+    responsiveClass: true, // Use responsive classes
+    infinite: true, // Infinite scrolling
+    speed: 100, // Speed of transition
     navText: [
-      <i class="fas fa-chevron-left" aria-hidden="true"></i>,
-      <i class="fas fa-chevron-right" aria-hidden="true"></i>,
+      '<i class="fa fa-chevron-left" aria-hidden="true"></i><span class="sr-only">Previous</span>',
+      '<i class="fa fa-chevron-right" aria-hidden="true"></i><span class="sr-only">Next</span>',
     ], // Custom Font Awesome arrows
-
     responsive: {
       0: {
-        items: 2,
+        items: 2, // Show 2 items on small screens
         margin: 0,
       },
       600: {
-        items: 4,
+        items: 4, // Show 4 items on medium screens
         margin: 10,
       },
       1000: {
-        items: 5,
-
-        // loop: true,
+        items: 5, // Show 5 items on large screens
       },
     },
   };
@@ -225,7 +222,7 @@ const Home = () => {
     navText: [
       '<i class="fas fa-chevron-left" aria-hidden="true"></i>',
       '<i class="fas fa-chevron-right" aria-hidden="true"></i>',
-    ], // Custom Font Awesome arrows
+    ],
 
     responsive: {
       0: {
@@ -244,24 +241,24 @@ const Home = () => {
     },
   };
 
+  // // Handlers for Previous and Next buttons
+  // const handlePrevFirst = () => {
+  //   if (firstCarouselRef.current) {
+  //     firstCarouselRef.current.prev();
+  //   }
+  // };
+
+  // const handleNextFirst = () => {
+  //   if (firstCarouselRef.current) {
+  //     firstCarouselRef.current.next();
+  //   }
+  // };
+
   const [selected, setSelected] = useState();
 
   const owlCarouselRef = useRef(null);
 
   const firstCarouselRef = useRef(null);
-
-  // Handlers for Previous and Next buttons
-  const handlePrevFirst = () => {
-    if (firstCarouselRef.current) {
-      firstCarouselRef.current.prev();
-    }
-  };
-
-  const handleNextFirst = () => {
-    if (firstCarouselRef.current) {
-      firstCarouselRef.current.next();
-    }
-  };
 
   const handlePrev = () => {
     if (owlCarouselRef.current) {
@@ -311,7 +308,7 @@ const Home = () => {
     }
 
     const popularCollectionRes = await APICALL(
-      "user/getpopularCollection",
+      "user/getPopularCollectionsOverall",
       "post",
       {}
     );
@@ -369,10 +366,10 @@ const Home = () => {
                               src={imgBaseURL() + item?.image}
                               alt="slider-img"
                               width="100%"
-                              loading={i === 0 ? "eager" : "lazy"}
+                              loading="lazy"
                             />
                             <div className="cnt_slider">
-                              <h2>{item?.title}</h2>
+                              <h1>{item?.title}</h1>
                               <Link
                                 to={item?.redirectUrl}
                                 className="global_btn"
@@ -384,20 +381,6 @@ const Home = () => {
                         </div>
                       ))}
                   </OwlCarousel>
-                  {/* <div className="arrow_buttn">
-                    <button onClick={handlePrevFirst} aria-label="Previous">
-                      <i
-                        className="fa-solid fa-angle-left"
-                        aria-hidden="true"
-                      ></i>
-                    </button>
-                    <button onClick={handleNextFirst} aria-label="Next">
-                      <i
-                        className="fa-solid fa-angle-right"
-                        aria-hidden="true"
-                      ></i>
-                    </button>
-                  </div> */}
                 </div>
               </Col>
 
@@ -434,7 +417,7 @@ const Home = () => {
               <Col lg={4}>
                 <div className="just_bought global_card">
                   <div className="d-flex justify-content-between align-items-center">
-                    <h1>Just Bought !</h1>
+                    <h2>Just Bought !</h2>
                     <div className="cs_btn">
                       <button onClick={handlePrev} aria-label="Previous">
                         <i
@@ -472,6 +455,7 @@ const Home = () => {
                                         imgBaseURL() + art?.productId?.thumbnail
                                       }
                                       alt="poster-img"
+                                      loading="lazy"
                                     />
                                   </Link>
                                 </div>
@@ -547,7 +531,7 @@ const Home = () => {
                                     : productimg
                                 }
                                 alt={item?.title || "product-img"}
-                                loading="lazy" // Add lazy loading for images
+                                // loading="lazy" // Add lazy loading for images
                               />
                             </div>
                             <h3 className="product_name">{item?.title}</h3>
@@ -625,6 +609,7 @@ const Home = () => {
                           width="41px"
                           height="41px"
                           style={{ objectFit: "contain" }}
+                          loading="lazy"
                         />
                       </button>
                     ))}
@@ -658,6 +643,7 @@ const Home = () => {
                               className="w-100"
                               src={imgBaseURL() + row?.product?.thumbnail}
                               alt="populat-collection-img"
+                              loading="lazy"
                             />
                           </Link>
                         </div>
@@ -667,10 +653,10 @@ const Home = () => {
                     <>
                       <div className="outer_top_ten">
                         <div className="top_ten_arts text-center mt-3">
-                          <img src={noDataImg} alt="no-art" />
-                          <h5 className="mt-3">
+                          <img src={noDataImg} alt="no-art" loading="lazy" />
+                          <h4 className="mt-3">
                             There are no artwork on this tier !
-                          </h5>
+                          </h4>
                         </div>
                       </div>
                     </>
@@ -701,7 +687,7 @@ const Home = () => {
       <section className="all_categores">
         <Container>
           <div className="left_global_heading">
-            <h3 class=" mb-4 text-center">
+            <h3 class="left_global_heading  mb-4 text-center">
               <Spinner animation="grow" size="sm" /> Still looking for a match?
             </h3>
           </div>
@@ -879,7 +865,6 @@ const Home = () => {
           </div>
         </Container>
       </section>
-
       <section className="article">
         <Container>
           <OwlCarousel className=" owl-theme" {...article}>
@@ -893,11 +878,12 @@ const Home = () => {
                           className="w-100"
                           src={imgBaseURL() + item?.image}
                           alt="blog-img"
+                          loading="lazy"
                         />
                       </div>
 
                       <div className="d-flex align-items-center justify-content-between mt-4 mb-2">
-                        <h5>{item?.title}</h5>
+                        <h3>{item?.title}</h3>
                         <div>
                           <svg
                             width="25"
@@ -926,7 +912,7 @@ const Home = () => {
                         style={{ gap: "10px" }}
                       >
                         <div>
-                          <h2>By Admin</h2>
+                          <h4>By Admin</h4>
                           <p>{timeAgo(item?.createdAt)}</p>
                         </div>
                       </div>
@@ -937,7 +923,6 @@ const Home = () => {
           </OwlCarousel>
         </Container>
       </section>
-
       <Newsletter />
     </div>
   );

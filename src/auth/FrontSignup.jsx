@@ -397,7 +397,7 @@ const FrontSignup = () => {
                               to="/forgot-password"
                               className="forgetpassword"
                             >
-                              Forget password?
+                              Forgot password?
                             </Link>
                             {/* </Form.Group> */}
                           </div>

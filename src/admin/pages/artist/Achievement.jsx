@@ -119,20 +119,20 @@ const Achievement = () => {
               <ul className="p-0 m-0">
                 {item?.tierId !== "66b5c86d7402d256e68f8562" &&
                   <li>
-                    <i class="fa-regular fa-circle-check me-2"></i>{item?.tierName} Badge
+                    <i className="fa-regular fa-circle-check me-2"></i>{item?.tierName} Badge
                   </li>
                 }
 
                 <li>
-                  <i class="fa-regular fa-circle-check me-2"></i>{item?.maxUploads} uploads
+                  <i className="fa-regular fa-circle-check me-2"></i>{item?.maxUploads} uploads
                 </li>
 
                 <li>
-                  <i class="fa-regular fa-circle-check me-2"></i>{item?.commission}% Commision
+                  <i className="fa-regular fa-circle-check me-2"></i>{item?.commission}% Commision
                 </li>
 
                 <li>
-                  <i class="fa-regular fa-circle-check me-2"></i>+{item?.achievementPoints} Points
+                  <i className="fa-regular fa-circle-check me-2"></i>+{item?.achievementPoints} Points
                 </li>
               </ul>
 
@@ -140,14 +140,14 @@ const Achievement = () => {
                 <>
                   <div className="cmp_box">
                     <div className="cmp_badge">
-                      <i class="fa-solid fa-trophy"></i> Completed
+                      <i className="fa-solid fa-trophy"></i> Completed
                     </div>
                   </div>
 
                   <p className="mt-3 mb-0 not_achve success_text">Completed : {item?.achievementDate ? formatDate(item.achievementDate) : ''}</p>
                 </>
                 :
-                <p className="mt-3 mb-0 not_achve"><i class="fa-solid fa-lock me-2"></i>Not Yet achieved</p>}
+                <p className="mt-3 mb-0 not_achve"><i className="fa-solid fa-lock me-2"></i>Not Yet achieved</p>}
 
 
             </div>

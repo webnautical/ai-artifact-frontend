@@ -159,7 +159,7 @@ const ContactQuery = () => {
                                         </>
                                         :
                                         <div className="col-12 text-center px-2 mt-3">
-                                            <div class="alert alert-success text-capitalize" role="alert">
+                                            <div className="alert alert-success text-capitalize" role="alert">
                                                 there are no data to display
                                             </div>
                                         </div>

@@ -157,7 +157,7 @@ const ArtList = () => {
             <Paper className="artis_inner_dashboard table_samepattern px-3">
                 <div className="row-details py-3" style={{ display: "flex", justifyContent: "space-between" }} >
                     <div className="d-flex" style={{ gap: '10px' }}>
-                        {table && <Button className="artist-btn" onClick={() => setTable(null)}><i class="fa-solid fa-arrow-left"></i></Button>}
+                        {table && <Button className="artist-btn" onClick={() => setTable(null)}><i className="fa-solid fa-arrow-left"></i></Button>}
                         <hh2 className="title-admins-table">Artworks {table && `- ${table?.name}`}</hh2>
                     </div>
 

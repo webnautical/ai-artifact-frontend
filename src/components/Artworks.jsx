@@ -31,7 +31,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
         <Row className="align-items-center" >
           <Col md={6}>
           <div className="left_global_heading ">
-            <h3 class="mb-4">{title || "Best Selling Artworks"}</h3>
+            <h3 className="mb-4">{title || "Best Selling Artworks"}</h3>
             </div>
           </Col>
         </Row>
@@ -52,6 +52,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                 src={imgBaseURL() + productList[0]?.thumbnail}
                                 alt="artwork-images"
                                 className="w-100"
+                                  loading="lazy" 
                               />
                             </Link>
                             <div className="animation_btn d-flex justify-content-between">
@@ -59,7 +60,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                 contextLoader.addToCart[productList[0]?._id] ?
                                   <BTNLoader className='white_global_btn w-100' /> :
                                   <button type="button" onClick={() => addToCartFun(productList[0]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                    <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                    <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                               }
  
                               {
@@ -68,7 +69,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   addRemoveWishList(productList[0]?._id, relatedProduct, true)
                                 }}>
                                   {productList[0]?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                    <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                 </button>
                               }
                             </div>
@@ -84,6 +85,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   src={imgBaseURL() + productList[1]?.thumbnail}
                                   alt="artwork-images"
                                   className="w-100"
+                                    loading="lazy" 
                                 />
                               </Link>
                               <div className="animation_btn d-flex justify-content-between">
@@ -91,7 +93,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   contextLoader.addToCart[productList[1]?._id] ?
                                     <BTNLoader className='white_global_btn w-100' /> :
                                     <button type="button" onClick={() => addToCartFun(productList[1]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                      <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                      <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
                                 {
                                   auth('customer') &&
@@ -99,7 +101,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     addRemoveWishList(productList[1]?._id, relatedProduct, true)
                                   }}>
                                     {productList[1]?.isWishlist ?
-                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                      <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                   </button>
                                 }
                               </div>
@@ -112,6 +114,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   src={imgBaseURL() + productList[2]?.thumbnail}
                                   alt="artwork-images"
                                   className="w-100"
+                                    loading="lazy" 
                                 />
                               </Link>
                               <div className="animation_btn d-flex justify-content-between">
@@ -119,7 +122,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   contextLoader.addToCart[productList[2]?._id] ?
                                     <BTNLoader className='white_global_btn w-100' /> :
                                     <button type="button" onClick={() => addToCartFun(productList[2]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                      <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                      <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
                                 {
                                   auth('customer') &&
@@ -127,7 +130,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     addRemoveWishList(productList[2]?._id, relatedProduct, true)
                                   }}>
                                     {productList[2]?.isWishlist ?
-                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                      <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                   </button>
                                 }
                               </div>
@@ -151,6 +154,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                 src={imgBaseURL() + productList[3]?.thumbnail}
                                 alt="artwork-images"
                                 className="w-100"
+                                  loading="lazy" 
                               />
                             </Link>
                             <div className="animation_btn d-flex justify-content-between">
@@ -158,7 +162,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                 contextLoader.addToCart[productList[3]?._id] ?
                                   <BTNLoader className='white_global_btn w-100' /> :
                                   <button type="button" onClick={() => addToCartFun(productList[3]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                    <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                    <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                               }
                               {
                                 auth('customer') &&
@@ -166,7 +170,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   addRemoveWishList(productList[3]?._id, relatedProduct, true)
                                 }}>
                                   {productList[3]?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                    <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                 </button>
                               }
                             </div>
@@ -182,6 +186,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   src={imgBaseURL() + productList[4]?.thumbnail}
                                   alt="artwork-images"
                                   className="w-100"
+                                    loading="lazy" 
                                 />
                               </Link>
                               <div className="animation_btn d-flex justify-content-between">
@@ -189,7 +194,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   contextLoader.addToCart[productList[4]?._id] ?
                                     <BTNLoader className='white_global_btn w-100' /> :
                                     <button type="button" onClick={() => addToCartFun(productList[4]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                      <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                      <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
                                 {
                                   auth('customer') &&
@@ -197,7 +202,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     addRemoveWishList(productList[4]?._id, relatedProduct, true)
                                   }}>
                                     {productList[4]?.isWishlist ?
-                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                      <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                   </button>
                                 }
                               </div>
@@ -210,6 +215,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   src={imgBaseURL() + productList[5]?.thumbnail}
                                   alt="artwork-images"
                                   className="w-100"
+                                    loading="lazy" 
                                 />
                               </Link>
                               <div className="animation_btn d-flex justify-content-between">
@@ -217,7 +223,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   contextLoader.addToCart[productList[5]?._id] ?
                                     <BTNLoader className='white_global_btn w-100' /> :
                                     <button type="button" onClick={() => addToCartFun(productList[5]?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                      <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                      <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
                                 {
                                   auth('customer') &&
@@ -225,7 +231,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     addRemoveWishList(productList[5]?._id, relatedProduct, true)
                                   }}>
                                     {productList[5]?.isWishlist ?
-                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                      <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                   </button>
                                 }
                               </div>
@@ -255,6 +261,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                 src={imgBaseURL() + data[0]?.product?.thumbnail}
                                 alt="artwork-images"
                                 className="w-100"
+                                  loading="lazy" 
                               />
                             </Link>
                             <div className="animation_btn d-flex justify-content-between">
@@ -262,7 +269,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                 contextLoader.addToCart[data[0]?.product?._id] ?
                                   <BTNLoader className='white_global_btn w-100' /> :
                                   <button type="button" onClick={() => addToCartFun(data[0]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                    <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                    <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                               }
                               {
                                 auth('customer') &&
@@ -270,7 +277,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   addRemoveWishList(data[0]?.product?._id, fun, true)
                                 }}>
                                   {data[0]?.product?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                    <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                 </button>
                               }
                             </div>
@@ -286,6 +293,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   src={imgBaseURL() + data[1]?.product?.thumbnail}
                                   alt="artwork-images"
                                   className="w-100"
+                                    loading="lazy" 
                                 />
                               </Link>
                               <div className="animation_btn d-flex justify-content-between">
@@ -293,7 +301,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   contextLoader.addToCart[data[1]?.product?._id] ?
                                     <BTNLoader className='white_global_btn w-100' /> :
                                     <button type="button" onClick={() => addToCartFun(data[1]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                      <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                      <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
                                 {
                                   auth('customer') &&
@@ -301,7 +309,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     addRemoveWishList(data[1]?.product?._id, fun, true)
                                   }}>
                                     {data[1]?.product?.isWishlist ?
-                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                      <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                   </button>
                                 }
                               </div>
@@ -314,6 +322,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   src={imgBaseURL() + data[2]?.product?.thumbnail}
                                   alt="artwork-images"
                                   className="w-100"
+                                    loading="lazy" 
                                 />
                               </Link>
                               <div className="animation_btn d-flex justify-content-between">
@@ -321,7 +330,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   contextLoader.addToCart[data[2]?.product?._id] ?
                                     <BTNLoader className='white_global_btn w-100' /> :
                                     <button type="button" onClick={() => addToCartFun(data[2]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                      <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                      <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
                                 {
                                   auth('customer') &&
@@ -329,7 +338,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     addRemoveWishList(data[2]?.product?._id, fun, true)
                                   }}>
                                     {data[2]?.product?.isWishlist ?
-                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                      <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                   </button>
                                 }
                               </div>
@@ -353,6 +362,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                 src={imgBaseURL() + data[3]?.product?.thumbnail}
                                 alt="artwork-images"
                                 className="w-100"
+                                  loading="lazy" 
                               />
                             </Link>
                             <div className="animation_btn d-flex justify-content-between">
@@ -360,7 +370,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                 contextLoader.addToCart[data[3]?.product?._id] ?
                                   <BTNLoader className='white_global_btn w-100' /> :
                                   <button type="button" onClick={() => addToCartFun(data[3]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                    <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                    <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                               }
                               {
                                 auth('customer') &&
@@ -368,7 +378,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   addRemoveWishList(data[3]?.product?._id, fun, true)
                                 }}>
                                   {data[3]?.product?.isWishlist ?
-                                    <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                    <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                 </button>
                               }
                             </div>
@@ -384,6 +394,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   src={imgBaseURL() + data[4]?.product?.thumbnail}
                                   alt="artwork-images"
                                   className="w-100"
+                                    loading="lazy" 
                                 />
                               </Link>
                               <div className="animation_btn d-flex justify-content-between">
@@ -391,7 +402,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   contextLoader.addToCart[data[4]?.product?._id] ?
                                     <BTNLoader className='white_global_btn w-100' /> :
                                     <button type="button" onClick={() => addToCartFun(data[4]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                      <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                      <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
                                 {
                                   auth('customer') &&
@@ -399,7 +410,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     addRemoveWishList(data[4]?.product?._id, fun, true)
                                   }}>
                                     {data[4]?.product?.isWishlist ?
-                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                      <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                   </button>
                                 }
                               </div>
@@ -412,6 +423,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   src={imgBaseURL() + data[5]?.product?.thumbnail}
                                   alt="artwork-images"
                                   className="w-100"
+                                    loading="lazy" 
                                 />
                               </Link>
                               <div className="animation_btn d-flex justify-content-between">
@@ -419,7 +431,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                   contextLoader.addToCart[data[5]?.product?._id] ?
                                     <BTNLoader className='white_global_btn w-100' /> :
                                     <button type="button" onClick={() => addToCartFun(data[5]?.product?._id, 1, P_UID, UID_OBJ, 'addToCart')} className="white_global_btn w-100">
-                                      <i class="fa-solid fa-bag-shopping"></i>  Cart</button>
+                                      <i className="fa-solid fa-bag-shopping"></i>  Cart</button>
                                 }
                                 {
                                   auth('customer') &&
@@ -427,7 +439,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                                     addRemoveWishList(data[5]?.product?._id, fun, true)
                                   }}>
                                     {data[5]?.product?.isWishlist ?
-                                      <i class="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
+                                      <i className="fa-solid fa-heart" style={{ color: '#008080' }}></i> : <i className="fa-regular fa-heart"></i>}
                                   </button>
                                 }
                               </div>
@@ -446,7 +458,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
  
  
         <div className="text-center mt-md-5 mt-0 ">
-          <Link to='/product-list' class="global_btn">View More</Link>
+          <Link to='/product-list' className="global_btn">View More</Link>
         </div>
       </Container>
     </section>

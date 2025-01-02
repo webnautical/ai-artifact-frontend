@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import bannerimg from "../../assets/images/banner.png";
-import goldtier from "../../assets/images/gold-tiaer.png";
+// import goldtier from "../../assets/images/gold-tiaer.png";
 import productimg from "../../assets/images/product (1).webp";
-import badge from "../../assets/images/badge (1).png";
-import Pagination from "react-bootstrap/Pagination";
-import CollectionLIst from "../../components/CollectionLIst";
+// import badge from "../../assets/images/badge (1).png";
+// import Pagination from "react-bootstrap/Pagination";
+// import CollectionLIst from "../../components/CollectionLIst";
 import { useParams } from "react-router";
 import { APICALL } from "../../helper/api/api";
 import NoData from "../../components/NoData";
@@ -182,7 +182,7 @@ const Collection = () => {
  
                             <div className="collection_by">
                               <div className="review_person_img">
-                                <h5 className="first_letter">{item?.artistId?.userName.charAt(0)}</h5>
+                                <div className="first_letter">{item?.artistId?.userName.charAt(0)}</div>
                               </div>
                               <div className="collection_by_details">
                                 <h4>{item?.name}</h4>
