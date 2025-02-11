@@ -51,7 +51,6 @@ const MyAddress = () => {
         "phone": ""
     })
 
-
     useEffect(() => {
         if (userDetails?._id) {
             setValue({
@@ -126,6 +125,7 @@ const MyAddress = () => {
             setValue((prevValue) => ({ ...prevValue, city: newValue.value }));
         }
     };
+
     const getStateFun = (country) => {
         const stateData = State?.getStatesOfCountry(country).map((state) => ({
             value: state.isoCode,
@@ -159,6 +159,7 @@ const MyAddress = () => {
             setSubmitLoading(false)
         }
     }
+    
     const handleLocationChange = async (value) => {
         setValue((prevValue) => ({
             ...prevValue,

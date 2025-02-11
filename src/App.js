@@ -55,7 +55,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <LoadScript googleMapsApiKey="AIzaSyB_UmCcbfXD-tjZv_Mxk-O8z45xrAEloT0" libraries={libraries}>
+        <LoadScript googleMapsApiKey="AIzaSyB_UmCcbfXD-tjZv_Mxk-O8z45xrAEloT0" libraries={libraries} loadingElement={<div style={{ display: "none" }} />}>
           <ScrollToTop />
           <Elements stripe={stripePromise}>
             <Routes>
