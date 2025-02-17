@@ -145,7 +145,7 @@ const ProductList = () => {
   const handleCategoryChange = (item) => {
     setCategoryObj(item)
   };
- 
+
  
   return (
     <div className="product_list_page">
@@ -214,7 +214,7 @@ const ProductList = () => {
                       artWorkListing?.map((item, i) => (
                         <Col md={3} sm={3} xs={6} className="mb-4" key={i}>
                           <div className="product_box_outer">
-                            <Link to={`/product-details/${item?._id}`}>
+                            <Link to={`/product-details/${item?.slug}`}>
  
                               <div className="product_box">
                                 <div className="main_show_image">

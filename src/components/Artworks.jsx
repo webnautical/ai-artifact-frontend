@@ -47,7 +47,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                         productList[0] &&
                         <Col md={8} sm={8} className="mb-sm-0 mb-3" >
                           <div className="grid_box_artwork_big">
-                            <Link to={`/product-details/${productList[0]?._id}`}>
+                            <Link to={`/product-details/${productList[0]?.slug}`}>
                               <img
                                 src={imgBaseURL() + productList[0]?.thumbnail}
                                 alt="artwork-images"
@@ -80,7 +80,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                         <div className="grid_box_artwork">
                           {productList[1] &&
                             <div className="img_box">
-                              <Link to={`/product-details/${productList[1]?._id}`}>
+                              <Link to={`/product-details/${productList[1]?.slug}`}>
                                 <img
                                   src={imgBaseURL() + productList[1]?.thumbnail}
                                   alt="artwork-images"
@@ -109,7 +109,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                           }
                           {productList[2] &&
                             <div className="img_box">
-                              <Link to={`/product-details/${productList[2]?._id}`}>
+                              <Link to={`/product-details/${productList[2]?.slug}`}>
                                 <img
                                   src={imgBaseURL() + productList[2]?.thumbnail}
                                   alt="artwork-images"
@@ -149,7 +149,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                         productList[3] &&
                         <Col md={8} sm={8} className="mb-sm-0 mb-3" >
                           <div className="grid_box_artwork_big">
-                            <Link to={`/product-details/${productList[3]?._id}`}>
+                            <Link to={`/product-details/${productList[3]?.slug}`}>
                               <img
                                 src={imgBaseURL() + productList[3]?.thumbnail}
                                 alt="artwork-images"
@@ -181,7 +181,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                         <div className="grid_box_artwork">
                           {productList[4] &&
                             <div className="img_box">
-                              <Link to={`/product-details/${productList[4]?._id}`}>
+                              <Link to={`/product-details/${productList[4]?.slug}`}>
                                 <img
                                   src={imgBaseURL() + productList[4]?.thumbnail}
                                   alt="artwork-images"
@@ -210,7 +210,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                           }
                           {productList[5] &&
                             <div className="img_box">
-                              <Link to={`/product-details/${productList[5]?._id}`}>
+                              <Link to={`/product-details/${productList[5]?.slug}`}>
                                 <img
                                   src={imgBaseURL() + productList[5]?.thumbnail}
                                   alt="artwork-images"
@@ -256,7 +256,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                         data[0]?.product &&
                         <Col md={8} sm={8} className="mb-sm-0 mb-3" >
                           <div className="grid_box_artwork_big">
-                            <Link to={`/product-details/${data[0]?.product?._id}`}>
+                            <Link to={`/product-details/${data[0]?.product?.slug}`}>
                               <img
                                 src={imgBaseURL() + data[0]?.product?.thumbnail}
                                 alt="artwork-images"
@@ -288,7 +288,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                         <div className="grid_box_artwork">
                           {data[1]?.product &&
                             <div className="img_box">
-                              <Link to={`/product-details/${data[1]?.product?._id}`}>
+                              <Link to={`/product-details/${data[1]?.product?.slug}`}>
                                 <img
                                   src={imgBaseURL() + data[1]?.product?.thumbnail}
                                   alt="artwork-images"
@@ -317,7 +317,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                           }
                           {data[2]?.product &&
                             <div className="img_box">
-                              <Link to={`/product-details/${data[2]?.product?._id}`}>
+                              <Link to={`/product-details/${data[2]?.product?.slug}`}>
                                 <img
                                   src={imgBaseURL() + data[2]?.product?.thumbnail}
                                   alt="artwork-images"
@@ -357,7 +357,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                         data[3]?.product &&
                         <Col md={8} sm={8} className="mb-sm-0 mb-3" >
                           <div className="grid_box_artwork_big">
-                            <Link to={`/product-details/${data[3]?.product?._id}`}>
+                            <Link to={`/product-details/${data[3]?.product?.slug}`}>
                               <img
                                 src={imgBaseURL() + data[3]?.product?.thumbnail}
                                 alt="artwork-images"
@@ -389,7 +389,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                         <div className="grid_box_artwork">
                           {data[4]?.product &&
                             <div className="img_box">
-                              <Link to={`/product-details/${data[4]?.product?._id}`}>
+                              <Link to={`/product-details/${data[4]?.product?.slug}`}>
                                 <img
                                   src={imgBaseURL() + data[4]?.product?.thumbnail}
                                   alt="artwork-images"
@@ -418,7 +418,7 @@ const Artworks = ({ title, type, category_id, data, fun }) => {
                           }
                           {data[5]?.product &&
                             <div className="img_box">
-                              <Link to={`/product-details/${data[5]?.product?._id}`}>
+                              <Link to={`/product-details/${data[5]?.product?.slug}`}>
                                 <img
                                   src={imgBaseURL() + data[5]?.product?.thumbnail}
                                   alt="artwork-images"

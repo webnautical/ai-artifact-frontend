@@ -16,6 +16,7 @@ import { useParams } from "react-router";
 import { imgBaseURL } from "../../helper/Utility";
 import AdminLoader from "../components/AdminLoader";
 import swal from "sweetalert";
+import NewCKEditor from "../../components/NewCKEditor";
 const StaticPages = () => {
     const { route } = useParams()
     const [loading, setLoading] = useState(false)
@@ -23,6 +24,7 @@ const StaticPages = () => {
     const [pageData, setPageDaa] = useState(null)
     const [formData, setFormData] = useState({
         name: "",
+        parentId: "",
         route: route,
         mainTitle: "",
         metaTitle: "",
@@ -40,6 +42,10 @@ const StaticPages = () => {
     }, [route])
 
     useEffect(() => {
+        getListFun()
+    }, [])
+
+    useEffect(() => {
         if (pageData?._id) {
             setFormData({
                 ...formData,
@@ -49,6 +55,7 @@ const StaticPages = () => {
                 'metaDesc': pageData?.metaDesc,
                 'mainTitle': pageData?.mainTitle,
                 'subTitle': pageData?.subTitle,
+                'parentId': pageData?.parentId,
                 'editorContent1': pageData?.editorContent1 ? pageData?.editorContent1 : "",
                 'editorContent2': pageData?.editorContent2 ? pageData?.editorContent2 : "",
                 'editorContent3': pageData?.editorContent3 ? pageData?.editorContent3 : "",
@@ -59,6 +66,7 @@ const StaticPages = () => {
         } else {
             setFormData({
                 ...formData,
+                'parentId': '',
                 'name': '',
                 'route': route,
                 'mainTitle': '',
@@ -130,6 +138,7 @@ const StaticPages = () => {
         params.append("editorContent3", formData.editorContent3);
         params.append("image1", formData.image1);
         params.append("image2", formData.image2);
+        params.append("parentId", formData?.parentId);
         try {
             const res = await axiosInstance.post('/admin/createPage', params, {
                 headers: {
@@ -159,6 +168,15 @@ const StaticPages = () => {
             setFormData((prevValues) => { return { ...prevValues, ["editorContent3"]: value } });
         }
     };
+    const [pageList, setPageList] = useState([])
+    const getListFun = async () => {
+        try {
+            const res = await APICALL("/admin/getNestedPages", 'post', { role: "admin" })
+            if (res?.status) setPageList(res?.data); else setPageList([])
+        } catch (error) {
+            setPageList([])
+        }
+    }
 
     return (
         <Card className="card-cusotom ">
@@ -170,9 +188,9 @@ const StaticPages = () => {
                     <CardBody>
                         <div className="cutoms-login-artist">
                             <Row className="mb-md-3 mb-2">
-                                {/* <Col md={6}>
+                                <Col md={6}>
                                     <Form.Group className="mb-3" controlId="formFirstName">
-                                        <Form.Label>Name</Form.Label>
+                                        <Form.Label>Page Name</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="name"
@@ -180,7 +198,7 @@ const StaticPages = () => {
                                             onChange={handleChange}
                                         />
                                     </Form.Group>
-                                </Col> */}
+                                </Col>
                                 <Col md={6}>
                                     <Form.Group className="mb-3" controlId="formFirstName">
                                         <Form.Label>Meta title</Form.Label>
@@ -233,6 +251,18 @@ const StaticPages = () => {
                                         </Form.Group>
                                     </Col>
                                 }
+                                <Col md={6}>
+
+                                    <Form.Group controlId="formSelect">
+                                        <Form.Label>Select Parent Menu</Form.Label>
+                                        <Form.Select value={formData?.parentId} name="parentId" onChange={handleChange}>
+                                            <option value="">-- Select an option --</option>
+                                            {pageList?.map((item, i) => (
+                                                <option value={item?._id}>{item?.name}</option>
+                                            ))}
+                                        </Form.Select>
+                                    </Form.Group>
+                                </Col>
 
                                 <Col md={12}>
                                     <label htmlFor="">Content 1</label>
@@ -268,11 +298,7 @@ const StaticPages = () => {
                                     <Col md={6} className="mt-3">
                                         <Form.Group className="mb-3" controlId="formmainTitle">
                                             <Form.Label>Image 1</Form.Label>
-                                            <Form.Control
-                                                type="file"
-                                                name="image1"
-                                                onChange={handleChange}
-                                            />
+                                            <Form.Control type="file" name="image1" onChange={handleChange} />
                                         </Form.Group>
                                         {imgPreview.image1 && (
                                             <img src={imgPreview.image1} style={{ height: '60px', width: '60px' }} alt="Cover Preview" />
@@ -296,9 +322,7 @@ const StaticPages = () => {
                                         )}
                                     </Col>
                                 }
-
                             </Row>
-
                         </div>
                     </CardBody>
                     <CardFooter>

@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Col, Row, Form, Container, Modal } from "react-bootstrap";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
+
+
+import { Offcanvas, Button } from "react-bootstrap";
+
 // import tiericon from "../../assets/images/4 - Diamond.png";
 import noreview from "../../assets/images/no-review.gif";
 import Artworks from "../../components/Artworks";
@@ -12,6 +16,7 @@ import WishlistIcon from "../../components/WishlistIcon";
 import ImageCarousel from "../../components/ImageCarousel";
 import QuantitySelector from "../../components/QuantitySelector ";
 import GlossEffect from "../../components/GlossEffect";
+
 import SelectableButtons from "../../components/SelectableButtons";
 // import revimg from "../../assets/images/feedback.gif";
 import { APICALL } from "../../helper/api/api";
@@ -19,6 +24,7 @@ import { useNavigate, useParams } from "react-router";
 import FrontLoader from "../../components/FrontLoader";
 import {
   auth,
+  createSlug,
   encryptId,
   getTierImg,
   imgBaseURL,
@@ -31,8 +37,27 @@ import { SOMETHING_ERR } from "../../helper/Constant";
 import { useFrontDataContext } from "../../helper/context/FrontContextProvider";
 import { Link } from "react-router-dom";
 import noDataImg from "../../assets/images/animasi-emptystate.gif";
+import HTMLContent from "../../components/HTMLContent";
 
 const ProductDetail = () => {
+  // Har video ke liye alag state aur ref
+  const videoRefs = [useRef(null), useRef(null), useRef(null)];
+  const [isPlaying, setIsPlaying] = useState([false, false, false]);
+
+  const handlePlayPause = (index) => {
+    const newPlayingState = [...isPlaying];
+
+    if (newPlayingState[index]) {
+      videoRefs[index].current.pause();
+    } else {
+      videoRefs[index].current.play();
+    }
+
+    newPlayingState[index] = !newPlayingState[index];
+    setIsPlaying(newPlayingState);
+  };
+  const [offcanvasModel, setOffcanvasModel] = useState(false);
+
   const {
     getGeneralSettingFun,
     addToCartFun,
@@ -176,6 +201,7 @@ const ProductDetail = () => {
     getGeneralSettingFun();
     getProductDetailsFun();
     getProductReviewFun();
+    getProductGuidefun()
   }, [id]);
 
   const getProductDetailsFun = async () => {
@@ -377,6 +403,20 @@ const ProductDetail = () => {
       console.log(error);
     }
   };
+  const [productGuideActive, setProductGuideActive] = useState("")
+  const [productGuideObj, setProductGuideObj] = useState(null)
+  const getProductGuidefun = async () => {
+    try {
+      const res = await APICALL("/admin/getProductGuide", 'post', { role: "admin" })
+      if (res?.status) { setProductGuideObj(res?.data) } else setProductGuideObj(null)
+    } catch (error) {
+      setProductGuideObj(null)
+    }
+  }
+
+
+  console.log("productGuideObj", productGuideObj)
+  console.log("productGuideActive", productGuideActive)
 
   return (
     <>
@@ -408,7 +448,7 @@ const ProductDetail = () => {
                         </li>
                         <li>
                           <Link
-                            to={`/collection/${productDetails?.artist_id?._id}`}
+                            to={`/collection/${productDetails?.artist_id?.userName}`}
                           >
                             {" "}
                             {productDetails?.artist_id?.userName}{" "}
@@ -417,7 +457,7 @@ const ProductDetail = () => {
                         </li>
                         <li>
                           <Link
-                            to={`/collection/${productDetails?.artist_id?._id}/${productDetails?.directoryId?._id}`}
+                            to={`/collection/${productDetails?.artist_id?.userName}/${createSlug(productDetails?.directoryId?.name)}`}
                           >
                             {" "}
                             {productDetails?.directoryId?.name}{" "}
@@ -439,8 +479,9 @@ const ProductDetail = () => {
                             images={images}
                             currentIndex={currentIndex}
                             onSelectBackground={handleBackgroundSelect}
-                            //   onNext={handleNext}
-                            //   onPrev={handlePrev}
+                            productImg={productDetails?.thumbnail}
+                          //   onNext={handleNext}
+                          //   onPrev={handlePrev}
                           />
                         </div>
 
@@ -513,31 +554,37 @@ const ProductDetail = () => {
                         <span>({reviewList?.length})</span>
                       </div>
 
-                      <Link
-                        to={`/collection/${productDetails?.artist_id?._id}`}
-                      >
-                        <div className="artist_name mt-2 mb-4">
+                      <Link to={`/collection/${productDetails?.artist_id?.userName}`}>
+                        <div className="artist_name mt-2 mb-2">
                           {
                             getTierImg(productDetails?.artist_id?.currentRank)
                               ?.icon
                           }
-
                           <p className="m-0">
                             {productDetails?.artist_id?.userName}
                           </p>
                         </div>
                       </Link>
                       <div className="mb-4">
-                        <p className="typehed mb-1">Product type</p>
+                        <p className="typehed mb-1">
+                          Product type{" "}
+                          <div class="icon-container">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span class="text" onClick={() => { setOffcanvasModel(true); setProductGuideActive("productType") }}>Learn More</span>
+                          </div>
+                        </p>
                         <div className="add_frame">
-                          <GlossEffect
-                            onBrightnessChange={handleBrightnessChange}
-                          />
+                          <GlossEffect onBrightnessChange={handleBrightnessChange} />
                         </div>
                       </div>
 
                       <div>
-                        <p className="typehed mb-1">Add frame</p>
+                        <p className="typehed mb-1">Add frame{" "}
+                          <div class="icon-container">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span class="text" onClick={() => { setOffcanvasModel(true); setProductGuideActive("frame") }}>Learn More</span>
+                          </div>
+                        </p>
                         <div className="add_frame">
                           <TexturePicker
                             onTextureSelect={handleTextureSelect}
@@ -545,21 +592,24 @@ const ProductDetail = () => {
                         </div>
                       </div>
 
-                      <p className="typehed mb-2 mt-4">Choose Size</p>
+                      <p className="typehed mb-2 mt-4">Choose Size{" "}
+
+                        <div class="icon-container">
+                          <i class="fa-solid fa-circle-info"></i>
+                          <span class="text" onClick={() => { setOffcanvasModel(true); setProductGuideActive("size") }}>Learn More</span>
+                        </div>
+                      </p>
                       <div className="add_frame">
                         <div className="add_frame">
                           {btnArr.map((item, i) => (
-                            <button
-                              key={i}
-                              type="button"
+                            <button key={i} type="button"
                               className={
                                 imgSize.transform == item.transform
                                   ? "active"
                                   : ""
                               }
                               onClick={() => handleSizeSelect(item)}
-                            >
-                              {item.name}
+                            > {item.name}
                             </button>
                           ))}
                         </div>
@@ -621,6 +671,13 @@ const ProductDetail = () => {
                         <h3 className="mb-4">Description</h3>
                         <ul className="p-0">
                           <li>
+                            <span className="d-block">
+                              {productDetails?.description}
+                            </span>
+                          </li>
+                        </ul>
+                        <ul className="product_artist_details p-0">
+                          <li>
                             Artist
                             <span className="d-block">
                               {" "}
@@ -643,13 +700,6 @@ const ProductDetail = () => {
                             Sub Category
                             <span className="d-block">
                               {productDetails?.subcategory?.name}
-                            </span>
-                          </li>
-
-                          <li>
-                            Description
-                            <span className="d-block">
-                              {productDetails?.description}
                             </span>
                           </li>
                         </ul>
@@ -715,7 +765,7 @@ const ProductDetail = () => {
                                   <div className="lis-timg-upload" key={index}>
                                     <img
                                       src={URL.createObjectURL(image)}
-                                      alt={`Uploaded ${index + 1}`} 
+                                      alt={`Uploaded ${index + 1}`}
                                     />
                                     <i
                                       className="fa fa-trash"
@@ -782,7 +832,7 @@ const ProductDetail = () => {
                                       <div className="review_person_img">
                                         <div
                                           className="first_letter"
-                                          // style={{ backgroundColor: getRandomColor()}}
+                                        // style={{ backgroundColor: getRandomColor()}}
                                         >
                                           {item?.user_id?.first_name.charAt(0)}
                                         </div>
@@ -884,6 +934,120 @@ const ProductDetail = () => {
           </Container>
         )}
       </div>
+
+
+      <Offcanvas show={offcanvasModel} onHide={() => setOffcanvasModel(false)} placement="end">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title className="product_finish">
+            <i class="fa-solid fa-circle-info"></i>{" "}
+            {
+              productGuideActive === "productType" ?
+                "Three different finishes and styles"
+                :
+                productGuideActive === "frame" ?
+                  "Frames"
+                  :
+                  productGuideActive === "size" ?
+                    "Sizes"
+                    :
+                    <></>
+            }
+          </Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <div className="product_finish_cnt">
+
+            {productGuideActive === "size" &&
+              productGuideObj?.size?.map((item, i) => (
+                <div className="video_box" style={{ position: "relative", width: "500px", maxWidth: "100%" }}>
+                  <p><strong>{item?.name}</strong></p>
+                  <img src={imgBaseURL() + item?.image1} alt="" style={{ width: "100%" }} />
+                </div>
+              ))
+            }
+
+            {productGuideActive === "frame" &&
+              productGuideObj?.frame?.map((item, i) => (
+                <div className="video_box" style={{ position: "relative", width: "500px", maxWidth: "100%" }}>
+                  {item?.image1 && (
+                    item.image1.endsWith(".mp4") || item.image1.endsWith(".webm") || item.image1.endsWith(".ogg") ? (
+                      <video
+                        src={imgBaseURL() + item.image1}
+                        controls
+                        style={{ width: "100%" }}
+                        alt="Video Preview"
+                      />
+                    ) : (
+                      <img src={imgBaseURL() + item.image1} alt="Image Preview" style={{ width: "100%" }} />
+                    )
+                  )}
+
+                  <HTMLContent data={item?.editorContent1} />
+                </div>
+              ))
+            }
+
+            {productGuideActive === "productType" &&
+              productGuideObj?.productType?.map((item, i) => (
+                <div className="video_box" style={{ position: "relative", width: "500px", maxWidth: "100%" }}>
+                <p><strong>{item?.name}</strong></p>
+                  {item?.image1 && (
+                    item.image1.endsWith(".mp4") || item.image1.endsWith(".webm") || item.image1.endsWith(".ogg") ? (
+                      <video
+                        src={imgBaseURL() + item.image1}
+                        controls
+                        style={{ width: "100%" }}
+                        alt="Video Preview"
+                      />
+                    ) : (
+                      <img src={imgBaseURL() + item.image1} alt="Image Preview" style={{ width: "100%" }} />
+                    )
+                  )}
+                  <HTMLContent data={item?.editorContent1} />
+                </div>
+              ))
+            }
+
+            {/* <div className="video_box" style={{ position: "relative", width: "500px", maxWidth: "100%" }}>
+              <p><strong>Textra</strong></p>
+              <video ref={videoRefs[0]} width="100%" poster="https://i.imgur.com/1ztO5uE.png">
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+
+              <button
+                onClick={() => handlePlayPause(0)}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  background: "rgba(0,0,0,0.7)",
+                  border: "none",
+                  padding: "15px",
+                  borderRadius: "50%",
+                  cursor: "pointer",
+                  color: "white",
+                  fontSize: "20px",
+                  width: "50px",
+                  height: "50px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <i className={isPlaying[0] ? "fas fa-pause" : "fas fa-play"}></i>
+              </button>
+            </div>
+            <p><strong>Textured finish that pops</strong></p>
+            <p>
+              Using selective matt & gloss finish and 3D-enhanced print, Textra lets you feel the details and outlines as they seamlessly pop up on the metal surface.
+              This tactile finish evolves with different light conditions, creating a whole new, dynamic and immersive art experience. Find your Textra
+            </p> */}
+
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
 
       <Modal
         show={reviewModal}

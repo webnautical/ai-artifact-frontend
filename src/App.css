@@ -4286,9 +4286,10 @@ header nav ul li a {
 }
 
 .typehed {
-  font-size: 16px;
-  text-transform: uppercase;
-  font-weight: 500;
+  font-size: 15px;
+  text-transform: capitalize;
+  font-weight: 600;
+
 }
 
 .custom-radio .form-check-input {
@@ -6491,3 +6492,123 @@ nav.sidebr-admin .simplebar-scrollable-x {
   align-items: center;
   gap: 21px;
 }
+
+.sibebar_page {     border: 1px solid #cccccc;
+  margin: 40px 0;
+  padding: 0px 15px;}
+.sibebar_page ul{ padding-left: 15px; margin: 0px;}
+.sibebar_page ul li { list-style: none;}
+.sibebar_page ul li a{ display: block; padding: 10px 0px;}
+
+.sibebar_page ul {
+  list-style: none;
+  padding: 0;
+}
+.privacy-btn {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  font-size: 16px;
+}
+.submenu {
+  margin-left: 15px;
+  transition: all 0.3s ease-in-out;
+}
+.submenu li {
+  margin-top: 5px;
+}
+
+
+.sibebar_page button{background: none;
+  border: none;
+  color: black;
+  cursor: pointer;
+  font-size: 16px; padding: 10px 0px!important;}
+
+
+  .submenu{
+
+    padding-left: 15px!important;
+  }
+
+
+  .product_artist_details {
+
+    display: grid
+;
+    grid-template-columns: 1fr 1fr;
+  }
+
+
+  .track_order_box{     background-color: #f5f5f5;
+    padding: 16px 25px;}
+  .track_order_box h1{     font-size: 20px;
+    font-weight: 600;
+    margin: 10px;
+    text-align: center;
+    color: #000000;}
+
+  .track_order_box img{ width: 90px;}
+
+  .track_order_box.cutoms-login-artist .form-control{  background-color: white;}
+
+  .track_order_outer {
+
+    padding: 125px 0px 0px;
+  }
+
+
+  .icon-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.icon-container i {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    font-size: 15px;
+    color: teal;
+}
+
+.icon-container .text {
+  position: absolute;
+  top: 31px;
+  left: 300%;
+  transform: translate(-50%, 0);
+  opacity: 0;
+  transition: transform 0.3sease, opacity 0.3sease;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+  color: #008080;
+}
+
+.typehed:hover i {
+    transform: translateY(-20px);
+    opacity: 0;
+  
+}
+
+.typehed:hover .text {
+    transform: translate(-50%, -20px);
+    opacity: 1;
+}
+
+.product_finish i{ color: teal;}
+
+
+.product_finish { font-size: 17px; color: black; font-weight: 600;} 
+
+
+.product_finish_cnt p{ margin: 10px 0; font-size: 15px; font-weight: 500; color: #7c7c7c; }
+
+.product_finish_cnt p strong{ font-size: 15px; color: black; font-weight: 600;}
+
+.sibebar_page .active{
+  color: red !important;
+}
+
+/* 
+.video_box{ padding: 15px 0;} */

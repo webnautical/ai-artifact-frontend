@@ -128,85 +128,17 @@ const dashboard = {
       ]
     },
 
-
     {
       id: 'pages',
       title: 'Content Management',
       type: 'collapse',
       icon: AutoStoriesIcon,
       children: [
-
         {
           id: 'blogs',
           title: 'Blogs',
           type: 'item',
           url: '/admin/blogs',
-
-          breadcrumbs: false
-        },
-        {
-          id: 'contact-us',
-          title: 'Contact Us',
-          type: 'item',
-          url: `/admin/pages/contact-us`,
-          breadcrumbs: false
-        },
-        {
-          id: 'about-us',
-          title: 'About Us',
-          type: 'item',
-          url: `/admin/pages/about-us`,
-          breadcrumbs: false
-        },
-        {
-          id: 'shipping',
-          title: 'Shipping',
-          type: 'item',
-          url: `/admin/pages/shipping`,
-          breadcrumbs: false
-        },
-        {
-          id: 'copyright',
-          title: 'Copyright',
-          type: 'item',
-          url: `/admin/pages/copyright-complaints`,
-          breadcrumbs: false
-        },
-        {
-          id: 'terms-of-use',
-          title: 'Terms Of Use',
-          type: 'item',
-          url: `/admin/pages/terms-of-use`,
-          breadcrumbs: false
-        },
-        {
-          id: 'privacy-policy',
-          title: 'Privacy Policy',
-          type: 'item',
-          url: `/admin/pages/privacy-policy`,
-          breadcrumbs: false
-        },
-        {
-          id: 'what-is-aiartifact',
-          title: 'What is AiArtifact',
-          type: 'item',
-          url: `/admin/pages/what-is-aiartifact`,
-          breadcrumbs: false
-        },
-
-        {
-          id: 'aiartifact-club',
-          title: 'Aiartifact club',
-          type: 'item',
-          url: `/admin/pages/aiartifact-club`,
-          breadcrumbs: false
-        },
-
-        {
-          id: 'mounting-instructions',
-          title: 'Mounting Instructions',
-          type: 'item',
-          url: `/admin/pages/mounting-instructions`,
           breadcrumbs: false
         },
         {
@@ -217,12 +149,19 @@ const dashboard = {
           breadcrumbs: false
         },
         {
-          id: 'contentGuidelines',
-          title: 'Content Guidelines',
+          id: 'pages',
+          title: 'Pages',
           type: 'item',
-          url: `/admin/pages/content-guidelines`,
+          url: `/admin/all-pages`,
           breadcrumbs: false
         },
+        {
+          id: 'product_details_info',
+          title: 'Product Guide',
+          type: 'item',
+          url: `/admin/product-guide`,
+          breadcrumbs: false
+        }
       ]
     },
 
@@ -235,10 +174,6 @@ const dashboard = {
       icon: NotificationsNoneIcon,
       breadcrumbs: false
     },
-
-
-
-
 
     {
       id: 'setting',
@@ -274,10 +209,6 @@ const dashboard = {
         },
       ]
     },
-
-
-
-
 
 
     {

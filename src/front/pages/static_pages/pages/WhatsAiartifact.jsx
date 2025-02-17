@@ -1,8 +1,6 @@
 import React from 'react'
 import { Container, Row } from 'react-bootstrap'
 import HTMLContent from '../../../../components/HTMLContent'
-import ContactForm from '../../../../components/ContactForm'
-
 const WhatsAiartifact = ({ pageData }) => {
   return (
     <>
@@ -18,7 +16,6 @@ const WhatsAiartifact = ({ pageData }) => {
           </Row>
         </Container>
       </div>
-      <ContactForm></ContactForm>
     </>
   )
 }

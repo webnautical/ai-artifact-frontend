@@ -1,11 +1,7 @@
 import React from "react";
 import { Container, } from "react-bootstrap";
 import HTMLContent from "../../../../components/HTMLContent";
-import ContactForm from "../../../../components/ContactForm";
-
-
 const PlainTextPage = ({ pageData }) => {
-
   return (
     <>
       <section className="content-page-static">
@@ -14,7 +10,6 @@ const PlainTextPage = ({ pageData }) => {
           <HTMLContent data={pageData?.editorContent1} />
         </Container>
       </section>
-      <ContactForm />
     </>
   );
 };

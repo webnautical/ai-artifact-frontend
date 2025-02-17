@@ -247,13 +247,13 @@ const Cart = () => {
                         cartList?.map((item, i) => (
                           <div className="cart_list">
                             <div className="product_image">
-                              <Link to={`/product-details/${item?.product_id?._id}`}>
+                              <Link to={`/product-details/${item?.product_id?.slug}`}>
                                 <img src={imgBaseURL() + item?.product_id?.thumbnail} alt="product-image" />
                               </Link>
                             </div>
 
                             <div className="about_details_product">
-                              <Link to={`/product-details/${item?.product_id?._id}`}>
+                              <Link to={`/product-details/${item?.product_id?.slug}`}>
                                 <h2>{item?.product_id?.title}</h2>
                               </Link>
 
@@ -343,7 +343,7 @@ const Cart = () => {
                     <ul className="p-0">
                       <h3>Checkout</h3>
                       <li>
-                        <div>Est. Total:</div>
+                        <div>Product Total:</div>
                         <div className="Prcie_final">${totalPrice}</div>
                       </li>
                     </ul>

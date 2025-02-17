@@ -72,7 +72,7 @@ const Artists = () => {
                         <ul>
                           {artistsByLetter?.map((artist) => (
                             <li key={artist.id}>
-                              <Link to={`/collection/${artist?._id}`}>
+                              <Link to={`/collection/${artist?.userName}`}>
                                 {artist?.userName}
                                 <span className="image_tier">
                                   {getTierImg(artist?.currentRank)?.icon}

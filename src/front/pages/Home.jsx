@@ -1,50 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-// import sliderbanner from "../../assets/images/sliderbanner.png";
-// import sliderbannertwo from "../../assets/images/bannertwo.webp";
-// import baughtlistnew from "../../assets/images/baughtlisttwo.png";
 import noDataImg from "../../assets/images/noart.png";
-// import baughtlisttwo from "../../assets/images/baughtlist.png";
-// import baughtlistthree from "../../assets/images/baought-4.png";
-// import baughtlistfour from "../../assets/images/baought-3.png";
-// import badge from "../../assets/images/badge (1).png";
-// import badgebronze from "../../assets/images/1 - Bronze.png";
-// import badgesilver from "../../assets/images/2 - Silver.png";
-// import badgegold from "../../assets/images/3 - Gold.png";
-// import badgedimond from "../../assets/images/4 - Diamond.png";
 import productimg from "../../assets/images/new-1.png";
 import Spinner from "react-bootstrap/Spinner";
-// import productimgtwo from "../../assets/images/new-2.png";
-// import productimgthree from "../../assets/images/new-3.png";
-// import productimgfour from "../../assets/images/new-4.png";
-// import productimgfive from "../../assets/images/new-5.png";
 import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-// import collectionimg from "../../assets/images/top (1).png";
-// import toptwo from "../../assets/images/top (2).png";
-// import topthree from "../../assets/images/top (3).png";
-// import topfour from "../../assets/images/top (4).png";
-// import topfive from "../../assets/images/top-5.png";
-// import topsix from "../../assets/images/top-6.png";
-
-// import firsttier from "../../assets/images/1 - Bronze.png";
-// import silver from "../../assets/images/2 - Silver.png";
-// import gold from "../../assets/images/3 - Gold.png";
-// import diamond from "../../assets/images/4 - Diamond.png";
-// import topimages from "../../assets/images/top (1).png";
-// import topimagesone from "../../assets/images/top (2).png";
-// import topimagestwo from "../../assets/images/top (3).png";
-// import topimagesthree from "../../assets/images/top (4).png";
 import CollectionLIst from "../../components/CollectionLIst";
 import Artworks from "../../components/Artworks";
 import Newsletter from "../../components/Newsletter";
-// import harry from "../../assets/images/harry.png";
-// import cattwo from "../../assets/images/cat-2.png";
-// import catthree from "../../assets/images/cat-3.png";
-// import catfaour from "../../assets/images/cat-4.png";
+
 import { Link, useNavigate } from "react-router-dom";
 import Feedback from "../../assets/images/facebook.png";
 import redit from "../../assets/images/redit.png";
@@ -351,29 +318,63 @@ const Home = () => {
             <Row>
               <Col lg={8} className="web_banner">
                 <div className="hero-slider">
+                  {bannerList?.length > 0 &&
+
+                    <OwlCarousel
+                      className="owl-theme"
+                      {...heroslider}
+                      ref={firstCarouselRef}
+                    >
+                      {bannerList
+                        ?.filter((item) => item?.type === "web")
+                        ?.map((item, i) => (
+                          <div className="item" key={`first-${i}`}>
+                            <div className="slider_big">
+                              <img
+                                className="w-100 full"
+                                src={imgBaseURL() + item?.image}
+                                alt="slider-img"
+                                width="100%"
+                                loading="lazy"
+                              />
+                              <div className="cnt_slider">
+                                <h1>{item?.title}</h1>
+                                <Link
+                                  to={item?.redirectUrl}
+                                  className="global_btn"
+                                >
+                                  View More
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                    </OwlCarousel>
+                  }
+                </div>
+              </Col>
+              {bannerList?.length > 0 &&
+                <Col lg={8} className="mobile_banner mb-4">
                   <OwlCarousel
-                    className="owl-theme"
+                    className=" owl-theme"
                     {...heroslider}
-                    ref={firstCarouselRef}
+                    ref={owlCarouselRef}
                   >
                     {bannerList
-                      ?.filter((item) => item?.type === "web")
+                      ?.filter((item) => item?.type === "mobile")
                       ?.map((item, i) => (
-                        <div className="item" key={`first-${i}`}>
+                        <div className="item">
                           <div className="slider_big">
                             <img
-                              className="w-100 full"
+                              className="w-100 full zoom"
                               src={imgBaseURL() + item?.image}
                               alt="slider-img"
                               width="100%"
                               loading="lazy"
                             />
                             <div className="cnt_slider">
-                              <h1>{item?.title}</h1>
-                              <Link
-                                to={item?.redirectUrl}
-                                className="global_btn"
-                              >
+                              <h2>{item?.title}</h2>
+                              <Link to={item?.redirectUrl} className="global_btn">
                                 View More
                               </Link>
                             </div>
@@ -381,38 +382,8 @@ const Home = () => {
                         </div>
                       ))}
                   </OwlCarousel>
-                </div>
-              </Col>
-
-              <Col lg={8} className="mobile_banner mb-4">
-                <OwlCarousel
-                  className=" owl-theme"
-                  {...heroslider}
-                  ref={owlCarouselRef}
-                >
-                  {bannerList
-                    ?.filter((item) => item?.type === "mobile")
-                    ?.map((item, i) => (
-                      <div className="item">
-                        <div className="slider_big">
-                          <img
-                            className="w-100 full zoom"
-                            src={imgBaseURL() + item?.image}
-                            alt="slider-img"
-                            width="100%"
-                            loading="lazy"
-                          />
-                          <div className="cnt_slider">
-                            <h2>{item?.title}</h2>
-                            <Link to={item?.redirectUrl} className="global_btn">
-                              View More
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                </OwlCarousel>
-              </Col>
+                </Col>
+              }
 
               <Col lg={4}>
                 <div className="just_bought global_card">
@@ -433,71 +404,72 @@ const Home = () => {
                       </button>
                     </div>
                   </div>
-                  <OwlCarousel
-                    className=" owl-theme"
-                    {...knowledgebaseowl}
-                    ref={owlCarouselRef}
-                  >
-                    {justBought?.map((item, i) => (
-                      <div className="item">
-                        {item?.lists?.map((art, i) => (
-                          <div className="main_baught_list_box">
-                            <div className="main_baught_list_box_outer">
-                              <div>
-                                <div className="baught_img">
+                  {justBought?.length > 0 &&
+                    <OwlCarousel
+                      className=" owl-theme" {...knowledgebaseowl}
+                      ref={owlCarouselRef}
+                    >
+                      {justBought?.map((item, i) => (
+                        <div className="item">
+                          {item?.lists?.map((art, i) => (
+                            <div className="main_baught_list_box">
+                              <div className="main_baught_list_box_outer">
+                                <div>
+                                  <div className="baught_img">
+                                    <Link
+                                      to={`/product-details/${art?.productId?.slug}`}
+                                      className="baought_list"
+                                    >
+                                      <img
+                                        className=" w-100"
+                                        src={
+                                          imgBaseURL() + art?.productId?.thumbnail
+                                        }
+                                        alt="poster-img"
+                                        loading="lazy"
+                                      />
+                                    </Link>
+                                  </div>
+                                </div>
+                                <div className="my_main_baught_list_box_width">
+                                  <div className="sub_tittle">
+                                    <Link
+                                      to={`/collection/${art?.artistId?.userName}/${art?.productId?.directoryId?.name}`}
+                                    >
+                                      {art?.productId?.directoryId?.name}
+                                    </Link>
+                                  </div>
+
                                   <Link
-                                    to={`/product-details/${art?.productId?._id}`}
+                                    to={`/product-details/${art?.productId?.slug}`}
                                     className="baought_list"
                                   >
-                                    <img
-                                      className=" w-100"
-                                      src={
-                                        imgBaseURL() + art?.productId?.thumbnail
+                                    {art?.productId?.title}
+                                  </Link>
+
+                                  <div className="tiear_stauts_name d-flex align-items-center">
+                                    <span className="me-2">
+                                      {
+                                        getTierImg(art?.artistId?.currentRank)
+                                          ?.icon
                                       }
-                                      alt="poster-img"
-                                      loading="lazy"
-                                    />
-                                  </Link>
-                                </div>
-                              </div>
-                              <div className="my_main_baught_list_box_width">
-                                <div className="sub_tittle">
-                                  <Link
-                                    to={`/collection/${art?.artistId?._id}/${art?.productId?.directoryId?._id}`}
-                                  >
-                                    {art?.productId?.directoryId?.name}
-                                  </Link>
-                                </div>
-
-                                <Link
-                                  to={`/product-details/${art?.productId?._id}`}
-                                  className="baought_list"
-                                >
-                                  {art?.productId?.title}
-                                </Link>
-
-                                <div className="tiear_stauts_name d-flex align-items-center">
-                                  <span className="me-2">
-                                    {
-                                      getTierImg(art?.artistId?.currentRank)
-                                        ?.icon
-                                    }
-                                  </span>
-                                  <Link
-                                    to={`/collection/${art?.artistId?._id}`}
-                                  >
-                                    <div className="name text-capitalize">
-                                      {art?.artistId?.userName}
-                                    </div>
-                                  </Link>
+                                    </span>
+                                    <Link
+                                      to={`/collection/${art?.artistId?.userName}`}
+                                    >
+                                      <div className="name text-capitalize">
+                                        {art?.artistId?.userName}
+                                      </div>
+                                    </Link>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                  </OwlCarousel>
+                          ))}
+                        </div>
+                      ))}
+                    </OwlCarousel>
+                  }
                 </div>
               </Col>
             </Row>
@@ -520,7 +492,7 @@ const Home = () => {
                       i // Limit the number of items rendered
                     ) => (
                       <div className="product_box_outer" key={item?._id}>
-                        <Link to={`/product-details/${item?._id}`}>
+                        <Link to={`/product-details/${item?.slug}`}>
                           <div className="product_box">
                             <div className="main_show_image">
                               <img
@@ -531,7 +503,7 @@ const Home = () => {
                                     : productimg
                                 }
                                 alt={item?.title || "product-img"}
-                                // loading="lazy" // Add lazy loading for images
+                              // loading="lazy" // Add lazy loading for images
                               />
                             </div>
                             <h3 className="product_name">{item?.title}</h3>
@@ -557,9 +529,8 @@ const Home = () => {
                         </Link>
                         <button
                           className="wishlist border-0"
-                          aria-label={`Add or remove ${
-                            item?.name || "item"
-                          } from wishlist`}
+                          aria-label={`Add or remove ${item?.name || "item"
+                            } from wishlist`}
                           onClick={() => {
                             addRemoveWishList(
                               item?._id,
@@ -638,7 +609,7 @@ const Home = () => {
                     top10ArtworkList.map((row, i) => (
                       <Col className="mb-4">
                         <div className="collection_grid">
-                          <Link to={`/product-details/${row?.product?._id}`}>
+                          <Link to={`/product-details/${row?.product?.slug}`}>
                             <img
                               className="w-100"
                               src={imgBaseURL() + row?.product?.thumbnail}

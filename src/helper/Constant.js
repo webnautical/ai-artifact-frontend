@@ -11,3 +11,11 @@ export const strongPasswordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&!@#$%^
 
 export const P_UID = "flat_130x180-mm-5r_200-gsm-80lb-uncoated_4-0_ver"
 export const UID_OBJ = {"quality": "Matte","frame": "No Frame","size": "13x18 cm / 5x7\""}
+
+export const AUTO_LOGOUT_TIME_AFTER_SIXTY_DAYS = 60 * 24 * 60 * 60 * 1000;
+// export const SIXTY_DAYS_IN_MS = 1 * 60 * 1000;
+export const AUTO_LOGOUT_TIME_IF_NO_ACTIVITY = 14 * 24 * 60 * 60 * 1000;
+// export const AUTO_LOGOUT_TIME_IF_NO_ACTIVITY = 1 * 60 * 1000;
+
+export const CAPTCHA_SITE_KEY = "6Le1zZQqAAAAAJAEe6a0LiXD4-T-YfzgxgCeOksz"
+export const CAPTCHA_SECRET_KEY = "6LetCNYqAAAAAG2YCRiBIH6q7iekSE04cLYGjsoV"

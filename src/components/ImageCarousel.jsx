@@ -7,6 +7,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
+import { imgBaseURL } from "../helper/Utility";
 
 const images = [
   "https://assets-static-prod.displate.com/next-assets/public/images/pdp/HeroSlider/cupboard/bcg/2560.avif?v=MDQuMDQuMjAyNA==",
@@ -19,9 +20,11 @@ const ImageCarousel = ({
   currentIndex,
   onNext,
   onPrev,
+  productImg
 }) => {
   return (
     <div className="thumbnails">
+      <img src={imgBaseURL() + productImg} alt=""  style={{ width: 100, height: 64, }} />
       {images.map((image, index) => (
        <div className="outer_image">
          <img
@@ -33,11 +36,6 @@ const ImageCarousel = ({
         />
         </div>
       ))}
-
-
-
-
-
     </div>
   );
 };

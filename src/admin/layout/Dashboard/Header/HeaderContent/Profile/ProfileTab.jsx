@@ -21,7 +21,9 @@ export default function ProfileTab({ setOpen }) {
     setOpen(false)
     if(index === "changePassword"){
       navigate(`/${auth('admin')?.user_role}/change-password`)
-    }else{
+    }else if(index === "two_fa"){
+      navigate(`/${auth('admin')?.user_role}/setup-two-factor`)
+    } else{
       navigate(`/${auth('admin')?.user_role}/edit-profile`)
     }
   };
@@ -35,6 +37,8 @@ export default function ProfileTab({ setOpen }) {
       navigate('/login/affiliate')
     }
     localStorage.removeItem(getTokenType(type))
+    localStorage.removeItem("lastActivityTime");
+    localStorage.removeItem("loginTimestamp");
   }
  
   return (
@@ -49,14 +53,22 @@ export default function ProfileTab({ setOpen }) {
         </ListItemButton>
       }
  
-      {
-        auth('admin')?.user_role === 'admin' &&
+      {auth('admin')?.user_role === 'admin' &&
+
+        <>
+        <ListItemButton selected={selectedIndex === 1} onClick={() => handleListItemClick("two_fa")}>
+          <ListItemIcon sx={{ fontSize: '18px', color: '#000' }}>
+            <PasswordIcon />
+          </ListItemIcon>
+          <ListItemText primary="Two-Factor Authentication" />
+        </ListItemButton>
         <ListItemButton selected={selectedIndex === 1} onClick={() => handleListItemClick("changePassword")}>
           <ListItemIcon sx={{ fontSize: '18px', color: '#000' }}>
             <PasswordIcon />
           </ListItemIcon>
           <ListItemText primary="Change Password" />
         </ListItemButton>
+        </>
       }
  
       <ListItemButton selected={selectedIndex === 2} onClick={() => handleLogout('admin')}>

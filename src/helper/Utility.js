@@ -21,8 +21,8 @@ export const imgBaseURL = () => {
     // } else {
     // }
     // return "https://phpstack-1369337-5047547.cloudwaysapps.com/"
-    // return "https://aiartifact.itworkshop.in/"
-    return "https://www.aiartifact.com/"
+    return "https://aiartifact.itworkshop.in/"
+    // return "https://www.aiartifact.com/"
 }
 export const apiBaseURL = () => {
     // const hostname = window.location.hostname
@@ -31,12 +31,21 @@ export const apiBaseURL = () => {
     // } else {
     // }
     // return "https://phpstack-1369337-5047547.cloudwaysapps.com"
-    // return "https://aiartifact.itworkshop.in"
-    return "https://www.aiartifact.com"
+    return "https://aiartifact.itworkshop.in"
+    // return "https://www.aiartifact.com"
 }
 export const apiVersion = () => {
     return "/v1/"
 }
+
+export const createSlug = (text) => {
+    return text?.toLowerCase() // Convert to lowercase
+        ?.trim() // Remove leading and trailing spaces
+        ?.replace(/[^a-z0-9\s-]/g, "") // Remove special characters
+        ?.replace(/\s+/g, "-"); // Replace spaces with dashes
+};
+
+
 export const encryptId = (id) => {
     const encrypted = CryptoJS.AES.encrypt(id, "MYID").toString();
     return encrypted;

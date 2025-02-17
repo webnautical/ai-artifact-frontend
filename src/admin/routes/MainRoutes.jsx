@@ -8,6 +8,9 @@ import ProductDetails from '../pages/product/ProductDetails';
 import ChangePassword from '../pages/Common/ChangePassword';
 import Collections from '../pages/Common/Collections';
 import Achievement from '../pages/artist/Achievement';
+import AllPages from '../pages/AllPages';
+import SetupTwoFactor from '../pages/Common/SetupTwoFactor';
+import ProductGuide from '../pages/web/ProductGuide';
 const Tier = Loadable(lazy(() => import("../pages/web/Tier")));
 const DashboardDefault = Loadable(lazy(() => import('../pages/dashboard/index')));
 const RolesPermission = Loadable(lazy(() => import('../pages/roles-permission/RolesPermission')));
@@ -89,6 +92,10 @@ const MainRoutes = {
       element: <Notifications />
     },
     {
+      path: '/all-pages',
+      element: <AllPages />
+    },
+    {
       path: '/pages/:route',
       element: <StaticPages />
     },
@@ -96,10 +103,6 @@ const MainRoutes = {
       path: '/collections',
       element: <Collections />
     },
-    // {
-    //   path: '/product-management',
-    //   element: <ComingSoon />
-    // },
     {
       path: '/withdrawal',
       element: <Withdrawal />
@@ -123,6 +126,10 @@ const MainRoutes = {
     {
       path: "/blogs",
       element: <BlogList />,
+    },
+    {
+      path: "/product-guide",
+      element: <ProductGuide />,
     },
     {
       path: "/general-settings",
@@ -159,6 +166,10 @@ const MainRoutes = {
     {
       path: "/change-password",
       element: <ChangePassword />,
+    },
+    {
+      path: "/setup-two-factor",
+      element: <SetupTwoFactor />,
     },
     //
     // // // // // ARTIST ROUTES // // // //

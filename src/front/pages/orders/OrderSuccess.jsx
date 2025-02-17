@@ -137,7 +137,7 @@ const OrderSuccess = () => {
                       <Row className="align-items-center">
                         {orderDetails?.orderItems?.map((row, index) => (
                           <Col md={12}>
-                            <Link to={`/product-details/${row.productId?._id}`}>
+                            <Link to={`/product-details/${row.productId?.slug}`}>
                               <div className="order_all_details p-0 mt-2  ">
                                 <div className="order_img">
                                   <img

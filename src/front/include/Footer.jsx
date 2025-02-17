@@ -104,6 +104,9 @@ const Footer = () => {
                     <Link to={"/shipping"}>Shipping & Returns</Link>
                   </li>
                   <li>
+                    <Link to={"/tracking"}>Track your order</Link>
+                  </li>
+                  <li>
                     <Link to={"/faq"}>Help / FAQ</Link>
                   </li>
                   <li>

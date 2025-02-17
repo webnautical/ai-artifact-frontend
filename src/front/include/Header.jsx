@@ -437,7 +437,7 @@ const Header = () => {
                                         style={{ cursor: "pointer" }}
                                       >
                                         <Link
-                                          to={`/product-details/${item?.randomProduct?._id}`}
+                                          to={`/product-details/${item?.randomProduct?.slug}`}
                                         >
                                           <div className="browse_with_img">
                                             <img

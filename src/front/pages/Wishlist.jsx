@@ -56,7 +56,7 @@ const Wishlist = () => {
                         <Col className="mb-4">
                           <div className="product_box">
                             <Link
-                              to={`/product-details/${item?.product_id?._id}`}
+                              to={`/product-details/${item?.product_id?.slug}`}
                             >
                               <div className="main_show_image">
                                 <img

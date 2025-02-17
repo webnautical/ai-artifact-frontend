@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { defaultIMG, imgBaseURL } from "../helper/Utility";
+import { createSlug, defaultIMG, imgBaseURL } from "../helper/Utility";
 import { Link } from "react-router-dom";
 
 const CollectionLIst = ({ title, data, btnHide }) => {
@@ -19,7 +19,7 @@ const CollectionLIst = ({ title, data, btnHide }) => {
           {
             data?.map((item, i) => (
               <Col md={6} lg={3} className="mb-md-3 mb-4">
-                <Link to={`/collection/${item?.artist?._id}/${item?._id}`} className="popular_box">
+                <Link to={`/collection/${item?.artist?.userName}/${createSlug(item?.directoryName)}`} className="popular_box">
                   <Row>
                     {
                       Array(4).fill(null).map((_, i) => (

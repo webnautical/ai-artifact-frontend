@@ -120,17 +120,6 @@ const SocialIcon = () => {
         onError: errorResponse => console.log(errorResponse),
     });
 
-    // const onGoogleSuccess = async (tokenResponse) => {
-    //     try {
-    //         const userData = parseJwt(tokenResponse?.credential);
-    //         console.log("Userdata", userData)
-
-    //     } catch (error) {
-
-    //         console.log("Google fetch error", { error });
-    //     }
-    // };
-
     return (
         <>
             <div className="log_in_using mt-3">

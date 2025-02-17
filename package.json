@@ -5,7 +5,9 @@
   "dependencies": {
     "@ant-design/icons": "^5.3.7",
     "@ckeditor/ckeditor5-build-classic": "^41.4.2",
+    "@ckeditor/ckeditor5-code-block": "^44.1.0",
     "@ckeditor/ckeditor5-react": "^7.0.0",
+    "@ckeditor/ckeditor5-source-editing": "^44.1.0",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
@@ -23,6 +25,8 @@
     "country-state-city": "^3.2.1",
     "crypto-js": "^4.2.0",
     "formik": "^2.4.6",
+    "framer-motion": "^12.4.2",
+    "jodit-react": "^5.2.6",
     "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",

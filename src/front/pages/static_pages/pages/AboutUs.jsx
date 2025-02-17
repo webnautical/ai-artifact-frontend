@@ -2,7 +2,6 @@ import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import HTMLContent from '../../../../components/HTMLContent'
 import { imgBaseURL } from '../../../../helper/Utility'
-import ContactForm from '../../../../components/ContactForm'
 const AboutUs = ({ pageData }) => {
   return (
     <>
@@ -30,7 +29,6 @@ const AboutUs = ({ pageData }) => {
         
         </Container>
       </div>
-      <ContactForm />
     </>
   )
 }

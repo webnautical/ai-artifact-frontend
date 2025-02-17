@@ -251,7 +251,7 @@ const RankingStatus = () => {
                                                   topArtwork?.slice(0, 5)?.map((item, i) => (
                                                     <div className="col p-0">
                                                       <Link
-                                                        to={`/product-details/${item?._id}`}
+                                                        to={`/product-details/${item?.slug}`}
                                                       >
                                                         <div className="product_box">
                                                           <div className="main_show_image">
